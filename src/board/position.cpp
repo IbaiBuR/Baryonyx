@@ -1,3 +1,3 @@
-#include "board.hpp"
+#include "position.hpp"
 
 namespace Board {}
