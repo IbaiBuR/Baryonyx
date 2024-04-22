@@ -81,3 +81,14 @@ enum class Piece : I8 {
     PIECE_NB,
     NO_PIECE = -1
 };
+
+enum class Direction : I8 {
+    NORTH      = 8,
+    SOUTH      = -NORTH,
+    EAST       = 1,
+    WEST       = -EAST,
+    NORTH_EAST = NORTH + EAST,
+    NORTH_WEST = NORTH + WEST,
+    SOUTH_EAST = SOUTH + EAST,
+    SOUTH_WEST = SOUTH + WEST
+};
