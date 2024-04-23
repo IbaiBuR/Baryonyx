@@ -1,5 +1,8 @@
 #pragma once
 
+#include <bit>
+#include <cassert>
+
 #include "../../types.hpp"
 
 namespace Board::Bitboards {
@@ -12,14 +15,39 @@ class Bitboard {
             data(bb){};
 
         static constexpr Bitboard fromSquare(const Square sq) {
-            return Bitboard(1ULL << static_cast<U64>(sq));
+            return Bitboard(1ULL << static_cast<U8>(sq));
         }
 
         static constexpr bool isBitSet(const Bitboard &bitboard, const Square sq) {
-            return static_cast<bool>(bitboard.data & 1ULL << static_cast<U64>(sq));
+            return static_cast<bool>(bitboard.data & 1ULL << static_cast<U8>(sq));
+        }
+
+        static constexpr void setBit(Bitboard &bitboard, const Square sq) {
+            bitboard.data |= 1ULL << static_cast<U8>(sq);
+        }
+
+        static constexpr void clearBit(Bitboard &bitboard, const Square sq) {
+            bitboard.data &= ~(1ULL << static_cast<U8>(sq));
         }
 
         [[nodiscard]] constexpr U64 asU64() const { return data; }
+
+        [[nodiscard]] constexpr bool empty() const { return data != 0ULL; }
+
+        [[nodiscard]] constexpr int bitCount() const { return std::popcount(data); }
+
+        [[nodiscard]] constexpr int getLSB() const {
+            assert(data);
+            return std::countr_zero(data);
+        }
+
+        [[nodiscard]] constexpr int getMSB() const { return 63 - std::countl_zero(data); }
+
+        [[nodiscard]] constexpr int popLSB() {
+            const int lsbIndex = getLSB();
+            data &= data - 1;
+            return lsbIndex;
+        }
 
         constexpr bool operator==(const Bitboard &other) const { return data == other.data; }
         constexpr bool operator!=(const Bitboard &other) const { return data != other.data; }
