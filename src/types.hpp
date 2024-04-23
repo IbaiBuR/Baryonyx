@@ -12,14 +12,14 @@ using I16 = std::int16_t;
 using I32 = std::int32_t;
 
 enum class File : U8 {
-    A_FILE,
-    B_FILE,
-    C_FILE,
-    D_FILE,
-    E_FILE,
-    F_FILE,
-    G_FILE,
-    H_FILE,
+    FILE_A,
+    FILE_B,
+    FILE_C,
+    FILE_D,
+    FILE_E,
+    FILE_F,
+    FILE_G,
+    FILE_H,
     FILE_NB
 };
 
