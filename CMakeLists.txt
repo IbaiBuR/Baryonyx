@@ -7,6 +7,9 @@ set(CMAKE_CXX_FLAGS_DEBUG "-O0")
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
-file(GLOB SRCS "src/*.hpp" "src/*.cpp" "src/board/*.hpp" "src/board/*.cpp")
+file(GLOB SRCS
+        "src/*.hpp" "src/*.cpp"
+        "src/board/*.hpp" "src/board/*.cpp"
+        "src/board/bitboard/*.hpp" "src/board/bitboard/*.cpp")
 
 add_executable(NibbleCpp ${SRCS})
