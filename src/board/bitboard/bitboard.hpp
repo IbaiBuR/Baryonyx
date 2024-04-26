@@ -32,7 +32,7 @@ class Bitboard {
 
         [[nodiscard]] constexpr U64 asU64() const { return data; }
 
-        [[nodiscard]] constexpr bool empty() const { return data != 0ULL; }
+        [[nodiscard]] constexpr bool empty() const { return data == 0ULL; }
 
         [[nodiscard]] constexpr int bitCount() const { return std::popcount(data); }
 
@@ -48,6 +48,8 @@ class Bitboard {
             data &= data - 1;
             return lsbIndex;
         }
+
+        constexpr explicit operator bool() const { return data != 0ULL; }
 
         constexpr bool operator==(const Bitboard &other) const { return data == other.data; }
         constexpr bool operator!=(const Bitboard &other) const { return data != other.data; }
