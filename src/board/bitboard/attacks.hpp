@@ -284,4 +284,40 @@ constexpr std::array<Bitboard, static_cast<U8>(Square::SQUARE_NB)> kingAttacks =
      }
 };
 
+template <Direction d>
+constexpr Bitboard slidingAttacks(const Square sq, const Bitboard &occupied) {
+    Bitboard       attacks;
+    const Bitboard squareBB = Bitboard::fromSquare(sq);
+
+    for (Bitboard b = shift<d>(squareBB); !b.empty(); b = shift<d>(b))
+    {
+        attacks |= b;
+
+        if (b & occupied)
+            break;
+    }
+
+    return attacks;
+}
+
+template <PieceType pt>
+constexpr Bitboard genSliding(const Square sq, const Bitboard &occupied) {
+    assert(pt == PieceType::BISHOP || pt == PieceType::ROOK);
+
+    if constexpr (pt == PieceType::BISHOP)
+    {
+        return slidingAttacks<Direction::NORTH_EAST>(sq, occupied)
+             | slidingAttacks<Direction::NORTH_WEST>(sq, occupied)
+             | slidingAttacks<Direction::SOUTH_EAST>(sq, occupied)
+             | slidingAttacks<Direction::SOUTH_WEST>(sq, occupied);
+    }
+    else
+    {
+        return slidingAttacks<Direction::NORTH>(sq, occupied)
+             | slidingAttacks<Direction::SOUTH>(sq, occupied)
+             | slidingAttacks<Direction::EAST>(sq, occupied)
+             | slidingAttacks<Direction::WEST>(sq, occupied);
+    }
+}
+
 } // namespace Board::Bitboards::Attacks
