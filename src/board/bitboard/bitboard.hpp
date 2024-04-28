@@ -119,14 +119,14 @@ constexpr auto FileFBB = Bitboard(0x2020202020202020ULL);
 constexpr auto FileGBB = Bitboard(0x4040404040404040ULL);
 constexpr auto FileHBB = Bitboard(0x8080808080808080ULL);
 
-constexpr auto Rank1BB = Bitboard(0xFF00000000000000ULL);
-constexpr auto Rank2BB = Bitboard(0x00FF000000000000ULL);
-constexpr auto Rank3BB = Bitboard(0x0000FF0000000000ULL);
-constexpr auto Rank4BB = Bitboard(0x000000FF00000000ULL);
-constexpr auto Rank5BB = Bitboard(0x00000000FF000000ULL);
-constexpr auto Rank6BB = Bitboard(0x0000000000FF0000ULL);
-constexpr auto Rank7BB = Bitboard(0x000000000000FF00ULL);
-constexpr auto Rank8BB = Bitboard(0x00000000000000FFULL);
+constexpr auto Rank1BB = Bitboard(0x00000000000000FFULL);
+constexpr auto Rank2BB = Bitboard(0x000000000000FF00ULL);
+constexpr auto Rank3BB = Bitboard(0x0000000000FF0000ULL);
+constexpr auto Rank4BB = Bitboard(0x00000000FF000000ULL);
+constexpr auto Rank5BB = Bitboard(0x000000FF00000000ULL);
+constexpr auto Rank6BB = Bitboard(0x0000FF0000000000ULL);
+constexpr auto Rank7BB = Bitboard(0x00FF000000000000ULL);
+constexpr auto Rank8BB = Bitboard(0xFF00000000000000ULL);
 
 constexpr File fileOf(const Square sq) { return static_cast<File>(static_cast<U8>(sq) & 7); }
 constexpr Rank rankOf(const Square sq) { return static_cast<Rank>(static_cast<U8>(sq) >> 3); }
@@ -144,10 +144,10 @@ constexpr Bitboard shift(const Bitboard &bb) {
     switch (d)
     {
     case Direction::NORTH:
-        return Bitboard(bb >> 8);
+        return Bitboard(bb << 8);
         break;
     case Direction::SOUTH:
-        return Bitboard(bb << 8);
+        return Bitboard(bb >> 8);
         break;
     case Direction::EAST:
         return Bitboard(bb << 1) & ~Util::FileABB;
@@ -156,16 +156,16 @@ constexpr Bitboard shift(const Bitboard &bb) {
         return Bitboard(bb >> 1) & ~Util::FileHBB;
         break;
     case Direction::NORTH_EAST:
-        return Bitboard(bb >> 7) & ~Util::FileABB;
-        break;
-    case Direction::NORTH_WEST:
-        return Bitboard(bb >> 9) & ~Util::FileHBB;
-        break;
-    case Direction::SOUTH_EAST:
         return Bitboard(bb << 9) & ~Util::FileABB;
         break;
-    case Direction::SOUTH_WEST:
+    case Direction::NORTH_WEST:
         return Bitboard(bb << 7) & ~Util::FileHBB;
+        break;
+    case Direction::SOUTH_EAST:
+        return Bitboard(bb >> 7) & ~Util::FileABB;
+        break;
+    case Direction::SOUTH_WEST:
+        return Bitboard(bb >> 9) & ~Util::FileHBB;
         break;
     default:
         return Bitboard(0ULL);
