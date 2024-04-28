@@ -4,3 +4,5 @@ cmake-build-debug/*
 cmake-build-release/*
 CMakeCache.txt
 cmake_install.cmake
+tests/cmake-build-release/*
+tests/cmake-build-debug/*
