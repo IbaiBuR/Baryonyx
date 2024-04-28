@@ -8,9 +8,9 @@ namespace Board::Bitboards {
 void printBB(const Bitboard bitboard) {
     std::cout << std::endl;
 
-    for (U8 rank = 0; rank < 8; rank++)
+    for (int rank = 7; rank >= 0; rank--)
     {
-        std::cout << " " << 8 - rank << " ";
+        std::cout << " " << rank + 1 << " ";
 
         for (U8 file = 0; file < 8; file++)
         {
