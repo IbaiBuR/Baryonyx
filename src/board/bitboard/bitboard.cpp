@@ -21,8 +21,8 @@ void printBB(const Bitboard bitboard) {
         std::cout << std::endl;
     }
     std::cout << std::endl << "    a b c d e f g h" << std::endl << std::endl;
-    std::cout << "    Bitboard: 0x" << std::hex << std::setw(16) << std::setfill('0')
-              << bitboard.asU64() << "ULL" << std::endl
+    std::cout << "    Bitboard: 0x" << std::uppercase << std::hex << std::setw(16)
+              << std::setfill('0') << bitboard.asU64() << "ULL" << std::endl
               << std::endl;
 }
 
