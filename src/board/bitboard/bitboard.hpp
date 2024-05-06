@@ -110,6 +110,8 @@ class Bitboard {
 
 namespace Util {
 
+constexpr auto EmptyBB = Bitboard(0ULL);
+
 constexpr auto FileABB = Bitboard(0x101010101010101ULL);
 constexpr auto FileBBB = Bitboard(0x202020202020202ULL);
 constexpr auto FileCBB = Bitboard(0x404040404040404ULL);
