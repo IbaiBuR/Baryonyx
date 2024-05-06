@@ -6,6 +6,12 @@
 
 namespace Board::Bitboards::Magics {
 
+struct MagicEntry {
+    Bitboard mask;
+    U64 magic;
+    U8 index;
+};
+
 constexpr std::array<Bitboard, static_cast<U8>(Square::SQUARE_NB)> bishopMasks = {
     {
      Bitboard(0x0040201008040200ULL), Bitboard(0x0000402010080400ULL),
