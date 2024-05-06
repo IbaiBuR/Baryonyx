@@ -2,18 +2,16 @@
 
 #include <array>
 
-#include "../types.hpp"
 #include "bitboard/bitboard.hpp"
 
 namespace Board {
 
-class CastlingRights {
-    public:
-        CastlingRights() :
-            rights(0){};
-
-    private:
-        U8 rights;
+enum class CastlingRights : U8 {
+    NONE,
+    WK = 1,
+    WQ = 2,
+    BK = 4,
+    BQ = 8,
 };
 
 class Position {
@@ -21,6 +19,7 @@ class Position {
         Position() :
             stm(Color::WHITE),
             epSq(Square::NO_SQ),
+            castling(CastlingRights::NONE),
             halfMoveClock(0),
             fullMoveNumver(1),
             pieces() {
