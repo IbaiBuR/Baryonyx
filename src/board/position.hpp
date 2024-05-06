@@ -34,8 +34,8 @@ class Position {
         Color                                                                     stm;
         Square                                                                    epSq;
         CastlingRights                                                            castling;
-        U16                                                                       halfMoveClock;
-        U32                                                                       fullMoveNumver;
+        U8                                                                        halfMoveClock;
+        U16                                                                       fullMoveNumver;
         std::array<Bitboards::Bitboard, static_cast<U8>(PieceType::PIECETYPE_NB)> pieceBB;
         std::array<Bitboards::Bitboard, static_cast<U8>(Color::COLOR_NB)>         occupiedBB;
         std::array<Piece, static_cast<U8>(Square::SQUARE_NB)>                     pieces;
