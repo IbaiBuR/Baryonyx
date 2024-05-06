@@ -19,7 +19,6 @@ class CastlingRights {
 class Position {
     public:
         Position() :
-            checkersBB(Bitboards::Util::EmptyBB),
             stm(Color::WHITE),
             epSq(Square::NO_SQ),
             halfMoveClock(0),
