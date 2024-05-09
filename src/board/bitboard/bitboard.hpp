@@ -141,6 +141,10 @@ constexpr Square squareOf(const U8 file, const U8 rank) {
 
 void printBB(Bitboard bitboard);
 
+/// @brief Shifts a bitboard to the specified direction
+/// @tparam d Direction to shift the bitboard to
+/// @param bb Bitboard to shift
+/// @returns The shifted bitboard
 template <Direction d>
 constexpr Bitboard shift(const Bitboard &bb) {
     switch (d)

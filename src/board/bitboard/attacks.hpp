@@ -292,6 +292,11 @@ constexpr std::array<Bitboard, static_cast<U8>(Square::SQUARE_NB)> kingAttacks =
      }
 };
 
+/// @brief Creates the sliding attacks for the specified direction
+/// @tparam d Direction to create the attacks
+/// @param sq Square to generate the attacks from
+/// @param occupied Bitboard of occupied squares in the board (Blockers)
+/// @returns A bitboard with the sliding attacks on the given direction
 template <Direction d>
 constexpr Bitboard slidingAttacks(const Square sq, const Bitboard &occupied) {
     Bitboard attacks;
@@ -307,6 +312,13 @@ constexpr Bitboard slidingAttacks(const Square sq, const Bitboard &occupied) {
     return attacks;
 }
 
+/// @brief Generates the possible moves for sliding pieces
+/// @tparam pt Piece type (Slider)
+/// @param sq Square to generate the attacks from
+/// @param occupied Bitboard of occupied squares in the board (Blockers)
+/// @returns A bitboard with the generated sliding attacks
+/// @note An assert is used to ensure the function is only used with sliders. The queen is not
+/// included since we can obtain it by combining the attacks of the bishop and the rook
 template <PieceType pt>
 constexpr Bitboard genSliding(const Square sq, const Bitboard &occupied) {
     assert(pt == PieceType::BISHOP || pt == PieceType::ROOK);
