@@ -8,7 +8,7 @@
 
 namespace Board::Bitboards::Magics {
 
-/// @brief Utility for magic bitboards used to generate all the blocker combinations of a mask
+/// @brief Utility used to generate all the blocker combinations of a mask
 /// @param index Index for blocker configuration
 /// @param nBits Number of bits set in the mask
 /// @param mask Attack mask
