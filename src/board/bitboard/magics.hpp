@@ -7,9 +7,9 @@
 namespace Board::Bitboards::Magics {
 
 struct MagicEntry {
-    Bitboard mask;
-    U64 magic;
-    U8 index;
+        Bitboard mask;
+        U64      magic;
+        int      shift;
 };
 
 constexpr std::array<Bitboard, static_cast<U8>(Square::SQUARE_NB)> bishopMasks = {
@@ -85,5 +85,7 @@ constexpr std::array<Bitboard, static_cast<U8>(Square::SQUARE_NB)> rookMasks = {
      Bitboard(0x3E40404040404000ULL), Bitboard(0x7E80808080808000ULL),
      }
 };
+
+void printMagics();
 
 } // namespace Board::Bitboards::Magics
