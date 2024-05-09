@@ -1,6 +1,6 @@
 #include "bitboard.hpp"
 
-#include <iomanip>
+#include <format>
 #include <iostream>
 
 namespace Board::Bitboards {
@@ -21,9 +21,7 @@ void printBB(const Bitboard bitboard) {
         std::cout << std::endl;
     }
     std::cout << std::endl << "    a b c d e f g h" << std::endl << std::endl;
-    std::cout << "    Bitboard: 0x" << std::uppercase << std::hex << std::setw(16)
-              << std::setfill('0') << bitboard.asU64() << "ULL" << std::endl
-              << std::endl;
+    std::cout << std::format("    Bitboard: 0x{:016X}", bitboard.asU64()) << std::endl << std::endl;
 }
 
 } // namespace Board::Bitboards
