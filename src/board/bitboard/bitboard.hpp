@@ -81,6 +81,11 @@ class Bitboard {
             return *this;
         }
 
+        constexpr Bitboard operator*=(const U64 value) {
+            data *= value;
+            return *this;
+        }
+
         constexpr Bitboard operator|=(const Bitboard &other) {
             data |= other.data;
             return *this;
