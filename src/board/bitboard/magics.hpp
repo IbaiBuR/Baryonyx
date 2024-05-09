@@ -221,5 +221,6 @@ constexpr std::array<MagicEntry, static_cast<U8>(Square::SQUARE_NB)> rookMagics{
 };
 
 void printMagics();
+int magicIndex(const MagicEntry &entry, Bitboard &occupied);
 
 } // namespace Board::Bitboards::Magics
