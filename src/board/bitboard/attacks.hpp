@@ -292,6 +292,8 @@ constexpr std::array<Bitboard, static_cast<U8>(Square::SQUARE_NB)> kingAttacks =
      }
 };
 
+void init();
+
 /// @brief Creates the sliding attacks for the specified direction
 /// @tparam d Direction to create the attacks
 /// @param sq Square to generate the attacks from
