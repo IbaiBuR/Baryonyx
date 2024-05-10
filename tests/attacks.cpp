@@ -35,10 +35,15 @@ TEST_SUITE("Attacks Test") {
     }
 
     TEST_CASE("sliding attacks") {
+        Attacks::init();
         SUBCASE("bishop attacks") {
             CHECK(Attacks::genSliding<PieceType::BISHOP>(Square::E4, Bitboard(0x440000004400ULL))
                   == Bitboard(0x442800284400ULL));
             CHECK(Attacks::genSliding<PieceType::BISHOP>(Square::D4, Bitboard(0x40020000002200ULL))
+                  == Bitboard(0x40221400142200ULL));
+            CHECK(Attacks::getBishopAttacks(Square::E4, Bitboard(0x440000004400ULL))
+                  == Bitboard(0x442800284400ULL));
+            CHECK(Attacks::getBishopAttacks(Square::D4, Bitboard(0x40020000002200ULL))
                   == Bitboard(0x40221400142200ULL));
         }
 
@@ -46,6 +51,10 @@ TEST_SUITE("Attacks Test") {
             CHECK(Attacks::genSliding<PieceType::ROOK>(Square::E4, Bitboard(0x10000042001000ULL))
                   == Bitboard(0x1010106E101000ULL));
             CHECK(Attacks::genSliding<PieceType::ROOK>(Square::E2, Bitboard(0x10000000004200ULL))
+                  == Bitboard(0x10101010106E10ULL));
+            CHECK(Attacks::getRookAttacks(Square::E4, Bitboard(0x10000042001000ULL))
+                  == Bitboard(0x1010106E101000ULL));
+            CHECK(Attacks::getRookAttacks(Square::E2, Bitboard(0x10000000004200ULL))
                   == Bitboard(0x10101010106E10ULL));
         }
     }
