@@ -1,7 +1,7 @@
-#include <iostream>
+#include "board/bitboard/attacks.hpp"
 
 int main()
 {
-    std::cout << "Hello, World!" << std::endl;
+    Board::Bitboards::Attacks::init();
     return 0;
 }
