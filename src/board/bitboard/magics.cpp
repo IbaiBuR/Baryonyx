@@ -136,7 +136,7 @@ void printMagics() {
 
 /// @brief Generates an index to map an attack table
 /// @param entry MagicEntry
-/// @param occupied Bitboard of occupied squares in the board (Blockers)
+/// @param occupied Bitboard of occupied squares on the board (Blockers)
 /// @returns The index
 int magicIndex(const MagicEntry &entry, Bitboard &occupied) {
     occupied &= entry.mask;
