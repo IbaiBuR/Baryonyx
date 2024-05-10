@@ -39,5 +39,15 @@ void init() {
     initSliders<PieceType::ROOK>();
 }
 
+Bitboard getBishopAttacks(Square sq, Bitboard blockers) {
+    return bishopAttacks[static_cast<U8>(sq)]
+                        [magicIndex(Magics::bishopMagics[static_cast<U8>(sq)], blockers)];
+}
+
+Bitboard getRookAttacks(Square sq, Bitboard blockers) {
+    return rookAttacks[static_cast<U8>(sq)]
+                      [magicIndex(Magics::rookMagics[static_cast<U8>(sq)], blockers)];
+}
+
 
 } // namespace Board::Bitboards::Attacks
