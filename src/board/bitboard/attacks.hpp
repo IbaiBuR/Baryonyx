@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <stdexcept>
 
 #include "bitboard.hpp"
 
@@ -341,6 +342,39 @@ constexpr Bitboard genSliding(const Square sq, const Bitboard &occupied) {
              | slidingAttacks<Direction::SOUTH>(sq, occupied)
              | slidingAttacks<Direction::EAST>(sq, occupied)
              | slidingAttacks<Direction::WEST>(sq, occupied);
+    }
+}
+
+/// @brief Generates the possible attacks for a given piece type on a given square
+/// @tparam pt Piece type
+/// @param sq Square to generate the attacks from
+/// @param occupied Bitboard of occupied squares on the board (Blockers)
+/// @returns A bitboard representing the squares that the piece can attack from the given square
+/// @throws std::invalid_argument If an invalid piece type is provided
+/// @note Pawns are not taken into account since this function is primarily used during movegen
+/// and pawns are treated separately there
+template <PieceType pt>
+constexpr Bitboard getAttacksByPieceType(const Square sq, const Bitboard occupied) {
+    switch (pt)
+    {
+    case PieceType::KNIGHT:
+        return knightAttacks[static_cast<U8>(sq)];
+        break;
+    case PieceType::KING:
+        return kingAttacks[static_cast<U8>(sq)];
+        break;
+    case PieceType::BISHOP:
+        return getBishopAttacks(sq, occupied);
+        break;
+    case PieceType::ROOK:
+        return getRookAttacks(sq, occupied);
+        break;
+    case PieceType::QUEEN:
+        return getBishopAttacks(sq, occupied) | getRookAttacks(sq, occupied);
+        break;
+    default:
+        throw std::invalid_argument("Invalid piece type provided.");
+        break;
     }
 }
 
