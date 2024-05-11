@@ -4,9 +4,9 @@
 
 namespace Board::Bitboards::Attacks {
 
-std::array<std::array<Bitboard, maxBishopBlockersConfig>, static_cast<U8>(Square::SQUARE_NB)>
+std::array<std::array<Bitboard, maxBishopBlockersConfig>, std::to_underlying(Square::SQUARE_NB)>
     bishopAttacks;
-std::array<std::array<Bitboard, maxRookBlockersConfig>, static_cast<U8>(Square::SQUARE_NB)>
+std::array<std::array<Bitboard, maxRookBlockersConfig>, std::to_underlying(Square::SQUARE_NB)>
     rookAttacks;
 
 /// @brief Initializes the sliding attacks lookup tables
@@ -15,7 +15,7 @@ template <PieceType pt>
 constexpr void initSliders() {
     constexpr bool isBishop = pt == PieceType::BISHOP;
 
-    for (U8 sq = 0; sq < static_cast<U8>(Square::SQUARE_NB); sq++)
+    for (U8 sq = 0; sq < std::to_underlying(Square::SQUARE_NB); sq++)
     {
         auto [mask, magic, shift] = isBishop ? Magics::bishopMagics[sq] : Magics::rookMagics[sq];
         const int nBits           = mask.bitCount();
@@ -39,14 +39,14 @@ void init() {
     initSliders<PieceType::ROOK>();
 }
 
-Bitboard getBishopAttacks(Square sq, Bitboard blockers) {
-    return bishopAttacks[static_cast<U8>(sq)]
-                        [magicIndex(Magics::bishopMagics[static_cast<U8>(sq)], blockers)];
+Bitboard getBishopAttacks(const Square sq, Bitboard blockers) {
+    return bishopAttacks[std::to_underlying(sq)]
+                        [magicIndex(Magics::bishopMagics[std::to_underlying(sq)], blockers)];
 }
 
-Bitboard getRookAttacks(Square sq, Bitboard blockers) {
-    return rookAttacks[static_cast<U8>(sq)]
-                      [magicIndex(Magics::rookMagics[static_cast<U8>(sq)], blockers)];
+Bitboard getRookAttacks(const Square sq, Bitboard blockers) {
+    return rookAttacks[std::to_underlying(sq)]
+                      [magicIndex(Magics::rookMagics[std::to_underlying(sq)], blockers)];
 }
 
 

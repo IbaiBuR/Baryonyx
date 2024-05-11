@@ -3,6 +3,7 @@
 #include <format>
 #include <iostream>
 #include <random>
+#include <utility>
 
 #include "attacks.hpp"
 
@@ -68,7 +69,7 @@ constexpr MagicEntry findMagic(const Square sq) {
         isBishop ? Attacks::maxBishopBlockersConfig : Attacks::maxRookBlockersConfig;
 
     const Bitboard mask =
-        isBishop ? bishopMasks[static_cast<U8>(sq)] : rookMasks[static_cast<U8>(sq)];
+        isBishop ? bishopMasks[std::to_underlying(sq)] : rookMasks[std::to_underlying(sq)];
     const int relevantBits   = mask.bitCount();
     const int numOccupancies = 1 << relevantBits;
 
@@ -108,9 +109,9 @@ constexpr MagicEntry findMagic(const Square sq) {
 
 template <PieceType pt>
 constexpr void printMagicsByPieceType() {
-    std::cout << std::format("{} {} {}",
-                             "constexpr std::array<MagicEntry, static_cast<U8>(Square::SQUARE_NB)>",
-                             pt == PieceType::BISHOP ? "bishopMagics" : "rookMagics", "{")
+    std::cout << std::format(
+        "{} {} {}", "constexpr std::array<MagicEntry, std::to_underlying(Square::SQUARE_NB)>",
+        pt == PieceType::BISHOP ? "bishopMagics" : "rookMagics", "{")
               << std::endl
               << " {" << std::endl;
 

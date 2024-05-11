@@ -2,6 +2,7 @@
 
 #include <array>
 #include <stdexcept>
+#include <utility>
 
 #include "bitboard.hpp"
 
@@ -10,12 +11,14 @@ namespace Board::Bitboards::Attacks {
 constexpr int maxBishopBlockersConfig = 1 << 9;
 constexpr int maxRookBlockersConfig   = 1 << 12;
 
-extern std::array<std::array<Bitboard, maxBishopBlockersConfig>, static_cast<U8>(Square::SQUARE_NB)>
+extern std::array<std::array<Bitboard, maxBishopBlockersConfig>,
+                  std::to_underlying(Square::SQUARE_NB)>
     bishopAttacks;
-extern std::array<std::array<Bitboard, maxRookBlockersConfig>, static_cast<U8>(Square::SQUARE_NB)>
+extern std::array<std::array<Bitboard, maxRookBlockersConfig>,
+                  std::to_underlying(Square::SQUARE_NB)>
     rookAttacks;
 
-constexpr std::array<Bitboard, static_cast<U8>(Square::SQUARE_NB)> whitePawnAttacks = {
+constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> whitePawnAttacks = {
     {
      Bitboard(0x200ULL),
      Bitboard(0x500ULL),
@@ -84,7 +87,7 @@ constexpr std::array<Bitboard, static_cast<U8>(Square::SQUARE_NB)> whitePawnAtta
      }
 };
 
-constexpr std::array<Bitboard, static_cast<U8>(Square::SQUARE_NB)> blackPawnAttacks = {
+constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> blackPawnAttacks = {
     {
      Bitboard(0x0ULL),
      Bitboard(0x0ULL),
@@ -155,7 +158,7 @@ constexpr std::array<Bitboard, static_cast<U8>(Square::SQUARE_NB)> blackPawnAtta
 
 constexpr std::array pawnAttacks = {whitePawnAttacks, blackPawnAttacks};
 
-constexpr std::array<Bitboard, static_cast<U8>(Square::SQUARE_NB)> knightAttacks = {
+constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> knightAttacks = {
     {
      Bitboard(0x20400ULL),
      Bitboard(0x50800ULL),
@@ -224,7 +227,7 @@ constexpr std::array<Bitboard, static_cast<U8>(Square::SQUARE_NB)> knightAttacks
      }
 };
 
-constexpr std::array<Bitboard, static_cast<U8>(Square::SQUARE_NB)> kingAttacks = {
+constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> kingAttacks = {
     {
      Bitboard(0x302ULL),
      Bitboard(0x705ULL),
@@ -358,10 +361,10 @@ constexpr Bitboard getAttacksByPieceType(const Square sq, const Bitboard occupie
     switch (pt)
     {
     case PieceType::KNIGHT:
-        return knightAttacks[static_cast<U8>(sq)];
+        return knightAttacks[std::to_underlying(sq)];
         break;
     case PieceType::KING:
-        return kingAttacks[static_cast<U8>(sq)];
+        return kingAttacks[std::to_underlying(sq)];
         break;
     case PieceType::BISHOP:
         return getBishopAttacks(sq, occupied);

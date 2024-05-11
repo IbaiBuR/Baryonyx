@@ -2,6 +2,7 @@
 
 #include <bit>
 #include <cassert>
+#include <utility>
 
 #include "../../types.hpp"
 
@@ -15,19 +16,19 @@ class Bitboard {
             data(bb){};
 
         static constexpr Bitboard fromSquare(const Square sq) {
-            return Bitboard(1ULL << static_cast<U8>(sq));
+            return Bitboard(1ULL << std::to_underlying(sq));
         }
 
         static constexpr bool isBitSet(const Bitboard &bitboard, const Square sq) {
-            return static_cast<bool>(bitboard.data & 1ULL << static_cast<U8>(sq));
+            return static_cast<bool>(bitboard.data & 1ULL << std::to_underlying(sq));
         }
 
         static constexpr void setBit(Bitboard &bitboard, const Square sq) {
-            bitboard.data |= 1ULL << static_cast<U8>(sq);
+            bitboard.data |= 1ULL << std::to_underlying(sq);
         }
 
         static constexpr void clearBit(Bitboard &bitboard, const Square sq) {
-            bitboard.data &= ~(1ULL << static_cast<U8>(sq));
+            bitboard.data &= ~(1ULL << std::to_underlying(sq));
         }
 
         [[nodiscard]] constexpr U64 asU64() const { return data; }
@@ -135,8 +136,8 @@ constexpr auto Rank6BB = Bitboard(0x0000FF0000000000ULL);
 constexpr auto Rank7BB = Bitboard(0x00FF000000000000ULL);
 constexpr auto Rank8BB = Bitboard(0xFF00000000000000ULL);
 
-constexpr File fileOf(const Square sq) { return static_cast<File>(static_cast<U8>(sq) & 7); }
-constexpr Rank rankOf(const Square sq) { return static_cast<Rank>(static_cast<U8>(sq) >> 3); }
+constexpr File fileOf(const Square sq) { return static_cast<File>(std::to_underlying(sq) & 7); }
+constexpr Rank rankOf(const Square sq) { return static_cast<Rank>(std::to_underlying(sq) >> 3); }
 
 constexpr Square squareOf(const U8 file, const U8 rank) {
     return static_cast<Square>((rank << 3) + file);

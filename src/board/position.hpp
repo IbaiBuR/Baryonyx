@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <utility>
 
 #include "bitboard/bitboard.hpp"
 
@@ -29,15 +30,15 @@ class Position {
         }
 
     private:
-        Bitboards::Bitboard                                                       checkersBB;
-        Color                                                                     stm;
-        Square                                                                    epSq;
-        CastlingRights                                                            castling;
-        U8                                                                        halfMoveClock;
-        U16                                                                       fullMoveNumver;
-        std::array<Bitboards::Bitboard, static_cast<U8>(PieceType::PIECETYPE_NB)> pieceBB;
-        std::array<Bitboards::Bitboard, static_cast<U8>(Color::COLOR_NB)>         occupiedBB;
-        std::array<Piece, static_cast<U8>(Square::SQUARE_NB)>                     pieces;
+        Bitboards::Bitboard                                                          checkersBB;
+        Color                                                                        stm;
+        Square                                                                       epSq;
+        CastlingRights                                                               castling;
+        U8                                                                           halfMoveClock;
+        U16                                                                          fullMoveNumver;
+        std::array<Bitboards::Bitboard, std::to_underlying(PieceType::PIECETYPE_NB)> pieceBB;
+        std::array<Bitboards::Bitboard, std::to_underlying(Color::COLOR_NB)>         occupiedBB;
+        std::array<Piece, std::to_underlying(Square::SQUARE_NB)>                     pieces;
 };
 
 } // namespace Board

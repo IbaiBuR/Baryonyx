@@ -15,9 +15,9 @@ TEST_SUITE("Bitboards Tests") {
     }
 
     TEST_CASE("squareOf") {
-        CHECK(Util::squareOf(static_cast<U8>(File::FILE_A), static_cast<U8>(Rank::RANK_1))
+        CHECK(Util::squareOf(std::to_underlying(File::FILE_A), std::to_underlying(Rank::RANK_1))
               == Square::A1);
-        CHECK(Util::squareOf(static_cast<U8>(File::FILE_H), static_cast<U8>(Rank::RANK_8))
+        CHECK(Util::squareOf(std::to_underlying(File::FILE_H), std::to_underlying(Rank::RANK_8))
               == Square::H8);
     }
 
