@@ -1,7 +1,7 @@
 CC = $(COMP)
 SRCS = src/*.cpp src/board/*.cpp src/board/bitboard/*.cpp
 HEADERS = src/*.hpp src/board/*.hpp src/board/bitboard/*.hpp
-CXXFLAGS = -O3 -DNDEBUG -std=c++20 -march=native -Wall -Wextra
+CXXFLAGS = -O3 -DNDEBUG -std=c++23 -march=native -Wall -Wextra
 EXE = nibblecpp
 
 .PHONY: all clean debug format
