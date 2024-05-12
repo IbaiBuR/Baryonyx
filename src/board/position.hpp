@@ -23,8 +23,6 @@ class Position {
             halfMoveClock(0),
             fullMoveNumver(1),
             pieces() {
-            pieceBB.fill(Bitboards::Util::EmptyBB);
-            occupiedBB.fill(Bitboards::Util::EmptyBB);
             pieces.fill(Piece::NO_PIECE);
         }
 
