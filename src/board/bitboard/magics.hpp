@@ -87,7 +87,7 @@ constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> rookMasks 
      }
 };
 
-constexpr std::array<MagicEntry, std::to_underlying(Square::SQUARE_NB)> bishopMagics{
+constexpr std::array<MagicEntry, std::to_underlying(Square::SQUARE_NB)> bishopMagics = {
     {MagicEntry(Bitboard(0x0040201008040200ULL), 0x020A262403220200ULL, 58),
      MagicEntry(Bitboard(0x0000402010080400ULL), 0x4004810801010082ULL, 59),
      MagicEntry(Bitboard(0x0000004020100A00ULL), 0x1316040902089000ULL, 59),
@@ -154,7 +154,7 @@ constexpr std::array<MagicEntry, std::to_underlying(Square::SQUARE_NB)> bishopMa
      MagicEntry(Bitboard(0x0040201008040200ULL), 0x020A262403220200ULL, 58)}
 };
 
-constexpr std::array<MagicEntry, std::to_underlying(Square::SQUARE_NB)> rookMagics{
+constexpr std::array<MagicEntry, std::to_underlying(Square::SQUARE_NB)> rookMagics = {
     {MagicEntry(Bitboard(0x000101010101017EULL), 0x00800284A050C000ULL, 52),
      MagicEntry(Bitboard(0x000202020202027CULL), 0x0840021008200240ULL, 53),
      MagicEntry(Bitboard(0x000404040404047AULL), 0x0100084020001100ULL, 53),
