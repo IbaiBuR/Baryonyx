@@ -1,27 +1,25 @@
 #include "bitboard.hpp"
 
-#include <format>
-#include <iostream>
+#include <print>
 
 namespace Board::Bitboards {
 
 void printBB(const Bitboard bitboard) {
-    std::cout << std::endl;
+    std::println("");
 
     for (int rank = 7; rank >= 0; rank--)
     {
-        std::cout << " " << rank + 1 << " ";
+        std::print(" {} ", rank + 1);
 
         for (U8 file = 0; file < 8; file++)
         {
-            std::cout << " "
-                      << (Bitboard::isBitSet(bitboard, Util::squareOf(file, rank)) ? '1' : '0');
+            std::print(" {}", Bitboard::isBitSet(bitboard, Util::squareOf(file, rank)) ? '1' : '0');
         }
 
-        std::cout << std::endl;
+        std::println("");
     }
-    std::cout << std::endl << "    a b c d e f g h" << std::endl << std::endl;
-    std::cout << std::format("    Bitboard: 0x{:016X}", bitboard.asU64()) << std::endl << std::endl;
+    std::println("\n    a b c d e f g h\n");
+    std::println("    Bitboard: 0x{:016X}\n", bitboard.asU64());
 }
 
 } // namespace Board::Bitboards
