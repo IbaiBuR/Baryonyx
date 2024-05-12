@@ -26,6 +26,17 @@ class Position {
             pieces.fill(Piece::NO_PIECE);
         }
 
+        [[nodiscard]] Bitboards::Bitboard checkers() const { return checkersBB; }
+        [[nodiscard]] Color               sideToMove() const { return stm; }
+        [[nodiscard]] Square              epSquare() const { return epSq; }
+        [[nodiscard]] CastlingRights      castlingRights() const { return castling; }
+        [[nodiscard]] U8                  fiftyMoveRule() const { return halfMoveClock; }
+        [[nodiscard]] U16                 fullMoves() const { return fullMoveNumver; }
+
+        [[nodiscard]] Piece pieceOn(const Square sq) const {
+            return pieces[std::to_underlying(sq)];
+        }
+
     private:
         Bitboards::Bitboard                                                          checkersBB;
         Color                                                                        stm;
