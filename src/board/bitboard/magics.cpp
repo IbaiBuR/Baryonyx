@@ -1,10 +1,7 @@
 #include "magics.hpp"
 
-#include <format>
-#include <iostream>
 #include <print>
 #include <random>
-#include <utility>
 
 #include "attacks.hpp"
 

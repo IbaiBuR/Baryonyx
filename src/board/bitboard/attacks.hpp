@@ -2,7 +2,6 @@
 
 #include <array>
 #include <stdexcept>
-#include <utility>
 
 #include "bitboard.hpp"
 
