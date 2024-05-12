@@ -12,6 +12,7 @@ enum class CastlingRights : U8 {
     WQ = 2,
     BK = 4,
     BQ = 8,
+    ALL = 15
 };
 
 class Position {
