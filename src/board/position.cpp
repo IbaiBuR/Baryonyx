@@ -1,3 +1,9 @@
 #include "position.hpp"
 
-namespace Board {}
+namespace Board {
+
+Position::Position(const std::string &fen) {
+
+}
+
+} // namespace Board

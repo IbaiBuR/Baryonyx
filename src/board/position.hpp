@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <string>
 
 #include "bitboard/bitboard.hpp"
 
@@ -26,6 +27,8 @@ class Position {
             pieces() {
             pieces.fill(Piece::NO_PIECE);
         }
+
+        explicit Position(const std::string &fen);
 
         [[nodiscard]] Bitboards::Bitboard checkers() const { return checkersBB; }
         [[nodiscard]] Color               sideToMove() const { return stm; }
