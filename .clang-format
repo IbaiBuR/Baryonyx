@@ -59,7 +59,7 @@ BitFieldColonSpacing: After
 BraceWrapping:
   AfterCaseLabel: false
   AfterClass: false
-  AfterControlStatement: Always
+  AfterControlStatement: Never
   AfterEnum: false
   AfterExternBlock: false
   AfterFunction: false
