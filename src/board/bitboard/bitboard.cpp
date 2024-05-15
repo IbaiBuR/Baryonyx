@@ -7,12 +7,10 @@ namespace Board::Bitboards {
 void printBB(const Bitboard bitboard) {
     std::println("");
 
-    for (int rank = 7; rank >= 0; rank--)
-    {
+    for (int rank = 7; rank >= 0; rank--) {
         std::print(" {} ", rank + 1);
 
-        for (U8 file = 0; file < 8; file++)
-        {
+        for (U8 file = 0; file < 8; file++) {
             std::print(" {}", Bitboard::isBitSet(bitboard, Util::squareOf(file, rank)) ? '1' : '0');
         }
 

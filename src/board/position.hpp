@@ -27,10 +27,8 @@ class CastlingRights {
 
         constexpr explicit CastlingRights(const std::string &flags) :
             castlingFlags(Flags::NONE) {
-            for (const char c : flags)
-            {
-                switch (c)
-                {
+            for (const char c : flags) {
+                switch (c) {
                 case 'K':
                     *this |= CastlingRights(Flags::WK);
                     break;

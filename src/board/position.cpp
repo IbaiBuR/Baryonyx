@@ -18,14 +18,11 @@ Position::Position(const std::string &fen) {
     const auto ranks = Utils::splitString(tokens[0], '/');
 
     int square = std::to_underlying(Square::A8);
-    for (const auto &rank : ranks)
-    {
-        for (const auto c : rank)
-        {
+    for (const auto &rank : ranks) {
+        for (const auto c : rank) {
             if (std::isdigit(c))
                 square += c - '0';
-            else
-            {
+            else {
                 const auto  sq         = static_cast<Square>(square);
                 const Color pieceColor = std::islower(c) ? Color::BLACK : Color::WHITE;
                 const Piece piece      = Pieces::charToPiece.at(c);
@@ -52,10 +49,8 @@ Position::Position(const std::string &fen) {
 void printBoard(const Position &pos) {
     std::println("\n +---+---+---+---+---+---+---+---+");
 
-    for (int rank = 7; rank >= 0; rank--)
-    {
-        for (int file = 0; file < 8; file++)
-        {
+    for (int rank = 7; rank >= 0; rank--) {
+        for (int file = 0; file < 8; file++) {
             const auto  sq           = Bitboards::Util::squareOf(file, rank);
             const Piece currentPiece = pos.pieceOn(sq);
             std::print(" | {}", currentPiece == Piece::NO_PIECE

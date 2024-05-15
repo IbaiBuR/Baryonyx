@@ -309,8 +309,7 @@ template <Direction d>
 constexpr Bitboard slidingAttacks(const Square sq, const Bitboard &occupied) {
     Bitboard attacks;
 
-    for (Bitboard b = shift<d>(Bitboard::fromSquare(sq)); !b.empty(); b = shift<d>(b))
-    {
+    for (Bitboard b = shift<d>(Bitboard::fromSquare(sq)); !b.empty(); b = shift<d>(b)) {
         attacks |= b;
 
         if (b & occupied)
@@ -331,15 +330,13 @@ template <PieceType pt>
 constexpr Bitboard genSliding(const Square sq, const Bitboard &occupied) {
     assert(pt == PieceType::BISHOP || pt == PieceType::ROOK);
 
-    if constexpr (pt == PieceType::BISHOP)
-    {
+    if constexpr (pt == PieceType::BISHOP) {
         return slidingAttacks<Direction::NORTH_EAST>(sq, occupied)
              | slidingAttacks<Direction::NORTH_WEST>(sq, occupied)
              | slidingAttacks<Direction::SOUTH_EAST>(sq, occupied)
              | slidingAttacks<Direction::SOUTH_WEST>(sq, occupied);
     }
-    else
-    {
+    else {
         return slidingAttacks<Direction::NORTH>(sq, occupied)
              | slidingAttacks<Direction::SOUTH>(sq, occupied)
              | slidingAttacks<Direction::EAST>(sq, occupied)
@@ -357,8 +354,7 @@ constexpr Bitboard genSliding(const Square sq, const Bitboard &occupied) {
 /// and pawns are treated separately there
 template <PieceType pt>
 constexpr Bitboard getAttacksByPieceType(const Square sq, const Bitboard occupied) {
-    switch (pt)
-    {
+    switch (pt) {
     case PieceType::KNIGHT:
         return knightAttacks[std::to_underlying(sq)];
         break;

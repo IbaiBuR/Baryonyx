@@ -153,8 +153,7 @@ void printBB(Bitboard bitboard);
 /// @returns The shifted bitboard
 template <Direction d>
 constexpr Bitboard shift(const Bitboard &bb) {
-    switch (d)
-    {
+    switch (d) {
     case Direction::NORTH:
         return Bitboard(bb << 8);
         break;
