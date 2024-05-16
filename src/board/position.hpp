@@ -112,12 +112,7 @@ class Position {
             return pieceBB[std::to_underlying(pt)];
         }
 
-        void setPiece(const Piece piece, const Square sq, const Color c) {
-            pieces[std::to_underlying(sq)] = piece;
-            Bitboards::Bitboard::setBit(
-                pieceBB[std::to_underlying(Pieces::pieceToPieceType.at(piece))], sq);
-            Bitboards::Bitboard::setBit(occupiedBB[std::to_underlying(c)], sq);
-        }
+        void setPiece(Piece p, Square sq, Color c);
 
     private:
         Bitboards::Bitboard                                                          checkersBB;

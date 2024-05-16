@@ -46,6 +46,12 @@ Position::Position(const std::string &fen) {
     this->fullMoveNumver = std::stoi(tokens[5]);
 }
 
+void Position::setPiece(const Piece p, const Square sq, const Color c) {
+    pieces[std::to_underlying(sq)] = p;
+    Bitboards::Bitboard::setBit(pieceBB[std::to_underlying(Pieces::pieceToPieceType.at(p))], sq);
+    Bitboards::Bitboard::setBit(occupiedBB[std::to_underlying(c)], sq);
+}
+
 void printBoard(const Position &pos) {
     std::println("\n +---+---+---+---+---+---+---+---+");
 
