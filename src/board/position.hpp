@@ -47,6 +47,14 @@ class CastlingRights {
             }
         }
 
+        constexpr bool operator==(const CastlingRights &other) const {
+            return std::to_underlying(castlingFlags) == std::to_underlying(other.castlingFlags);
+        }
+
+        constexpr bool operator!=(const CastlingRights &other) const {
+            return std::to_underlying(castlingFlags) != std::to_underlying(other.castlingFlags);
+        }
+
         constexpr CastlingRights operator|(const CastlingRights &other) const {
             return CastlingRights(static_cast<Flags>(std::to_underlying(castlingFlags)
                                                      | std::to_underlying(other.castlingFlags)));
