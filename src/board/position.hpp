@@ -133,7 +133,7 @@ class Position {
 
 namespace Util {
 
-constexpr std::string_view startPosFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+constexpr auto startPosFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
 // clang-format off
 constexpr std::string_view squareToCoordinates[std::to_underlying(Square::SQUARE_NB)] = {
