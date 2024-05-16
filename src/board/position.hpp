@@ -114,6 +114,8 @@ class Position {
 
         void setPiece(Piece p, Square sq, Color c);
 
+        [[nodiscard]] bool isValid() const;
+
     private:
         Bitboards::Bitboard                                                          checkersBB;
         Color                                                                        stm;

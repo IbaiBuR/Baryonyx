@@ -1,5 +1,6 @@
 #include "position.hpp"
 
+#include <iostream>
 #include <print>
 
 #include "../utils.hpp"
@@ -53,12 +54,50 @@ Position::Position(const std::string &fen) {
 
     this->halfMoveClock  = std::stoi(tokens[4]);
     this->fullMoveNumver = std::stoi(tokens[5]);
+
+    assert(this->isValid());
 }
 
 void Position::setPiece(const Piece p, const Square sq, const Color c) {
     pieces[std::to_underlying(sq)] = p;
     Bitboards::Bitboard::setBit(pieceBB[std::to_underlying(Pieces::pieceToPieceType.at(p))], sq);
     Bitboards::Bitboard::setBit(occupiedBB[std::to_underlying(c)], sq);
+}
+
+bool Position::isValid() const {
+    if (const int kingCount = pieceBB[std::to_underlying(PieceType::KING)].bitCount();
+        kingCount > 2 || kingCount < 2) {
+        std::println(std::cerr, "There must be 2 kings in the board.");
+        return false;
+    }
+
+    const auto &whiteOccupancies = occupiedBB[std::to_underlying(Color::WHITE)];
+
+    if (whiteOccupancies.bitCount() > 16) {
+        std::println(std::cerr, "White must have 16 or less pieces.");
+        return false;
+    }
+
+    const auto &blackOccupancies = occupiedBB[std::to_underlying(Color::BLACK)];
+
+    if (blackOccupancies.bitCount() > 16) {
+        std::println(std::cerr, "Black must have 16 or less pieces.");
+        return false;
+    }
+
+    const auto &pawns = pieceBB[std::to_underlying(PieceType::PAWN)];
+
+    if ((pawns & whiteOccupancies).bitCount() > 8) {
+        std::println(std::cerr, "White must have 8 or less pawns");
+        return false;
+    }
+
+    if ((pawns & blackOccupancies).bitCount() > 8) {
+        std::println(std::cerr, "Black must have 8 or less pawns");
+        return false;
+    }
+
+    return true;
 }
 
 void printBoard(const Position &pos) {
