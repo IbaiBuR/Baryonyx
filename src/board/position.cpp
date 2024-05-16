@@ -17,20 +17,29 @@ Position::Position(const std::string &fen) {
 
     const auto ranks = Utils::splitString(tokens[0], '/');
 
-    int square = std::to_underlying(Square::A8);
+    U8 rankIndex = 0;
+
     for (const auto &rank : ranks) {
+        if (rankIndex >= 8)
+            throw std::invalid_argument("Invalid FEN string: too many ranks.\n");
+
+        U8 fileIndex = 0;
+
         for (const auto c : rank) {
+            if (fileIndex >= 8)
+                throw std::invalid_argument("Invalid FEN string: too many files.\n");
+
             if (std::isdigit(c))
-                square += c - '0';
+                fileIndex += c - '0';
             else {
-                const auto  sq         = static_cast<Square>(square);
+                const auto  sq         = Bitboards::Util::squareOf(fileIndex, rankIndex);
                 const Color pieceColor = std::islower(c) ? Color::BLACK : Color::WHITE;
                 const Piece piece      = Pieces::charToPiece.at(c);
-                this->setPiece(piece, sq, pieceColor);
-                square++;
+                setPiece(piece, sq, pieceColor);
+                ++fileIndex;
             }
         }
-        square = square - 16 + square % std::to_underlying(File::FILE_NB);
+        ++rankIndex;
     }
 
     this->stm      = tokens[1] == "w" ? Color::WHITE : Color::BLACK;
