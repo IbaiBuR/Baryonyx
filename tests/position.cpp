@@ -3,7 +3,7 @@
 
 using namespace Board;
 
-TEST_SUITE("Positiion Tests") {
+TEST_SUITE("Position Tests") {
     TEST_CASE("fen parsing") {
         SUBCASE("start position") {
             Position pos(Util::startPosFen);
@@ -20,6 +20,7 @@ TEST_SUITE("Positiion Tests") {
             CHECK(pos.epSquare() == Square::NO_SQ);
             CHECK(pos.fiftyMoveRule() == 0);
             CHECK(pos.fullMoves() == 1);
+            CHECK(pos.checkers() == Bitboards::Util::EmptyBB);
         }
     }
 }
