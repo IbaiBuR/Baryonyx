@@ -8,7 +8,8 @@
 
 namespace Board {
 
-Position::Position(const std::string &fen) {
+Position::Position(const std::string &fen) :
+    pieces() {
     this->pieces.fill(Piece::NO_PIECE);
     const auto tokens = Utils::splitString(fen, ' ');
 
@@ -19,11 +20,12 @@ Position::Position(const std::string &fen) {
 
     const auto ranks = Utils::splitString(tokens[0], '/');
 
-    U8 rankIndex = 0;
+    if (ranks.size() > 7)
+        throw std::invalid_argument("Invalid FEN string: too many ranks.\n");
+
+    int rankIndex = 7;
 
     for (const auto &rank : ranks) {
-        if (rankIndex >= 8)
-            throw std::invalid_argument("Invalid FEN string: too many ranks.\n");
 
         U8 fileIndex = 0;
 
@@ -41,7 +43,7 @@ Position::Position(const std::string &fen) {
                 ++fileIndex;
             }
         }
-        ++rankIndex;
+        --rankIndex;
     }
 
     this->stm      = tokens[1] == "w" ? Color::WHITE : Color::BLACK;
