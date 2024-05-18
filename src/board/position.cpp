@@ -93,8 +93,8 @@ void Position::setPiece(const Piece p, const Square sq, const Color c) {
 
 bool Position::isValid() const {
     if (const int kingCount = pieceBB[std::to_underlying(PieceType::KING)].bitCount();
-        kingCount > 2 || kingCount < 2) {
-        std::println(std::cerr, "There must be 2 kings in the board.");
+        kingCount != 2) {
+        std::println(std::cerr, "There must be 2 kings on the board.");
         return false;
     }
 
