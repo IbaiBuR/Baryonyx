@@ -58,6 +58,8 @@ Position::Position(const std::string &fen) :
     this->halfMoveClock  = std::stoi(tokens[4]);
     this->fullMoveNumver = std::stoi(tokens[5]);
 
+    this->checkersBB = attacksToKing(kingSquare(this->stm), this->stm);
+
     if (!this->isValid())
         throw std::invalid_argument("Invalid FEN string: illegal position.\n");
 }
