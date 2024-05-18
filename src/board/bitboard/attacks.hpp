@@ -4,6 +4,7 @@
 #include <stdexcept>
 
 #include "bitboard.hpp"
+#include "magics.hpp"
 
 namespace Board::Bitboards::Attacks {
 
@@ -297,8 +298,23 @@ constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> kingAttack
 
 void init();
 
-Bitboard getBishopAttacks(Square sq, Bitboard blockers);
-Bitboard getRookAttacks(Square sq, Bitboard blockers);
+inline Bitboard getPawnAttacks(const Square sq, const Color c) {
+    return pawnAttacks[std::to_underlying(c)][std::to_underlying(sq)];
+}
+
+inline Bitboard getKnightAttacks(const Square sq) { return knightAttacks[std::to_underlying(sq)]; }
+
+inline Bitboard getBishopAttacks(const Square sq, Bitboard blockers) {
+    return bishopAttacks[std::to_underlying(sq)]
+                        [magicIndex(Magics::bishopMagics[std::to_underlying(sq)], blockers)];
+}
+
+inline Bitboard getRookAttacks(const Square sq, Bitboard blockers) {
+    return rookAttacks[std::to_underlying(sq)]
+                      [magicIndex(Magics::rookMagics[std::to_underlying(sq)], blockers)];
+}
+
+inline Bitboard getKingAttacks(const Square sq) { return kingAttacks[std::to_underlying(sq)]; }
 
 /// @brief Creates the sliding attacks for the specified direction
 /// @tparam d Direction to create the attacks

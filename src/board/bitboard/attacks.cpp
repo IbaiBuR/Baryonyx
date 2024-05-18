@@ -1,7 +1,5 @@
 #include "attacks.hpp"
 
-#include "magics.hpp"
-
 namespace Board::Bitboards::Attacks {
 
 std::array<std::array<Bitboard, maxBishopBlockersConfig>, std::to_underlying(Square::SQUARE_NB)>
@@ -36,16 +34,5 @@ void init() {
     initSliders<PieceType::BISHOP>();
     initSliders<PieceType::ROOK>();
 }
-
-Bitboard getBishopAttacks(const Square sq, Bitboard blockers) {
-    return bishopAttacks[std::to_underlying(sq)]
-                        [magicIndex(Magics::bishopMagics[std::to_underlying(sq)], blockers)];
-}
-
-Bitboard getRookAttacks(const Square sq, Bitboard blockers) {
-    return rookAttacks[std::to_underlying(sq)]
-                      [magicIndex(Magics::rookMagics[std::to_underlying(sq)], blockers)];
-}
-
 
 } // namespace Board::Bitboards::Attacks
