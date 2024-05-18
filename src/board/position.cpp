@@ -3,6 +3,7 @@
 #include <iostream>
 #include <print>
 
+#include "bitboard/attacks.hpp"
 #include "../utils.hpp"
 
 namespace Board {
@@ -56,6 +57,25 @@ Position::Position(const std::string &fen) {
     this->fullMoveNumver = std::stoi(tokens[5]);
 
     assert(this->isValid());
+}
+
+Bitboards::Bitboard Position::attacksToKing(const Square kingSquare, const Color c) const {
+    const auto &oppOccupancies   = occupiedBB[std::to_underlying(c) ^ 1];
+    const auto &oppPawns         = pieceTypeBB(PieceType::PAWN) & oppOccupancies;
+    const auto &oppKnights       = pieceTypeBB(PieceType::KNIGHT) & oppOccupancies;
+    const auto &oppQueens        = pieceTypeBB(PieceType::QUEEN) & oppOccupancies;
+    const auto &oppBishopsQueens = (pieceTypeBB(PieceType::BISHOP) & oppOccupancies) | oppQueens;
+    const auto &oppRooksQueens   = (pieceTypeBB(PieceType::ROOK) & oppOccupancies) | oppQueens;
+    const auto &oppKing          = pieceTypeBB(PieceType::KING) & oppOccupancies;
+
+    const auto &blockers =
+        occupiedBB[std::to_underlying(Color::WHITE)] | occupiedBB[std::to_underlying(Color::BLACK)];
+
+    return (Bitboards::Attacks::getPawnAttacks(kingSquare, c) & oppPawns)
+         | (Bitboards::Attacks::getKnightAttacks(kingSquare) & oppKnights)
+         | (Bitboards::Attacks::getBishopAttacks(kingSquare, blockers) & oppBishopsQueens)
+         | (Bitboards::Attacks::getRookAttacks(kingSquare, blockers) & oppRooksQueens)
+         | (Bitboards::Attacks::getKingAttacks(kingSquare) & oppKing);
 }
 
 void Position::setPiece(const Piece p, const Square sq, const Color c) {
