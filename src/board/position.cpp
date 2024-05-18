@@ -58,7 +58,8 @@ Position::Position(const std::string &fen) :
     this->halfMoveClock  = std::stoi(tokens[4]);
     this->fullMoveNumver = std::stoi(tokens[5]);
 
-    assert(this->isValid());
+    if (!this->isValid())
+        throw std::invalid_argument("Invalid FEN string: illegal position.\n");
 }
 
 Bitboards::Bitboard Position::attacksToKing(const Square kingSquare, const Color c) const {
