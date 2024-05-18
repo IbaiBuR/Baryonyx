@@ -139,7 +139,7 @@ void printBoard(const Position &pos) {
                                     ? ' '
                                     : Pieces::pieceToChar[std::to_underlying(currentPiece)]);
         }
-        std::println(" | {}\n +---+---+---+---+---+---+---+---+", 8 - rank);
+        std::println(" | {}\n +---+---+---+---+---+---+---+---+", rank + 1);
     }
 
     std::println("   A   B   C   D   E   F   G   H\n");
