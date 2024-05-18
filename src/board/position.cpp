@@ -78,6 +78,11 @@ Bitboards::Bitboard Position::attacksToKing(const Square kingSquare, const Color
          | (Bitboards::Attacks::getKingAttacks(kingSquare) & oppKing);
 }
 
+Square Position::kingSquare(const Color c) const {
+    const auto &kingBB = pieceTypeBB(PieceType::KING) & occupiedBB[std::to_underlying(c)];
+    return static_cast<Square>(kingBB.getLSB());
+}
+
 void Position::setPiece(const Piece p, const Square sq, const Color c) {
     pieces[std::to_underlying(sq)] = p;
     Bitboards::Bitboard::setBit(pieceBB[std::to_underlying(Pieces::pieceToPieceType.at(p))], sq);

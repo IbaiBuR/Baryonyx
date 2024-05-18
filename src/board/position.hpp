@@ -114,6 +114,8 @@ class Position {
 
         [[nodiscard]] Bitboards::Bitboard attacksToKing(Square kingSquare, Color c) const;
 
+        [[nodiscard]] Square kingSquare(Color c) const;
+
         void setPiece(Piece p, Square sq, Color c);
 
         [[nodiscard]] bool isValid() const;
