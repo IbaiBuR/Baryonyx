@@ -1,0 +1,31 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install latest Clang
+        run: |
+          wget https://apt.llvm.org/llvm.sh
+          chmod +x llvm.sh
+          sudo ./llvm.sh 18
+
+      - name: Set environment variables
+        run: |
+          echo "CC=$(which clang-18)" >> $GITHUB_ENV
+          echo "CXX=$(which clang++-18)" >> $GITHUB_ENV
+
+      - name: Build
+        run: make COMP=${{ env.CXX }}
+
+      - name: Clean
+        run: make clean
