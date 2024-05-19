@@ -13,16 +13,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install latest Clang
+      - name: Install latest GCC
         run: |
-          wget https://apt.llvm.org/llvm.sh
-          chmod +x llvm.sh
-          sudo ./llvm.sh 18
+          sudo add-apt-repository ppa:ubuntu-toolchain-r/ppa -y 
+          sudo apt-get update
+          sudo apt install -y g++-13 gcc-13
+          sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 60 --slave /usr/bin/g++ g++ /usr/bin/g++-13
+          sudo apt-get install -y gcc-13-multilib g++-13-multilib
 
       - name: Set environment variables
         run: |
-          echo "CC=$(which clang-18)" >> $GITHUB_ENV
-          echo "CXX=$(which clang++-18)" >> $GITHUB_ENV
+          echo "CC=$(which gcc-13)" >> $GITHUB_ENV
+          echo "CXX=$(which g++-13)" >> $GITHUB_ENV
 
       - name: Build
         run: make COMP=${{ env.CXX }}
