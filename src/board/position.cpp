@@ -20,8 +20,10 @@ Position::Position(const std::string &fen) :
 
     const auto ranks = Utils::splitString(tokens[0], '/');
 
-    if (ranks.size() > 7)
+    if (ranks.size() > 8)
         throw std::invalid_argument("Invalid FEN string: too many ranks.\n");
+    if (ranks.size() < 8)
+        throw std::invalid_argument("Invalid FEN string: missing ranks.\n");
 
     int rankIndex = 7;
 
