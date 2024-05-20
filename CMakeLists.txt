@@ -10,6 +10,7 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 file(GLOB SRCS
         "src/*.hpp" "src/*.cpp"
         "src/board/*.hpp" "src/board/*.cpp"
-        "src/board/bitboard/*.hpp" "src/board/bitboard/*.cpp")
+        "src/board/bitboard/*.hpp" "src/board/bitboard/*.cpp"
+        "src/moves/*.hpp" "src/moves/*.cpp")
 
 add_executable(NibbleCpp ${SRCS})
