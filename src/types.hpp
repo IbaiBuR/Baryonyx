@@ -11,6 +11,8 @@ using I8  = std::int8_t;
 using I16 = std::int16_t;
 using I32 = std::int32_t;
 
+using Score = I32;
+
 enum class File : U8 {
     FILE_A,
     FILE_B,
