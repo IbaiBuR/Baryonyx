@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../types.hpp"
-
 #include <string>
 #include <utility>
+
+#include "../types.hpp"
 
 namespace Moves {
 
@@ -43,6 +43,27 @@ class Move {
 
         [[nodiscard]] constexpr bool isPromotion() const {
             return this->flag() >= MoveFlag::KNIGHT_PROMO;
+        }
+
+        [[nodiscard]] constexpr bool isCapture() const {
+            const MoveFlag flag = this->flag();
+
+            return flag == MoveFlag::CAPTURE || flag >= MoveFlag::KNIGHT_CAPTURE_PROMO
+                || flag == MoveFlag::ENPASSANT;
+        }
+
+        [[nodiscard]] constexpr bool isEnPassant() const {
+            return this->flag() == MoveFlag::ENPASSANT;
+        }
+
+        [[nodiscard]] constexpr bool isDoublePush() const {
+            return this->flag() == MoveFlag::DOUBLEPUSH;
+        }
+
+        [[nodiscard]] constexpr bool isCastling() const { return this->flag() == MoveFlag::CASTLE; }
+
+        [[nodiscard]] constexpr bool isQuiet() const {
+            return !this->isCapture() && !this->isPromotion();
         }
 
         [[nodiscard]] std::string toString() const;
