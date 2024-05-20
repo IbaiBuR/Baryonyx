@@ -67,7 +67,7 @@ Position::Position(const std::string &fen) :
 }
 
 Bitboards::Bitboard Position::attacksToKing(const Square kingSquare, const Color c) const {
-    const auto &oppOccupancies   = occupiedBB[std::to_underlying(c) ^ 1];
+    const auto &oppOccupancies   = occupancies(static_cast<Color>(std::to_underlying(c) ^ 1));
     const auto &oppPawns         = pieceTypeBB(PieceType::PAWN) & oppOccupancies;
     const auto &oppKnights       = pieceTypeBB(PieceType::KNIGHT) & oppOccupancies;
     const auto &oppQueens        = pieceTypeBB(PieceType::QUEEN) & oppOccupancies;
@@ -75,8 +75,7 @@ Bitboards::Bitboard Position::attacksToKing(const Square kingSquare, const Color
     const auto &oppRooksQueens   = (pieceTypeBB(PieceType::ROOK) & oppOccupancies) | oppQueens;
     const auto &oppKing          = pieceTypeBB(PieceType::KING) & oppOccupancies;
 
-    const auto &blockers =
-        occupiedBB[std::to_underlying(Color::WHITE)] | occupiedBB[std::to_underlying(Color::BLACK)];
+    const auto &blockers = occupancies(Color::WHITE) | occupancies(Color::BLACK);
 
     return (Bitboards::Attacks::getPawnAttacks(kingSquare, c) & oppPawns)
          | (Bitboards::Attacks::getKnightAttacks(kingSquare) & oppKnights)
@@ -86,7 +85,7 @@ Bitboards::Bitboard Position::attacksToKing(const Square kingSquare, const Color
 }
 
 Square Position::kingSquare(const Color c) const {
-    const auto &kingBB = pieceTypeBB(PieceType::KING) & occupiedBB[std::to_underlying(c)];
+    const auto &kingBB = pieceTypeBB(PieceType::KING) & occupancies(c);
     return static_cast<Square>(kingBB.getLSB());
 }
 
@@ -126,35 +125,34 @@ bool Position::isSquareAttacked(const Square sq, const Color c) const {
 }
 
 bool Position::isValid() const {
-    if (const int kingCount = pieceBB[std::to_underlying(PieceType::KING)].bitCount();
-        kingCount != 2) {
+    if (pieceTypeBB(PieceType::KING).bitCount() != 2) {
         std::println(std::cerr, "There must be 2 kings on the board.");
         return false;
     }
 
-    const auto &whiteOccupancies = occupiedBB[std::to_underlying(Color::WHITE)];
+    const auto &whiteOccupancies = occupancies(Color::WHITE);
 
     if (whiteOccupancies.bitCount() > 16) {
         std::println(std::cerr, "White must have 16 or less pieces.");
         return false;
     }
 
-    const auto &blackOccupancies = occupiedBB[std::to_underlying(Color::BLACK)];
+    const auto &blackOccupancies = occupancies(Color::BLACK);
 
     if (blackOccupancies.bitCount() > 16) {
         std::println(std::cerr, "Black must have 16 or less pieces.");
         return false;
     }
 
-    const auto &pawns = pieceBB[std::to_underlying(PieceType::PAWN)];
+    const auto &pawns = pieceTypeBB(PieceType::PAWN);
 
     if ((pawns & whiteOccupancies).bitCount() > 8) {
-        std::println(std::cerr, "White must have 8 or less pawns");
+        std::println(std::cerr, "White must have 8 or less pawns.");
         return false;
     }
 
     if ((pawns & blackOccupancies).bitCount() > 8) {
-        std::println(std::cerr, "Black must have 8 or less pawns");
+        std::println(std::cerr, "Black must have 8 or less pawns.");
         return false;
     }
 
@@ -180,10 +178,9 @@ void printBoard(const Position &pos) {
 
     const auto enpassant = pos.epSquare();
 
-    std::println(" En passant      : {}",
-                 enpassant != Square::NO_SQ
-                     ? Util::squareToCoordinates[std::to_underlying(enpassant)]
-                     : "-");
+    std::println(" En passant      : {}", enpassant != Square::NO_SQ
+                                              ? Util::sqToCoords[std::to_underlying(enpassant)]
+                                              : "-");
     std::println(" Castling rights : {}", pos.castlingRights().toString());
     std::println(" Halfmove clock  : {}", pos.fiftyMoveRule());
     std::println(" Fullmove number : {}", pos.fullMoves());
