@@ -15,19 +15,19 @@ jobs:
 
       - name: Install latest GCC
         run: |
-          sudo add-apt-repository ppa:ubuntu-toolchain-r/ppa -y 
-          sudo apt-get update
-          sudo apt install -y g++-13 gcc-13
-          sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-13 60 --slave /usr/bin/g++ g++ /usr/bin/g++-13
-          sudo apt-get install -y gcc-13-multilib g++-13-multilib
+          sudo add-apt-repository universe -y
+          sudo apt-get update -y
+          sudo apt-get install g++-14 gcc-14 -y
+          sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-14 60 --slave /usr/bin/g++ g++ /usr/bin/g++-14
+          sudo apt-get install gcc-14-multilib g++-14-multilib -y
 
       - name: Set environment variables
         run: |
-          echo "CC=$(which gcc-13)" >> $GITHUB_ENV
-          echo "CXX=$(which g++-13)" >> $GITHUB_ENV
+          echo "CC=$(which gcc-14)" >> $GITHUB_ENV
+          echo "CXX=$(which g++-14)" >> $GITHUB_ENV
 
       - name: Build
-        run: make COMP=${{ env.CXX }}
+        run: make debug COMP=${{ env.CXX }}
 
       - name: Clean
         run: make clean
