@@ -17,7 +17,7 @@ struct ScoredMove {
 class MoveList {
     public:
         void push(const Move &move) {
-            assert(size + 1 < maxMoves);
+            assert(count + 1 < maxMoves);
             moves[count++].move = move;
         }
 
