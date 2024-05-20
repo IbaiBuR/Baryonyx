@@ -1,6 +1,8 @@
 #include "../src/board/position.hpp"
 #include "doctest/doctest.hpp"
 
+#include <stdexcept>
+
 using namespace Board;
 
 TEST_SUITE("Position Tests") {
@@ -21,6 +23,27 @@ TEST_SUITE("Position Tests") {
             CHECK(pos.fiftyMoveRule() == 0);
             CHECK(pos.fullMoves() == 1);
             CHECK(pos.checkers() == Bitboards::Util::EmptyBB);
+        }
+
+        SUBCASE("illegal position: too many kings") {
+            CHECK_THROWS_AS(Position("2k1k3/8/8/8/8/8/2K1K3/8 w - - 0 1"), std::invalid_argument);
+        }
+
+        SUBCASE("illegal position: too many pieces") {
+            CHECK_THROWS_AS(
+                Position("rnbqkbnr/pppppppp/8/8/8/1N4N1/PPPPPPPP/RNBQKBNR w KQkq - 0 1"),
+                std::invalid_argument);
+        }
+
+        SUBCASE("illegal position: too many pawns") {
+            CHECK_THROWS_AS(Position("rnbqkbnr/pppppppp/8/8/8/2PPP3/PPPPPPPP/R2QK2R w KQkq - 0 1"),
+                            std::invalid_argument);
+        }
+
+        SUBCASE("illegal position: side not to move in check") {
+            CHECK_THROWS_AS(
+                Position("rnbqkbnr/ppp2ppp/8/1B1pp3/4P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 1 3"),
+                std::invalid_argument);
         }
     }
 }
