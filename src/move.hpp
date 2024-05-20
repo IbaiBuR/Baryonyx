@@ -5,6 +5,8 @@
 #include <string>
 #include <utility>
 
+namespace Moves {
+
 class Move {
     public:
         enum class MoveFlag : U8 {
@@ -48,3 +50,5 @@ class Move {
     private:
         U16 data;
 };
+
+} // namespace Moves
