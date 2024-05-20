@@ -156,6 +156,13 @@ bool Position::isValid() const {
         return false;
     }
 
+    if (isSquareAttacked(kingSquare(static_cast<Color>(std::to_underlying(this->stm) ^ 1)),
+                         this->stm)) {
+        std::println(std::cerr,
+                     "The king of the player whose turn it is not to move must not be in check.");
+        return false;
+    }
+
     return true;
 }
 
