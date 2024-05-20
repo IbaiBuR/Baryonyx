@@ -2,7 +2,7 @@
 
 #include <format>
 
-#include "board/position.hpp"
+#include "../board/position.hpp"
 
 namespace Moves {
 
