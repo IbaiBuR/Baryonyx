@@ -94,6 +94,35 @@ void Position::setPiece(const Piece p, const Square sq, const Color c) {
     Bitboards::Bitboard::setBit(occupiedBB[std::to_underlying(c)], sq);
 }
 
+bool Position::isSquareAttacked(const Square sq, const Color c) const {
+    const auto &ourPieces  = occupancies(c);
+    const auto &ourPawns   = pieceTypeBB(PieceType::PAWN) & ourPieces;
+    const auto &ourKnights = pieceTypeBB(PieceType::KNIGHT) & ourPieces;
+    const auto &ourBishops = pieceTypeBB(PieceType::BISHOP) & ourPieces;
+    const auto &ourRooks   = pieceTypeBB(PieceType::ROOK) & ourPieces;
+    const auto &ourKing    = pieceTypeBB(PieceType::KING) & ourPieces;
+
+    const auto &blockers = occupancies(Color::WHITE) | occupancies(Color::BLACK);
+
+    if (Bitboards::Attacks::getPawnAttacks(sq, static_cast<Color>(std::to_underlying(c) ^ 1))
+        & ourPawns)
+        return true;
+
+    if (Bitboards::Attacks::getKnightAttacks(sq) & ourKnights)
+        return true;
+
+    if (Bitboards::Attacks::getBishopAttacks(sq, blockers) & ourBishops)
+        return true;
+
+    if (Bitboards::Attacks::getRookAttacks(sq, blockers) & ourRooks)
+        return true;
+
+    if (Bitboards::Attacks::getKingAttacks(sq) & ourKing)
+        return true;
+
+    return false;
+}
+
 bool Position::isValid() const {
     if (const int kingCount = pieceBB[std::to_underlying(PieceType::KING)].bitCount();
         kingCount != 2) {

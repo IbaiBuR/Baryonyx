@@ -118,6 +118,8 @@ class Position {
 
         void setPiece(Piece p, Square sq, Color c);
 
+        [[nodiscard]] bool isSquareAttacked(Square sq, Color c) const;
+
         [[nodiscard]] bool isValid() const;
 
     private:
