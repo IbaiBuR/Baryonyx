@@ -106,6 +106,25 @@ constexpr void generateQuietsByPieceType(const Board::Position &pos, MoveList &m
     }
 }
 
+template <PieceType pt, Color c>
+constexpr void generateCapturesByPieceType(const Board::Position &pos, MoveList &moveList) {
+    constexpr Color    us        = c;
+    constexpr Color    them      = us == Color::WHITE ? Color::BLACK : Color::WHITE;
+    const BB::Bitboard occupied  = pos.occupancies(Color::WHITE) | pos.occupancies(Color::BLACK);
+    BB::Bitboard       ourPieces = pos.pieceTypeBB(pt) & pos.occupancies(us);
+
+    while (!ourPieces.empty()) {
+        const auto   from = static_cast<Square>(ourPieces.popLSB());
+        BB::Bitboard possiblePieceCaptures =
+            BB::Attacks::getAttacksByPieceType<pt>(from, occupied) & pos.occupancies(them);
+
+        while (!possiblePieceCaptures.empty()) {
+            const auto to = static_cast<Square>(possiblePieceCaptures.popLSB());
+            moveList.push(Move(from, to, Move::MoveFlag::CAPTURE));
+        }
+    }
+}
+
 void generateAllQuiets(const Board::Position &pos, MoveList &moveList) {
     if (pos.sideToMove() == Color::WHITE) {
         generatePawnPushes<Color::WHITE>(pos, moveList);
@@ -128,9 +147,19 @@ void generateAllQuiets(const Board::Position &pos, MoveList &moveList) {
 void generateAllCaptures(const Board::Position &pos, MoveList &moveList) {
     if (pos.sideToMove() == Color::WHITE) {
         generatePawnCaptures<Color::WHITE>(pos, moveList);
+        generateCapturesByPieceType<PieceType::KNIGHT, Color::WHITE>(pos, moveList);
+        generateCapturesByPieceType<PieceType::BISHOP, Color::WHITE>(pos, moveList);
+        generateCapturesByPieceType<PieceType::ROOK, Color::WHITE>(pos, moveList);
+        generateCapturesByPieceType<PieceType::QUEEN, Color::WHITE>(pos, moveList);
+        generateCapturesByPieceType<PieceType::KING, Color::WHITE>(pos, moveList);
     }
     else {
         generatePawnCaptures<Color::BLACK>(pos, moveList);
+        generateCapturesByPieceType<PieceType::KNIGHT, Color::BLACK>(pos, moveList);
+        generateCapturesByPieceType<PieceType::BISHOP, Color::BLACK>(pos, moveList);
+        generateCapturesByPieceType<PieceType::ROOK, Color::BLACK>(pos, moveList);
+        generateCapturesByPieceType<PieceType::QUEEN, Color::BLACK>(pos, moveList);
+        generateCapturesByPieceType<PieceType::KING, Color::BLACK>(pos, moveList);
     }
 }
 
