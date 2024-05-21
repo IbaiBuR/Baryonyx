@@ -89,12 +89,39 @@ constexpr void generatePawnCaptures(const Board::Position &pos, MoveList &moveLi
     }
 }
 
+template <PieceType pt, Color c>
+constexpr void generateQuietsByPieceType(const Board::Position &pos, MoveList &moveList) {
+    const BB::Bitboard occupied  = pos.occupancies(Color::WHITE) | pos.occupancies(Color::BLACK);
+    BB::Bitboard       ourPieces = pos.pieceTypeBB(pt) & pos.occupancies(c);
+
+    while (!ourPieces.empty()) {
+        const auto   from = static_cast<Square>(ourPieces.popLSB());
+        BB::Bitboard possiblePieceMoves =
+            BB::Attacks::getAttacksByPieceType<pt>(from, occupied) & ~occupied;
+
+        while (!possiblePieceMoves.empty()) {
+            const auto to = static_cast<Square>(possiblePieceMoves.popLSB());
+            moveList.push(Move(from, to, Move::MoveFlag::QUIET));
+        }
+    }
+}
+
 void generateAllQuiets(const Board::Position &pos, MoveList &moveList) {
     if (pos.sideToMove() == Color::WHITE) {
         generatePawnPushes<Color::WHITE>(pos, moveList);
+        generateQuietsByPieceType<PieceType::KNIGHT, Color::WHITE>(pos, moveList);
+        generateQuietsByPieceType<PieceType::BISHOP, Color::WHITE>(pos, moveList);
+        generateQuietsByPieceType<PieceType::ROOK, Color::WHITE>(pos, moveList);
+        generateQuietsByPieceType<PieceType::QUEEN, Color::WHITE>(pos, moveList);
+        generateQuietsByPieceType<PieceType::KING, Color::WHITE>(pos, moveList);
     }
     else {
         generatePawnPushes<Color::BLACK>(pos, moveList);
+        generateQuietsByPieceType<PieceType::KNIGHT, Color::BLACK>(pos, moveList);
+        generateQuietsByPieceType<PieceType::BISHOP, Color::BLACK>(pos, moveList);
+        generateQuietsByPieceType<PieceType::ROOK, Color::BLACK>(pos, moveList);
+        generateQuietsByPieceType<PieceType::QUEEN, Color::BLACK>(pos, moveList);
+        generateQuietsByPieceType<PieceType::KING, Color::BLACK>(pos, moveList);
     }
 }
 
