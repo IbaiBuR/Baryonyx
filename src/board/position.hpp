@@ -179,9 +179,9 @@ class Position {
 
         void removePiece(Piece p, Square sq);
 
-        [[nodiscard]] bool isSquareAttacked(Square sq, Color c) const;
         void movePiece(Piece p, Square from, Square to);
 
+        [[nodiscard]] bool isSquareAttackedBy(Square sq, Color c) const;
 
         [[nodiscard]] bool isValid() const;
 

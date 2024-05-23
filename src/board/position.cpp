@@ -39,10 +39,9 @@ Position::Position(const std::string &fen) :
             if (std::isdigit(c))
                 fileIndex += c - '0';
             else {
-                const auto  sq         = Bitboards::Util::squareOf(fileIndex, rankIndex);
-                const Color pieceColor = std::islower(c) ? Color::BLACK : Color::WHITE;
-                const Piece piece      = Pieces::charToPiece.at(c);
-                setPiece(piece, sq, pieceColor);
+                const auto  sq    = Bitboards::Util::squareOf(fileIndex, rankIndex);
+                const Piece piece = Pieces::charToPiece.at(c);
+                setPiece(piece, sq);
                 ++fileIndex;
             }
         }
@@ -56,7 +55,7 @@ Position::Position(const std::string &fen) :
 
     this->epSq = enpassant == "-"
                    ? Square::NO_SQ
-                   : Bitboards::Util::squareOf(enpassant[0] - 'a', 8 - (enpassant[1] - '0'));
+                   : Bitboards::Util::squareOf(enpassant[0] - 'a', enpassant[1] - 1 - '0');
 
     this->halfMoveClock  = std::stoi(tokens[4]);
     this->fullMoveNumver = std::stoi(tokens[5]);
@@ -68,7 +67,7 @@ Position::Position(const std::string &fen) :
 }
 
 Bitboards::Bitboard Position::attacksToKing(const Square kingSquare, const Color c) const {
-    const auto &oppOccupancies   = occupancies(static_cast<Color>(std::to_underlying(c) ^ 1));
+    const auto &oppOccupancies   = occupancies(~c);
     const auto &oppPawns         = pieceTypeBB(PieceType::PAWN) & oppOccupancies;
     const auto &oppKnights       = pieceTypeBB(PieceType::KNIGHT) & oppOccupancies;
     const auto &oppQueens        = pieceTypeBB(PieceType::QUEEN) & oppOccupancies;
@@ -86,15 +85,11 @@ Bitboards::Bitboard Position::attacksToKing(const Square kingSquare, const Color
 }
 
 Square Position::kingSquare(const Color c) const {
-    const auto &kingBB = pieceTypeBB(PieceType::KING) & occupancies(c);
-    return static_cast<Square>(kingBB.getLSB());
+    return static_cast<Square>((pieceTypeBB(PieceType::KING) & occupancies(c)).popLSB());
 }
 
 void Position::setPiece(const Piece p, const Square sq) {
     pieces[std::to_underlying(sq)] = p;
-    Bitboards::Bitboard::setBit(pieceBB[std::to_underlying(Pieces::pieceToPieceType.at(p))], sq);
-    Bitboards::Bitboard::setBit(occupiedBB[std::to_underlying(c)], sq);
-}
     Bitboards::Bitboard::setBit(
         pieceBB[std::to_underlying(Pieces::pieceToPieceType[std::to_underlying(p)])], sq);
     Bitboards::Bitboard::setBit(
@@ -116,17 +111,18 @@ void Position::movePiece(const Piece p, const Square from, const Square to) {
 
 
 bool Position::isSquareAttacked(const Square sq, const Color c) const {
+bool Position::isSquareAttackedBy(const Square sq, const Color c) const {
     const auto &ourPieces  = occupancies(c);
     const auto &ourPawns   = pieceTypeBB(PieceType::PAWN) & ourPieces;
     const auto &ourKnights = pieceTypeBB(PieceType::KNIGHT) & ourPieces;
     const auto &ourBishops = pieceTypeBB(PieceType::BISHOP) & ourPieces;
     const auto &ourRooks   = pieceTypeBB(PieceType::ROOK) & ourPieces;
     const auto &ourKing    = pieceTypeBB(PieceType::KING) & ourPieces;
+    const auto &ourQueens  = pieceTypeBB(PieceType::QUEEN) & ourPieces;
 
     const auto &blockers = occupancies(Color::WHITE) | occupancies(Color::BLACK);
 
-    if (Bitboards::Attacks::getPawnAttacks(sq, static_cast<Color>(std::to_underlying(c) ^ 1))
-        & ourPawns)
+    if (Bitboards::Attacks::getPawnAttacks(sq, ~c) & ourPawns)
         return true;
 
     if (Bitboards::Attacks::getKnightAttacks(sq) & ourKnights)
@@ -139,6 +135,9 @@ bool Position::isSquareAttacked(const Square sq, const Color c) const {
         return true;
 
     if (Bitboards::Attacks::getKingAttacks(sq) & ourKing)
+        return true;
+
+    if (Bitboards::Attacks::getQueenAttacks(sq, blockers) & ourQueens)
         return true;
 
     return false;
