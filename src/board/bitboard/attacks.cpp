@@ -10,7 +10,7 @@ std::array<std::array<Bitboard, maxRookBlockersConfig>, std::to_underlying(Squar
 /// @brief Initializes the sliding attacks lookup tables
 /// @tparam pt Piece type (Slider)
 template <PieceType pt>
-constexpr void initSliders() {
+void initSliders() {
     constexpr bool isBishop = pt == PieceType::BISHOP;
 
     for (U8 sq = 0; sq < std::to_underlying(Square::SQUARE_NB); sq++) {
@@ -22,7 +22,7 @@ constexpr void initSliders() {
             const Bitboard occupied   = Magics::setBlockers(i, nBits, mask);
             const int      magicIndex = static_cast<int>((occupied.asU64() * magic) >> shift);
 
-            if (isBishop)
+            if constexpr (isBishop)
                 bishopAttacks[sq][magicIndex] = genSliding<pt>(static_cast<Square>(sq), occupied);
             else
                 rookAttacks[sq][magicIndex] = genSliding<pt>(static_cast<Square>(sq), occupied);
