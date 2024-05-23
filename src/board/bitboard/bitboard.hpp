@@ -4,7 +4,7 @@
 #include <cassert>
 #include <utility>
 
-#include "../../types.hpp"
+#include "../../chess.hpp"
 
 namespace Board::Bitboards {
 
