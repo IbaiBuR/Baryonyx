@@ -316,6 +316,10 @@ inline Bitboard getRookAttacks(const Square sq, Bitboard blockers) {
 
 inline Bitboard getKingAttacks(const Square sq) { return kingAttacks[std::to_underlying(sq)]; }
 
+inline Bitboard getQueenAttacks(const Square sq, const Bitboard blockers) {
+    return getBishopAttacks(sq, blockers) | getRookAttacks(sq, blockers);
+}
+
 /// @brief Creates the sliding attacks for the specified direction
 /// @tparam d Direction to create the attacks
 /// @param sq Square to generate the attacks from
