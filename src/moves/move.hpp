@@ -68,6 +68,8 @@ class Move {
 
         [[nodiscard]] std::string toString() const;
 
+        [[nodiscard]] Piece getPromotedPiece(Color stm) const;
+
     private:
         U16 data;
 };
