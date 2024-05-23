@@ -185,6 +185,8 @@ class Position {
 
         [[nodiscard]] bool isValid() const;
 
+        [[nodiscard]] bool wasLegal() const;
+
     private:
         Bitboards::Bitboard                                                          checkersBB;
         Color                                                                        stm;

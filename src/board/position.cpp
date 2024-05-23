@@ -185,6 +185,8 @@ bool Position::isValid() const {
     return true;
 }
 
+bool Position::wasLegal() const { return !isSquareAttackedBy(kingSquare(~stm), stm); }
+
 void printBoard(const Position &pos) {
     std::println("\n +---+---+---+---+---+---+---+---+");
 
