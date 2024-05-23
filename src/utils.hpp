@@ -1,8 +1,11 @@
 #pragma once
 
+#include <chrono>
 #include <ranges>
 #include <string>
 #include <vector>
+
+#include "types.hpp"
 
 namespace Utils {
 
@@ -17,6 +20,12 @@ inline std::vector<std::string> splitString(const std::string &str, const char d
         tokens.emplace_back(std::string_view(token));
 
     return tokens;
+}
+
+inline U64 getTimeMs() {
+    return std::chrono::duration_cast<std::chrono::milliseconds>(
+               std::chrono::steady_clock::now().time_since_epoch())
+        .count();
 }
 
 } // namespace Utils
