@@ -4,7 +4,7 @@
 #include <string>
 
 #include "bitboard/bitboard.hpp"
-#include "piece.hpp"
+#include "../moves/move.hpp"
 
 namespace Board {
 
@@ -66,6 +66,31 @@ class CastlingRights {
             return *this;
         }
 
+        constexpr CastlingRights operator&(const int update) const {
+            return CastlingRights(static_cast<Flags>(std::to_underlying(castlingFlags) & update));
+        }
+
+        constexpr CastlingRights &operator&=(const int update) {
+            castlingFlags = static_cast<Flags>(std::to_underlying(castlingFlags) & update);
+            return *this;
+        }
+
+        template <Color c>
+        [[nodiscard]] bool kingSideAvailable() const {
+            if constexpr (c == Color::WHITE)
+                return std::to_underlying(castlingFlags) & std::to_underlying(Flags::WK);
+            else
+                return std::to_underlying(castlingFlags) & std::to_underlying(Flags::BK);
+        }
+
+        template <Color c>
+        [[nodiscard]] bool queenSideAvailable() const {
+            if constexpr (c == Color::WHITE)
+                return std::to_underlying(castlingFlags) & std::to_underlying(Flags::WQ);
+            else
+                return std::to_underlying(castlingFlags) & std::to_underlying(Flags::BQ);
+        }
+
         [[nodiscard]] std::string toString() const {
             std::string result;
             const auto  flags = std::to_underlying(castlingFlags);
@@ -110,6 +135,40 @@ class Position {
 
         [[nodiscard]] Bitboards::Bitboard pieceTypeBB(const PieceType pt) const {
             return pieceBB[std::to_underlying(pt)];
+        }
+
+        template <Color c>
+        [[nodiscard]] bool canCastleKingSide() const {
+            const Bitboards::Bitboard &occupied =
+                occupancies(Color::WHITE) | occupancies(Color::BLACK);
+
+            if constexpr (c == Color::WHITE)
+                return castlingRights().kingSideAvailable<Color::WHITE>()
+                    && !isSquareAttackedBy(Square::F1, Color::BLACK)
+                    && !isSquareAttackedBy(Square::G1, Color::BLACK)
+                    && !(occupied & Bitboards::Bitboard(0x60ULL));
+            else
+                return castlingRights().kingSideAvailable<Color::BLACK>()
+                    && !isSquareAttackedBy(Square::F8, Color::WHITE)
+                    && !isSquareAttackedBy(Square::G8, Color::WHITE)
+                    && !(occupied & Bitboards::Bitboard(0x6000000000000000ULL));
+        }
+
+        template <Color c>
+        [[nodiscard]] bool canCastleQueenSide() const {
+            const Bitboards::Bitboard &occupied =
+                occupancies(Color::WHITE) | occupancies(Color::BLACK);
+
+            if constexpr (c == Color::WHITE)
+                return castlingRights().queenSideAvailable<Color::WHITE>()
+                    && !isSquareAttackedBy(Square::D1, Color::BLACK)
+                    && !isSquareAttackedBy(Square::C1, Color::BLACK)
+                    && !(occupied & Bitboards::Bitboard(0xEULL));
+            else
+                return castlingRights().queenSideAvailable<Color::BLACK>()
+                    && !isSquareAttackedBy(Square::D8, Color::WHITE)
+                    && !isSquareAttackedBy(Square::C8, Color::WHITE)
+                    && !(occupied & Bitboards::Bitboard(0xE00000000000000ULL));
         }
 
         [[nodiscard]] Bitboards::Bitboard attacksToKing(Square kingSquare, Color c) const;
