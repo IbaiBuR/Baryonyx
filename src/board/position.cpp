@@ -109,8 +109,59 @@ void Position::movePiece(const Piece p, const Square from, const Square to) {
     setPiece(p, to);
 }
 
+void Position::makeMove(const Moves::Move move) {
+    ++halfMoveClock;
 
-bool Position::isSquareAttacked(const Square sq, const Color c) const {
+    const Square    from        = move.from();
+    const Square    to          = move.to();
+    const Piece     movingPiece = pieceOn(from);
+    const Direction offset      = stm == Color::WHITE ? Direction::NORTH : Direction::SOUTH;
+
+    if (move.isCapture()) {
+        const auto targetSquare = move.isEnPassant() ? epSq - offset : to;
+        removePiece(pieceOn(targetSquare), targetSquare);
+        halfMoveClock = 0;
+    }
+
+    removePiece(movingPiece, from);
+    setPiece(move.isPromotion() ? move.getPromotedPiece(stm) : movingPiece, to);
+
+    if (move.isDoublePush())
+        epSq = to - offset;
+    else
+        epSq = Square::NO_SQ;
+
+    if (move.isCastling()) {
+        switch (to) {
+        case Square::G1:
+            movePiece(pieceOn(Square::H1), Square::H1, Square::F1);
+            break;
+        case Square::C1:
+            movePiece(pieceOn(Square::A1), Square::A1, Square::D1);
+            break;
+        case Square::G8:
+            movePiece(pieceOn(Square::H8), Square::H8, Square::F8);
+            break;
+        case Square::C8:
+            movePiece(pieceOn(Square::A8), Square::A8, Square::D8);
+            break;
+        default:
+            throw std::runtime_error("Castling to invalid square!\n");
+        }
+    }
+
+    castling &= Util::castlingRightsUpdate[std::to_underlying(from)];
+    castling &= Util::castlingRightsUpdate[std::to_underlying(to)];
+
+    fullMoveNumver += stm == Color::BLACK;
+
+    if (Pieces::pieceToPieceType[std::to_underlying(movingPiece)] == PieceType::PAWN)
+        halfMoveClock = 0;
+
+    stm        = ~stm;
+    checkersBB = attacksToKing(kingSquare(stm), stm);
+}
+
 bool Position::isSquareAttackedBy(const Square sq, const Color c) const {
     const auto &ourPieces  = occupancies(c);
     const auto &ourPawns   = pieceTypeBB(PieceType::PAWN) & ourPieces;
@@ -175,8 +226,7 @@ bool Position::isValid() const {
         return false;
     }
 
-    if (isSquareAttacked(kingSquare(static_cast<Color>(std::to_underlying(this->stm) ^ 1)),
-                         this->stm)) {
+    if (isSquareAttackedBy(kingSquare(~stm), stm)) {
         std::println(std::cerr,
                      "The king of the player whose turn it is not to move must not be in check.");
         return false;

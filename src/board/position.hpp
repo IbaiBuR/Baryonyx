@@ -181,6 +181,8 @@ class Position {
 
         void movePiece(Piece p, Square from, Square to);
 
+        void makeMove(Moves::Move move);
+
         [[nodiscard]] bool isSquareAttackedBy(Square sq, Color c) const;
 
         [[nodiscard]] bool isValid() const;
