@@ -14,8 +14,6 @@ Position::Position(const std::string &fen) :
     this->pieces.fill(Piece::NO_PIECE);
     const auto tokens = Utils::splitString(fen, ' ');
 
-    if (tokens.size() > 6)
-        throw std::invalid_argument("Invalid FEN string: too many fields.\n");
     if (tokens.size() < 6)
         throw std::invalid_argument("Invalid FEN string: missing fields.\n");
 
