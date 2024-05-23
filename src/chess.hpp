@@ -83,3 +83,25 @@ enum class Direction : I8 {
     SOUTH_EAST = SOUTH + EAST,
     SOUTH_WEST = SOUTH + WEST
 };
+
+constexpr Color operator~(const Color c) { return static_cast<Color>(static_cast<int>(c) ^ 1); }
+
+constexpr Square &operator++(Square &sq) {
+    return sq = static_cast<Square>(static_cast<int>(sq) + 1);
+}
+
+constexpr Square &operator--(Square &sq) {
+    return sq = static_cast<Square>(static_cast<int>(sq) - 1);
+}
+
+constexpr Square operator+(const Square sq, const Direction dir) {
+    return static_cast<Square>(static_cast<int>(sq) + static_cast<int>(dir));
+}
+
+constexpr Square operator-(const Square sq, const Direction dir) {
+    return static_cast<Square>(static_cast<int>(sq) - static_cast<int>(dir));
+}
+
+constexpr Direction operator*(const Direction dir, const int mul) {
+    return static_cast<Direction>(static_cast<int>(dir) * mul);
+}
