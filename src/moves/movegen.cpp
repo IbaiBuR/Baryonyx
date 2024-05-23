@@ -116,12 +116,28 @@ constexpr void generateCapturesByPieceType(const Board::Position &pos, MoveList 
     while (!ourPieces.empty()) {
         const auto   from = static_cast<Square>(ourPieces.popLSB());
         BB::Bitboard possiblePieceCaptures =
-            BB::Attacks::getAttacksByPieceType<pt>(from, occupied) & pos.occupancies(them);
+            BB::Attacks::getAttacksByPieceType(pt, from, occupied) & pos.occupancies(them);
 
         while (!possiblePieceCaptures.empty()) {
             const auto to = static_cast<Square>(possiblePieceCaptures.popLSB());
             moveList.push(Move(from, to, Move::MoveFlag::CAPTURE));
         }
+    }
+}
+
+template <Color c>
+void generateCastlingMoves(const Board::Position &pos, MoveList &moveList) {
+    if constexpr (c == Color::WHITE) {
+        if (pos.canCastleKingSide<Color::WHITE>())
+            moveList.push(Move(Square::E1, Square::G1, Move::MoveFlag::CASTLE));
+        if (pos.canCastleQueenSide<Color::WHITE>())
+            moveList.push(Move(Square::E1, Square::C1, Move::MoveFlag::CASTLE));
+    }
+    else {
+        if (pos.canCastleKingSide<Color::BLACK>())
+            moveList.push(Move(Square::E8, Square::G8, Move::MoveFlag::CASTLE));
+        if (pos.canCastleQueenSide<Color::BLACK>())
+            moveList.push(Move(Square::E8, Square::C8, Move::MoveFlag::CASTLE));
     }
 }
 
