@@ -236,30 +236,33 @@ bool Position::isValid() const {
 bool Position::wasLegal() const { return !isSquareAttackedBy(kingSquare(~stm), stm); }
 
 void printBoard(const Position &pos) {
-    std::println("\n +---+---+---+---+---+---+---+---+");
+    std::println("\n+---+---+---+---+---+---+---+---+");
 
     for (int rank = 7; rank >= 0; rank--) {
         for (int file = 0; file < 8; file++) {
             const auto  sq           = Bitboards::Util::squareOf(file, rank);
             const Piece currentPiece = pos.pieceOn(sq);
-            std::print(" | {}", currentPiece == Piece::NO_PIECE
-                                    ? ' '
-                                    : Pieces::pieceToChar[std::to_underlying(currentPiece)]);
+            std::print("| {}", currentPiece == Piece::NO_PIECE
+                                   ? ' '
+                                   : Pieces::pieceToChar[std::to_underlying(currentPiece)]);
+
+            if (file != 7)
+                std::print(" ");
         }
-        std::println(" | {}\n +---+---+---+---+---+---+---+---+", rank + 1);
+        std::println(" | {}\n+---+---+---+---+---+---+---+---+", rank + 1);
     }
 
-    std::println("   A   B   C   D   E   F   G   H\n");
-    std::println(" Side to move    : {}", pos.sideToMove() == Color::WHITE ? "white" : "black");
+    std::println("  A   B   C   D   E   F   G   H\n");
+    std::println("Side to move    : {}", pos.sideToMove() == Color::WHITE ? "white" : "black");
 
     const auto enpassant = pos.epSquare();
 
-    std::println(" En passant      : {}", enpassant != Square::NO_SQ
-                                              ? Util::sqToCoords[std::to_underlying(enpassant)]
-                                              : "-");
-    std::println(" Castling rights : {}", pos.castlingRights().toString());
-    std::println(" Halfmove clock  : {}", pos.fiftyMoveRule());
-    std::println(" Fullmove number : {}", pos.fullMoves());
+    std::println("En passant      : {}", enpassant != Square::NO_SQ
+                                             ? Util::sqToCoords[std::to_underlying(enpassant)]
+                                             : "-");
+    std::println("Castling rights : {}", pos.castlingRights().toString());
+    std::println("Halfmove clock  : {}", pos.fiftyMoveRule());
+    std::println("Fullmove number : {}", pos.fullMoves());
 }
 
 

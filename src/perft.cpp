@@ -28,7 +28,7 @@ U64 perft(const Board::Position &pos, const int depth) {
 }
 
 void splitPerft(const Board::Position &pos, const int depth) {
-    std::println("\n Running performance test...\n");
+    std::println("\nRunning performance test...\n");
 
     Moves::MoveList moveList;
     generateAllMoves(pos, moveList);
@@ -52,8 +52,8 @@ void splitPerft(const Board::Position &pos, const int depth) {
     const auto elapsed = Utils::getTimeMs() - startTime;
 
     std::println("");
-    std::println(" Depth           : {}", depth);
-    std::println(" Total nodes     : {}", totalNodes);
-    std::println(" Total time      : {}", elapsed);
-    std::println(" Nopes per second: {}", totalNodes / std::max(1UL, elapsed) * 1000);
+    std::println("Depth           : {}", depth);
+    std::println("Total nodes     : {}", totalNodes);
+    std::println("Total time      : {}", elapsed);
+    std::println("Nodes per second: {}", totalNodes / std::max(1UL, elapsed) * 1000);
 }
