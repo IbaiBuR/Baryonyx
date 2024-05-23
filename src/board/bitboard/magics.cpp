@@ -102,7 +102,7 @@ constexpr MagicEntry findMagic(const Square sq) {
 }
 
 template <PieceType pt>
-constexpr void printMagicsByPieceType() {
+void printMagicsByPieceType() {
     std::println(
         "constexpr std::array<MagicEntry, std::to_underlying(Square::SQUARE_NB)> {} = {}\n {}",
         pt == PieceType::BISHOP ? "bishopMagics" : "rookMagics", "{", "{");
@@ -124,17 +124,5 @@ void printMagics() {
     printMagicsByPieceType<PieceType::BISHOP>();
     printMagicsByPieceType<PieceType::ROOK>();
 }
-
-/// @brief Generates an index to map an attack table
-/// @param entry MagicEntry
-/// @param occupied Bitboard of occupied squares on the board (Blockers)
-/// @returns The index
-int magicIndex(const MagicEntry &entry, Bitboard &occupied) {
-    occupied &= entry.mask;
-    occupied *= entry.magic;
-    const int index = static_cast<int>(occupied.asU64() >> entry.shift);
-    return index;
-}
-
 
 } // namespace Board::Bitboards::Magics

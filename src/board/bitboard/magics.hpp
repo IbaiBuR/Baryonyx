@@ -220,8 +220,17 @@ constexpr std::array<MagicEntry, std::to_underlying(Square::SQUARE_NB)> rookMagi
      MagicEntry(Bitboard(0x7E80808080808000ULL), 0x0821000825420081ULL, 52)}
 };
 
+/// @brief Generates an index to map an attack table
+/// @param entry MagicEntry
+/// @param occupied Bitboard of occupied squares on the board (Blockers)
+/// @returns The index
+inline int magicIndex(const MagicEntry &entry, Bitboard &occupied) {
+    occupied &= entry.mask;
+    occupied *= entry.magic;
+    return static_cast<int>(occupied.asU64() >> entry.shift);
+}
+
 void printMagics();
-int  magicIndex(const MagicEntry &entry, Bitboard &occupied);
 
 Bitboard setBlockers(int index, int nBits, Bitboard mask);
 
