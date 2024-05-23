@@ -6,7 +6,8 @@ on:
       - main
 
 jobs:
-  build:
+  test:
+    name: Build Release & Test
     runs-on: ubuntu-24.04
 
     steps:
