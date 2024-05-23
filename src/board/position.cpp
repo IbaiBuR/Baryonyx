@@ -4,6 +4,7 @@
 #include <print>
 
 #include "bitboard/attacks.hpp"
+#include "piece.hpp"
 #include "../utils.hpp"
 
 namespace Board {
@@ -89,11 +90,30 @@ Square Position::kingSquare(const Color c) const {
     return static_cast<Square>(kingBB.getLSB());
 }
 
-void Position::setPiece(const Piece p, const Square sq, const Color c) {
+void Position::setPiece(const Piece p, const Square sq) {
     pieces[std::to_underlying(sq)] = p;
     Bitboards::Bitboard::setBit(pieceBB[std::to_underlying(Pieces::pieceToPieceType.at(p))], sq);
     Bitboards::Bitboard::setBit(occupiedBB[std::to_underlying(c)], sq);
 }
+    Bitboards::Bitboard::setBit(
+        pieceBB[std::to_underlying(Pieces::pieceToPieceType[std::to_underlying(p)])], sq);
+    Bitboards::Bitboard::setBit(
+        occupiedBB[std::to_underlying(Pieces::pieceColor[std::to_underlying(p)])], sq);
+}
+
+void Position::removePiece(const Piece p, const Square sq) {
+    pieces[std::to_underlying(sq)] = Piece::NO_PIECE;
+    Bitboards::Bitboard::clearBit(
+        pieceBB[std::to_underlying(Pieces::pieceToPieceType[std::to_underlying(p)])], sq);
+    Bitboards::Bitboard::clearBit(
+        occupiedBB[std::to_underlying(Pieces::pieceColor[std::to_underlying(p)])], sq);
+}
+
+void Position::movePiece(const Piece p, const Square from, const Square to) {
+    removePiece(p, from);
+    setPiece(p, to);
+}
+
 
 bool Position::isSquareAttacked(const Square sq, const Color c) const {
     const auto &ourPieces  = occupancies(c);

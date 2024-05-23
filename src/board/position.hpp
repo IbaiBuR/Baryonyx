@@ -175,9 +175,13 @@ class Position {
 
         [[nodiscard]] Square kingSquare(Color c) const;
 
-        void setPiece(Piece p, Square sq, Color c);
+        void setPiece(Piece p, Square sq);
+
+        void removePiece(Piece p, Square sq);
 
         [[nodiscard]] bool isSquareAttacked(Square sq, Color c) const;
+        void movePiece(Piece p, Square from, Square to);
+
 
         [[nodiscard]] bool isValid() const;
 
