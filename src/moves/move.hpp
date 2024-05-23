@@ -3,7 +3,7 @@
 #include <string>
 #include <utility>
 
-#include "../types.hpp"
+#include "../chess.hpp"
 
 namespace Moves {
 
@@ -28,7 +28,7 @@ class Move {
 
         constexpr Move() = default;
 
-        constexpr Move(const Square &from, const Square &to, const MoveFlag &flag) {
+        constexpr Move(const Square from, const Square to, const MoveFlag flag) {
             data = std::to_underlying(from) | std::to_underlying(to) << 6
                  | std::to_underlying(flag) << 12;
         }
