@@ -10,14 +10,20 @@ template <Color c>
 constexpr BB::Bitboard singlePawnPush(const BB::Bitboard &pawns, const BB::Bitboard &empty) {
     return c == Color::WHITE ? BB::shift<Direction::NORTH>(pawns) & empty
                              : BB::shift<Direction::SOUTH>(pawns) & empty;
+    if constexpr (c == Color::WHITE)
+        return BB::shift<Direction::NORTH>(pawns) & empty;
+    else
+        return BB::shift<Direction::SOUTH>(pawns) & empty;
 }
 
 template <Color c>
 constexpr BB::Bitboard doublePawnPush(const BB::Bitboard &pawns, const BB::Bitboard &empty) {
-    return c == Color::WHITE ? BB::shift<Direction::NORTH>(singlePawnPush<c>(pawns, empty)) & empty
-                                   & BB::Util::Rank4BB
-                             : BB::shift<Direction::SOUTH>(singlePawnPush<c>(pawns, empty)) & empty
-                                   & BB::Util::Rank5BB;
+    if constexpr (c == Color::WHITE)
+        return BB::shift<Direction::NORTH>(singlePawnPush<c>(pawns, empty)) & empty
+             & BB::Util::Rank4BB;
+    else
+        return BB::shift<Direction::SOUTH>(singlePawnPush<c>(pawns, empty)) & empty
+             & BB::Util::Rank5BB;
 }
 
 template <Color c>
