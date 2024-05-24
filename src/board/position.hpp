@@ -93,11 +93,19 @@ class CastlingRights {
 
         [[nodiscard]] std::string toString() const {
             std::string result;
-            const auto  flags = std::to_underlying(castlingFlags);
-            result += flags & std::to_underlying(Flags::WK) ? 'K' : '-';
-            result += flags & std::to_underlying(Flags::WQ) ? 'Q' : '-';
-            result += flags & std::to_underlying(Flags::BK) ? 'k' : '-';
-            result += flags & std::to_underlying(Flags::BQ) ? 'q' : '-';
+
+            if (kingSideAvailable<Color::WHITE>())
+                result += 'K';
+            if (queenSideAvailable<Color::WHITE>())
+                result += 'Q';
+            if (kingSideAvailable<Color::BLACK>())
+                result += 'k';
+            if (queenSideAvailable<Color::BLACK>())
+                result += 'q';
+
+            if (result.empty())
+                result = '-';
+
             return result;
         }
 
