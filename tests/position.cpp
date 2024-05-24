@@ -46,4 +46,24 @@ TEST_SUITE("Position Tests") {
                 std::invalid_argument);
         }
     }
+
+    TEST_CASE("board to fen") {
+        SUBCASE("start position") {
+            CHECK(Position(Util::startPosFen).toFen()
+                  == "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+        }
+
+        SUBCASE("r1bqk1nr/p1p3bp/2n3p1/1p1pPp2/4P3/P1P2NP1/1P3P1P/RNBQKB1R w KQkq f6 0 8") {
+            CHECK(
+                Position("r1bqk1nr/p1p3bp/2n3p1/1p1pPp2/4P3/P1P2NP1/1P3P1P/RNBQKB1R w KQkq f6 0 8")
+                    .toFen()
+                == "r1bqk1nr/p1p3bp/2n3p1/1p1pPp2/4P3/P1P2NP1/1P3P1P/RNBQKB1R w KQkq f6 0 8");
+        }
+
+        SUBCASE("r2q1knr/1bp3bp/p1n3p1/1p1pPp2/1P2P3/P1P2NP1/3N1PBP/R1BQK1R1 b Q - 0 11") {
+            CHECK(Position("r2q1knr/1bp3bp/p1n3p1/1p1pPp2/1P2P3/P1P2NP1/3N1PBP/R1BQK1R1 b Q - 0 11")
+                      .toFen()
+                  == "r2q1knr/1bp3bp/p1n3p1/1p1pPp2/1P2P3/P1P2NP1/3N1PBP/R1BQK1R1 b Q - 0 11");
+        }
+    }
 }
