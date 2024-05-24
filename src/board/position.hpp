@@ -189,6 +189,8 @@ class Position {
 
         [[nodiscard]] bool wasLegal() const;
 
+        [[nodiscard]] std::string toFen() const;
+
     private:
         Bitboards::Bitboard                                                          checkersBB;
         Color                                                                        stm;

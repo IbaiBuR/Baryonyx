@@ -235,6 +235,41 @@ bool Position::isValid() const {
 
 bool Position::wasLegal() const { return !isSquareAttackedBy(kingSquare(~stm), stm); }
 
+std::string Position::toFen() const {
+    std::string fen;
+
+    for (int rank = 7; rank >= 0; rank--) {
+        U16 emptySquares = 0;
+
+        for (int file = 0; file < 8; file++) {
+            const Square sq           = Bitboards::Util::squareOf(file, rank);
+            const Piece  currentPiece = pieceOn(sq);
+
+            if (currentPiece != Piece::NO_PIECE) {
+                if (emptySquares > 0)
+                    fen += std::to_string(emptySquares);
+                fen += Pieces::pieceToChar[std::to_underlying(currentPiece)];
+                emptySquares = 0;
+            }
+            else
+                emptySquares++;
+        }
+
+        if (emptySquares > 0)
+            fen += std::to_string(emptySquares);
+
+        fen += rank == 0 ? ' ' : '/';
+    }
+
+    fen +=
+        std::format("{} {} {} {} {}", stm == Color::WHITE ? "w" : "b", castlingRights().toString(),
+                    epSq != Square::NO_SQ ? Util::sqToCoords[std::to_underlying(epSq)] : "-",
+                    halfMoveClock, fullMoveNumver);
+
+    return fen;
+}
+
+
 void printBoard(const Position &pos) {
     std::println("\n+---+---+---+---+---+---+---+---+");
 
@@ -263,6 +298,7 @@ void printBoard(const Position &pos) {
     std::println("Castling rights : {}", pos.castlingRights().toString());
     std::println("Halfmove clock  : {}", pos.fiftyMoveRule());
     std::println("Fullmove number : {}", pos.fullMoves());
+    std::println("FEN             : {}", pos.toFen());
 }
 
 
