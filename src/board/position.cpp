@@ -160,6 +160,54 @@ void Position::makeMove(const Moves::Move move) {
     checkersBB = attacksToKing(kingSquare(stm), stm);
 }
 
+void Position::resetToStartPos() {
+    checkersBB     = Bitboards::Util::EmptyBB;
+    stm            = Color::WHITE;
+    epSq           = Square::NO_SQ;
+    castling       = CastlingRights(CastlingRights::Flags::ALL);
+    halfMoveClock  = 0;
+    fullMoveNumver = 1;
+
+    pieceBB[std::to_underlying(PieceType::PAWN)]   = Bitboards::Bitboard(0xFF00000000FF00ULL);
+    pieceBB[std::to_underlying(PieceType::KNIGHT)] = Bitboards::Bitboard(0x4200000000000042ULL);
+    pieceBB[std::to_underlying(PieceType::BISHOP)] = Bitboards::Bitboard(0x2400000000000024ULL);
+    pieceBB[std::to_underlying(PieceType::ROOK)]   = Bitboards::Bitboard(0x8100000000000081ULL);
+    pieceBB[std::to_underlying(PieceType::QUEEN)]  = Bitboards::Bitboard(0x800000000000008ULL);
+    pieceBB[std::to_underlying(PieceType::KING)]   = Bitboards::Bitboard(0x1000000000000010ULL);
+
+    occupiedBB[std::to_underlying(Color::WHITE)] = Bitboards::Bitboard(0xFFFFULL);
+    occupiedBB[std::to_underlying(Color::BLACK)] = Bitboards::Bitboard(0xFFFF000000000000ULL);
+
+    pieces.fill(Piece::NO_PIECE);
+
+    for (U8 sq = std::to_underlying(Square::A2); sq <= std::to_underlying(Square::H2); sq++)
+        pieces[sq] = Piece::W_PAWN;
+
+    for (U8 sq = std::to_underlying(Square::A7); sq <= std::to_underlying(Square::H7); sq++)
+        pieces[sq] = Piece::B_PAWN;
+
+    pieces[std::to_underlying(Square::B1)] = pieces[std::to_underlying(Square::G1)] =
+        Piece::W_KNIGHT;
+
+    pieces[std::to_underlying(Square::B8)] = pieces[std::to_underlying(Square::G8)] =
+        Piece::B_KNIGHT;
+
+    pieces[std::to_underlying(Square::C1)] = pieces[std::to_underlying(Square::F1)] =
+        Piece::W_BISHOP;
+
+    pieces[std::to_underlying(Square::C8)] = pieces[std::to_underlying(Square::F8)] =
+        Piece::B_BISHOP;
+
+    pieces[std::to_underlying(Square::A1)] = pieces[std::to_underlying(Square::H1)] = Piece::W_ROOK;
+    pieces[std::to_underlying(Square::A8)] = pieces[std::to_underlying(Square::H8)] = Piece::B_ROOK;
+
+    pieces[std::to_underlying(Square::D1)] = Piece::W_QUEEN;
+    pieces[std::to_underlying(Square::D8)] = Piece::B_QUEEN;
+
+    pieces[std::to_underlying(Square::E1)] = Piece::W_KING;
+    pieces[std::to_underlying(Square::E8)] = Piece::B_KING;
+}
+
 bool Position::isSquareAttackedBy(const Square sq, const Color c) const {
     const auto &ourPieces  = occupancies(c);
     const auto &ourPawns   = pieceTypeBB(PieceType::PAWN) & ourPieces;

@@ -191,6 +191,8 @@ class Position {
 
         void makeMove(Moves::Move move);
 
+        void resetToStartPos();
+
         [[nodiscard]] bool isSquareAttackedBy(Square sq, Color c) const;
 
         [[nodiscard]] bool isValid() const;
