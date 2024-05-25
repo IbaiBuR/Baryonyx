@@ -66,6 +66,9 @@ class Move {
             return !this->isCapture() && !this->isPromotion();
         }
 
+        constexpr bool operator==(const Move &other) const { return data == other.data; }
+        constexpr bool operator!=(const Move &other) const { return data != other.data; }
+
         [[nodiscard]] std::string toString() const;
 
         [[nodiscard]] Piece getPromotedPiece(Color stm) const;
