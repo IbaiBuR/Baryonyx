@@ -11,6 +11,7 @@ class Move {
     public:
         enum class MoveFlag : U8 {
             NOMOVE,
+            NULLMOVE,
             QUIET,
             CAPTURE,
             ENPASSANT,
@@ -32,6 +33,9 @@ class Move {
             data = std::to_underlying(from) | std::to_underlying(to) << 6
                  | std::to_underlying(flag) << 12;
         }
+
+        static constexpr Move none() { return {Square::A8, Square::A8, MoveFlag::NOMOVE}; }
+        static constexpr Move null() { return {Square::A8, Square::A8, MoveFlag::NULLMOVE}; }
 
         [[nodiscard]] constexpr Square from() const { return static_cast<Square>(data & 0X3F); }
 
