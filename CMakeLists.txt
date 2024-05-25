@@ -11,6 +11,7 @@ file(GLOB SRCS
         "src/*.hpp" "src/*.cpp"
         "src/board/*.hpp" "src/board/*.cpp"
         "src/board/bitboard/*.hpp" "src/board/bitboard/*.cpp"
-        "src/moves/*.hpp" "src/moves/*.cpp")
+        "src/moves/*.hpp" "src/moves/*.cpp"
+        "src/uci/*.hpp" "src/uci/*.cpp")
 
 add_executable(NibbleCpp ${SRCS})
