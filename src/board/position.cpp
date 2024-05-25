@@ -347,7 +347,7 @@ void printBoard(const Position &pos) {
     std::println("Halfmove clock  : {}", pos.fiftyMoveRule());
     std::println("Fullmove number : {}", pos.fullMoves());
     std::println("FEN             : {}", pos.toFen());
+    std::println("");
 }
-
 
 } // namespace Board
