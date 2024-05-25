@@ -47,7 +47,7 @@ void splitPerft(const Board::Position &pos, const int depth) {
         const U64 value = perft(copy, depth - 1);
         totalNodes += value;
 
-        std::println(" {0}: {1}", currentMove.toString(), value);
+        std::println("{0}: {1}", currentMove.toString(), value);
     }
     const auto elapsed = Utils::getTimeMs() - startTime;
 
