@@ -180,10 +180,10 @@ void Position::resetToStartPos() {
 
     pieces.fill(Piece::NO_PIECE);
 
-    for (U8 sq = std::to_underlying(Square::A2); sq <= std::to_underlying(Square::H2); sq++)
+    for (U8 sq = std::to_underlying(Square::A2); sq <= std::to_underlying(Square::H2); ++sq)
         pieces[sq] = Piece::W_PAWN;
 
-    for (U8 sq = std::to_underlying(Square::A7); sq <= std::to_underlying(Square::H7); sq++)
+    for (U8 sq = std::to_underlying(Square::A7); sq <= std::to_underlying(Square::H7); ++sq)
         pieces[sq] = Piece::B_PAWN;
 
     pieces[std::to_underlying(Square::B1)] = pieces[std::to_underlying(Square::G1)] =
@@ -286,10 +286,10 @@ bool Position::wasLegal() const { return !isSquareAttackedBy(kingSquare(~stm), s
 std::string Position::toFen() const {
     std::string fen;
 
-    for (int rank = 7; rank >= 0; rank--) {
+    for (int rank = 7; rank >= 0; --rank) {
         U16 emptySquares = 0;
 
-        for (int file = 0; file < 8; file++) {
+        for (int file = 0; file < 8; ++file) {
             const Square sq           = Bitboards::Util::squareOf(file, rank);
             const Piece  currentPiece = pieceOn(sq);
 
@@ -300,7 +300,7 @@ std::string Position::toFen() const {
                 emptySquares = 0;
             }
             else
-                emptySquares++;
+                ++emptySquares;
         }
 
         if (emptySquares > 0)
@@ -321,8 +321,8 @@ std::string Position::toFen() const {
 void printBoard(const Position &pos) {
     std::println("\n+---+---+---+---+---+---+---+---+");
 
-    for (int rank = 7; rank >= 0; rank--) {
-        for (int file = 0; file < 8; file++) {
+    for (int rank = 7; rank >= 0; --rank) {
+        for (int file = 0; file < 8; ++file) {
             const auto  sq           = Bitboards::Util::squareOf(file, rank);
             const Piece currentPiece = pos.pieceOn(sq);
             std::print("| {}", currentPiece == Piece::NO_PIECE
@@ -346,8 +346,7 @@ void printBoard(const Position &pos) {
     std::println("Castling rights : {}", pos.castlingRights().toString());
     std::println("Halfmove clock  : {}", pos.fiftyMoveRule());
     std::println("Fullmove number : {}", pos.fullMoves());
-    std::println("FEN             : {}", pos.toFen());
-    std::println("");
+    std::println("FEN             : {}\n", pos.toFen());
 }
 
 } // namespace Board

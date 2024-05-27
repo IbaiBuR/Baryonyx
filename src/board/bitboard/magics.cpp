@@ -15,7 +15,7 @@ namespace Board::Bitboards::Magics {
 Bitboard setBlockers(const int index, const int nBits, Bitboard mask) {
     Bitboard blockers;
 
-    for (int i = 0; i < nBits; i++) {
+    for (int i = 0; i < nBits; ++i) {
         const auto sq = static_cast<Square>(mask.popLSB());
 
         if (index & (1 << i))
@@ -40,7 +40,7 @@ bool tryMagic(const U64                    magic,
     std::vector<Bitboard> attackTable(numOccupancies);
     bool                  collision = false;
 
-    for (int i = 0; !collision && i < numOccupancies; i++) {
+    for (int i = 0; !collision && i < numOccupancies; ++i) {
         const U64 magicIndex = (blockers[i].asU64() * magic) >> shift;
 
         if (attackTable[magicIndex] == Util::EmptyBB)
@@ -72,7 +72,7 @@ constexpr MagicEntry findMagic(const Square sq) {
     std::vector<Bitboard> blockers(maxBlockersConfig);
     std::vector<Bitboard> attacks(maxBlockersConfig);
 
-    for (int i = 0; i < numOccupancies; i++) {
+    for (int i = 0; i < numOccupancies; ++i) {
         blockers[i] = setBlockers(i, relevantBits, mask);
         attacks[i]  = Attacks::genSliding<pt>(sq, blockers[i]);
     }
@@ -85,7 +85,7 @@ constexpr MagicEntry findMagic(const Square sq) {
     };
 
     // Find the magic numbers by trial and error
-    for (int i = 0; i < 10000000; i++) {
+    for (int i = 0; i < 10000000; ++i) {
         const U64 magicCandidate = randomMagic();
 
         // Skip bad magics
@@ -107,7 +107,7 @@ void printMagicsByPieceType() {
         "constexpr std::array<MagicEntry, std::to_underlying(Square::SQUARE_NB)> {} = {}\n {}",
         pt == PieceType::BISHOP ? "bishopMagics" : "rookMagics", "{", "{");
 
-    for (U8 sq = 0; sq < 64; sq++) {
+    for (U8 sq = 0; sq < 64; ++sq) {
         auto [mask, magic, shift] = findMagic<pt>(static_cast<Square>(sq));
         std::print(" MagicEntry(Bitboard(0x{:016X}ULL), 0x{:016X}ULL, {})", mask.asU64(), magic,
                    shift);

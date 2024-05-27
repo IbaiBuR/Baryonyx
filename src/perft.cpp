@@ -14,7 +14,7 @@ U64 perft(const Board::Position &pos, const int depth) {
     Moves::MoveList moveList;
     generateAllMoves(pos, moveList);
 
-    for (U32 i = 0; i < moveList.size(); i++) {
+    for (U32 i = 0; i < moveList.size(); ++i) {
         Board::Position copy = pos;
         copy.makeMove(moveList.moveAt(i));
 
@@ -36,7 +36,7 @@ void splitPerft(const Board::Position &pos, const int depth) {
     U64        totalNodes = 0ULL;
     const auto startTime  = Utils::getTimeMs();
 
-    for (U32 i = 0; i < moveList.size(); i++) {
+    for (U32 i = 0; i < moveList.size(); ++i) {
         Board::Position   copy        = pos;
         const Moves::Move currentMove = moveList.moveAt(i);
         copy.makeMove(currentMove);
@@ -49,6 +49,7 @@ void splitPerft(const Board::Position &pos, const int depth) {
 
         std::println("{0}: {1}", currentMove.toString(), value);
     }
+
     const auto elapsed = Utils::getTimeMs() - startTime;
 
     std::println("\nDepth           : {}", depth);
