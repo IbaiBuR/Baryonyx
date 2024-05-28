@@ -56,7 +56,7 @@ Position::Position(const std::string &fen) :
                    : Bitboards::Util::squareOf(enpassant[0] - 'a', enpassant[1] - 1 - '0');
 
     this->halfMoveClock  = std::stoi(tokens[4]);
-    this->fullMoveNumver = std::stoi(tokens[5]);
+    this->fullMoveNumber = std::stoi(tokens[5]);
 
     this->checkersBB = attacksToKing(kingSquare(this->stm), this->stm);
 
@@ -151,7 +151,7 @@ void Position::makeMove(const Moves::Move move) {
     castling &= Util::castlingRightsUpdate[std::to_underlying(from)];
     castling &= Util::castlingRightsUpdate[std::to_underlying(to)];
 
-    fullMoveNumver += stm == Color::BLACK;
+    fullMoveNumber += stm == Color::BLACK;
 
     if (Pieces::pieceToPieceType[std::to_underlying(movingPiece)] == PieceType::PAWN)
         halfMoveClock = 0;
@@ -166,7 +166,7 @@ void Position::resetToStartPos() {
     epSq           = Square::NO_SQ;
     castling       = CastlingRights(CastlingRights::Flags::ALL);
     halfMoveClock  = 0;
-    fullMoveNumver = 1;
+    fullMoveNumber = 1;
 
     pieceBB[std::to_underlying(PieceType::PAWN)]   = Bitboards::Bitboard(0xFF00000000FF00ULL);
     pieceBB[std::to_underlying(PieceType::KNIGHT)] = Bitboards::Bitboard(0x4200000000000042ULL);
@@ -312,7 +312,7 @@ std::string Position::toFen() const {
     fen +=
         std::format("{} {} {} {} {}", stm == Color::WHITE ? "w" : "b", castlingRights().toString(),
                     epSq != Square::NO_SQ ? Util::sqToCoords[std::to_underlying(epSq)] : "-",
-                    halfMoveClock, fullMoveNumver);
+                    halfMoveClock, fullMoveNumber);
 
     return fen;
 }

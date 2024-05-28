@@ -119,7 +119,7 @@ class Position {
             stm(Color::WHITE),
             epSq(Square::NO_SQ),
             halfMoveClock(0),
-            fullMoveNumver(1),
+            fullMoveNumber(1),
             pieces() {
             pieces.fill(Piece::NO_PIECE);
         }
@@ -131,7 +131,7 @@ class Position {
         [[nodiscard]] Square              epSquare() const { return epSq; }
         [[nodiscard]] CastlingRights      castlingRights() const { return castling; }
         [[nodiscard]] U8                  fiftyMoveRule() const { return halfMoveClock; }
-        [[nodiscard]] U16                 fullMoves() const { return fullMoveNumver; }
+        [[nodiscard]] U16                 fullMoves() const { return fullMoveNumber; }
 
         [[nodiscard]] Piece pieceOn(const Square sq) const {
             return pieces[std::to_underlying(sq)];
@@ -207,7 +207,7 @@ class Position {
         Square                                                                       epSq;
         CastlingRights                                                               castling;
         U8                                                                           halfMoveClock;
-        U16                                                                          fullMoveNumver;
+        U16                                                                          fullMoveNumber;
         std::array<Bitboards::Bitboard, std::to_underlying(PieceType::PIECETYPE_NB)> pieceBB;
         std::array<Bitboards::Bitboard, std::to_underlying(Color::COLOR_NB)>         occupiedBB;
         std::array<Piece, std::to_underlying(Square::SQUARE_NB)>                     pieces;
