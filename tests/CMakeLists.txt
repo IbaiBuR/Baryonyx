@@ -6,7 +6,7 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3 -march=native -Wall -Wextra")
 
 file(GLOB SRCS "*.cpp"
         "../src/*.hpp"
-        "../src/perft.cpp"
+        "../src/perft/perft.cpp"
         "../src/moves/*.hpp"
         "../src/moves/*.cpp"
         "../src/board/bitboard/*.hpp"

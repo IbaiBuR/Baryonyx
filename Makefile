@@ -1,6 +1,6 @@
 CXX = $(COMP)
-SRCS = src/*.cpp src/board/*.cpp src/board/bitboard/*.cpp src/moves/*.cpp src/uci/*.cpp
-HEADERS = src/*.hpp src/board/*.hpp src/board/bitboard/*.hpp src/moves/*.hpp src/uci/*.hpp
+SRCS = src/*.cpp src/board/*.cpp src/board/bitboard/*.cpp src/moves/*.cpp src/uci/*.cpp src/eval/*.cpp src/perft/*.cpp
+HEADERS = src/*.hpp src/board/*.hpp src/board/bitboard/*.hpp src/moves/*.hpp src/uci/*.hpp src/eval/*.hpp src/perft/*.hpp
 CXXFLAGS = -O3 -DNDEBUG -std=c++23 -march=native -Wall -Wextra
 DEBUGFLAGS = -g -std=c++23 -Wall -Wextra
 EXE = nibblecpp
