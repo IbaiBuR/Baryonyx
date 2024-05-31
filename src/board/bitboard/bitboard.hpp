@@ -12,7 +12,7 @@ class Bitboard {
     public:
         constexpr Bitboard() :
             data(0ULL){};
-        constexpr explicit Bitboard(const U64 bb) :
+        constexpr explicit Bitboard(const u64 bb) :
             data(bb){};
 
         static constexpr Bitboard fromSquare(const Square sq) {
@@ -31,7 +31,7 @@ class Bitboard {
             bitboard.data &= ~(1ULL << std::to_underlying(sq));
         }
 
-        [[nodiscard]] constexpr U64 asU64() const { return data; }
+        [[nodiscard]] constexpr u64 asU64() const { return data; }
 
         [[nodiscard]] constexpr bool empty() const { return data == 0ULL; }
 
@@ -82,7 +82,7 @@ class Bitboard {
             return *this;
         }
 
-        constexpr Bitboard operator*=(const U64 value) {
+        constexpr Bitboard operator*=(const u64 value) {
             data *= value;
             return *this;
         }
@@ -111,7 +111,7 @@ class Bitboard {
         constexpr Bitboard operator>>(const int shift) const { return Bitboard(data >> shift); }
 
     private:
-        U64 data;
+        u64 data;
 };
 
 namespace Util {
@@ -139,7 +139,7 @@ constexpr auto Rank8BB = Bitboard(0xFF00000000000000ULL);
 constexpr File fileOf(const Square sq) { return static_cast<File>(std::to_underlying(sq) & 7); }
 constexpr Rank rankOf(const Square sq) { return static_cast<Rank>(std::to_underlying(sq) >> 3); }
 
-constexpr Square squareOf(const U8 file, const U8 rank) {
+constexpr Square squareOf(const u8 file, const u8 rank) {
     return static_cast<Square>((rank << 3) + file);
 }
 

@@ -23,21 +23,21 @@ class MoveList {
 
         void clear() { count = 0; }
 
-        [[nodiscard]] U32 size() const { return count; }
+        [[nodiscard]] u32 size() const { return count; }
 
-        [[nodiscard]] Move moveAt(const U32 index) const {
+        [[nodiscard]] Move moveAt(const u32 index) const {
             assert(index < maxMoves);
             return moves[index].move;
         }
 
-        [[nodiscard]] Score scoreAt(const U32 index) const {
+        [[nodiscard]] Score scoreAt(const u32 index) const {
             assert(index < maxMoves);
             return moves[index].score;
         }
 
     private:
         std::array<ScoredMove, maxMoves> moves{};
-        U32                              count{};
+        u32                              count{};
 };
 
 void printMoveList(const MoveList &moveList);

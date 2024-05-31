@@ -2,7 +2,7 @@
 
 #include "types.hpp"
 
-enum class File : U8 {
+enum class File : u8 {
     FILE_A,
     FILE_B,
     FILE_C,
@@ -14,7 +14,7 @@ enum class File : U8 {
     FILE_NB
 };
 
-enum class Rank : U8 {
+enum class Rank : u8 {
     RANK_1,
     RANK_2,
     RANK_3,
@@ -40,13 +40,13 @@ enum class Square {
 };
 // clang-format on
 
-enum class Color : U8 {
+enum class Color : u8 {
     WHITE,
     BLACK,
     COLOR_NB
 };
 
-enum class PieceType : U8 {
+enum class PieceType : u8 {
     PAWN,
     KNIGHT,
     BISHOP,
@@ -56,7 +56,7 @@ enum class PieceType : U8 {
     PIECETYPE_NB
 };
 
-enum class Piece : I8 {
+enum class Piece : i8 {
     W_PAWN,
     W_KNIGHT,
     W_BISHOP,
@@ -73,7 +73,7 @@ enum class Piece : I8 {
     NO_PIECE = -1
 };
 
-enum class Direction : I8 {
+enum class Direction : i8 {
     NORTH      = 8,
     SOUTH      = -NORTH,
     EAST       = 1,

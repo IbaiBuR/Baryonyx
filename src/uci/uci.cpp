@@ -1,7 +1,7 @@
 #include "uci.hpp"
 
 #include "../moves/movegen.hpp"
-#include "../perft.hpp"
+#include "../perft/perft.hpp"
 #include "../utils.hpp"
 
 #include <iostream>
@@ -94,7 +94,7 @@ Moves::Move fromUCI(const Board::Position &pos, const std::string &move) {
     Moves::MoveList moveList;
     generateAllMoves(pos, moveList);
 
-    for (U32 i = 0; i < moveList.size(); ++i) {
+    for (u32 i = 0; i < moveList.size(); ++i) {
         if (const Moves::Move currentMove = moveList.moveAt(i); move == currentMove.toString())
             return currentMove;
     }

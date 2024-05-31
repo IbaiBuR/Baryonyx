@@ -13,7 +13,7 @@ template <PieceType pt>
 void initSliders() {
     constexpr bool isBishop = pt == PieceType::BISHOP;
 
-    for (U8 sq = 0; sq < std::to_underlying(Square::SQUARE_NB); ++sq) {
+    for (u8 sq = 0; sq < std::to_underlying(Square::SQUARE_NB); ++sq) {
         auto [mask, magic, shift] = isBishop ? Magics::bishopMagics[sq] : Magics::rookMagics[sq];
         const int nBits           = mask.bitCount();
         const int numOccupancies  = 1 << nBits;

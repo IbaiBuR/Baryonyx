@@ -10,7 +10,7 @@ namespace Board {
 
 class CastlingRights {
     public:
-        enum class Flags : U8 {
+        enum class Flags : u8 {
             NONE,
             WK  = 1,
             WQ  = 2,
@@ -130,8 +130,8 @@ class Position {
         [[nodiscard]] Color               sideToMove() const { return stm; }
         [[nodiscard]] Square              epSquare() const { return epSq; }
         [[nodiscard]] CastlingRights      castlingRights() const { return castling; }
-        [[nodiscard]] U8                  fiftyMoveRule() const { return halfMoveClock; }
-        [[nodiscard]] U16                 fullMoves() const { return fullMoveNumber; }
+        [[nodiscard]] u8                  fiftyMoveRule() const { return halfMoveClock; }
+        [[nodiscard]] u16                 fullMoves() const { return fullMoveNumber; }
 
         [[nodiscard]] Piece pieceOn(const Square sq) const {
             return pieces[std::to_underlying(sq)];
@@ -206,8 +206,8 @@ class Position {
         Color                                                                        stm;
         Square                                                                       epSq;
         CastlingRights                                                               castling;
-        U8                                                                           halfMoveClock;
-        U16                                                                          fullMoveNumber;
+        u8                                                                           halfMoveClock;
+        u16                                                                          fullMoveNumber;
         std::array<Bitboards::Bitboard, std::to_underlying(PieceType::PIECETYPE_NB)> pieceBB;
         std::array<Bitboards::Bitboard, std::to_underlying(Color::COLOR_NB)>         occupiedBB;
         std::array<Piece, std::to_underlying(Square::SQUARE_NB)>                     pieces;

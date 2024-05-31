@@ -8,7 +8,7 @@ namespace Board::Bitboards::Magics {
 
 struct MagicEntry {
         Bitboard mask;
-        U64      magic;
+        u64      magic;
         int      shift;
 };
 

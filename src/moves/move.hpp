@@ -9,7 +9,7 @@ namespace Moves {
 
 class Move {
     public:
-        enum class MoveFlag : U8 {
+        enum class MoveFlag : u8 {
             NOMOVE,
             NULLMOVE,
             QUIET,
@@ -78,7 +78,7 @@ class Move {
         [[nodiscard]] Piece getPromotedPiece(Color stm) const;
 
     private:
-        U16 data;
+        u16 data;
 };
 
 } // namespace Moves

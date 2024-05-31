@@ -22,7 +22,7 @@ inline std::vector<std::string> splitString(const std::string &str, const char d
     return tokens;
 }
 
-inline U64 getTimeMs() {
+inline u64 getTimeMs() {
     return std::chrono::duration_cast<std::chrono::milliseconds>(
                std::chrono::steady_clock::now().time_since_epoch())
         .count();

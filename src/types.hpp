@@ -2,13 +2,15 @@
 
 #include <cstdint>
 
-using U8  = std::uint8_t;
-using U16 = std::uint16_t;
-using U32 = std::uint32_t;
-using U64 = std::uint64_t;
+using u8  = std::uint8_t;
+using u16 = std::uint16_t;
+using u32 = std::uint32_t;
+using u64 = std::uint64_t;
 
-using I8  = std::int8_t;
-using I16 = std::int16_t;
-using I32 = std::int32_t;
+using usize = std::size_t;
 
-using Score = I32;
+using i8  = std::int8_t;
+using i16 = std::int16_t;
+using i32 = std::int32_t;
+
+using Score = i32;

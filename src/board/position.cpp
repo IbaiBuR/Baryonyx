@@ -28,7 +28,7 @@ Position::Position(const std::string &fen) :
 
     for (const auto &rank : ranks) {
 
-        U8 fileIndex = 0;
+        u8 fileIndex = 0;
 
         for (const auto c : rank) {
             if (fileIndex >= 8)
@@ -180,10 +180,10 @@ void Position::resetToStartPos() {
 
     pieces.fill(Piece::NO_PIECE);
 
-    for (U8 sq = std::to_underlying(Square::A2); sq <= std::to_underlying(Square::H2); ++sq)
+    for (u8 sq = std::to_underlying(Square::A2); sq <= std::to_underlying(Square::H2); ++sq)
         pieces[sq] = Piece::W_PAWN;
 
-    for (U8 sq = std::to_underlying(Square::A7); sq <= std::to_underlying(Square::H7); ++sq)
+    for (u8 sq = std::to_underlying(Square::A7); sq <= std::to_underlying(Square::H7); ++sq)
         pieces[sq] = Piece::B_PAWN;
 
     pieces[std::to_underlying(Square::B1)] = pieces[std::to_underlying(Square::G1)] =
@@ -287,7 +287,7 @@ std::string Position::toFen() const {
     std::string fen;
 
     for (int rank = 7; rank >= 0; --rank) {
-        U16 emptySquares = 0;
+        u16 emptySquares = 0;
 
         for (int file = 0; file < 8; ++file) {
             const Square sq           = Bitboards::Util::squareOf(file, rank);

@@ -32,7 +32,7 @@ Bitboard setBlockers(const int index, const int nBits, Bitboard mask) {
 /// @param blockers Blockers
 /// @param attacks Pre-calculated attacks
 /// @returns True if no collisions found while trying to fill in the attack table
-bool tryMagic(const U64                    magic,
+bool tryMagic(const u64                    magic,
               const int                    shift,
               const int                    numOccupancies,
               const std::vector<Bitboard> &blockers,
@@ -41,7 +41,7 @@ bool tryMagic(const U64                    magic,
     bool                  collision = false;
 
     for (int i = 0; !collision && i < numOccupancies; ++i) {
-        const U64 magicIndex = (blockers[i].asU64() * magic) >> shift;
+        const u64 magicIndex = (blockers[i].asU64() * magic) >> shift;
 
         if (attackTable[magicIndex] == Util::EmptyBB)
             attackTable[magicIndex] = attacks[i];
@@ -80,13 +80,13 @@ constexpr MagicEntry findMagic(const Square sq) {
     // RNG using a fixed seed generated with an std::random_device
     std::mt19937_64 magicsRng(979484151);
     const auto      randomMagic = [&magicsRng]() {
-        std::uniform_int_distribution<U64> dis;
+        std::uniform_int_distribution<u64> dis;
         return dis(magicsRng) & dis(magicsRng) & dis(magicsRng);
     };
 
     // Find the magic numbers by trial and error
     for (int i = 0; i < 10000000; ++i) {
-        const U64 magicCandidate = randomMagic();
+        const u64 magicCandidate = randomMagic();
 
         // Skip bad magics
         if (std::popcount((mask.asU64() * magicCandidate) & 0xFF00000000000000) < 6)
@@ -107,7 +107,7 @@ void printMagicsByPieceType() {
         "constexpr std::array<MagicEntry, std::to_underlying(Square::SQUARE_NB)> {} = {}\n {}",
         pt == PieceType::BISHOP ? "bishopMagics" : "rookMagics", "{", "{");
 
-    for (U8 sq = 0; sq < 64; ++sq) {
+    for (u8 sq = 0; sq < 64; ++sq) {
         auto [mask, magic, shift] = findMagic<pt>(static_cast<Square>(sq));
         std::print(" MagicEntry(Bitboard(0x{:016X}ULL), 0x{:016X}ULL, {})", mask.asU64(), magic,
                    shift);
