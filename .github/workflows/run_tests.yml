@@ -8,7 +8,11 @@ on:
 jobs:
   test:
     name: Build Release & Test
-    runs-on: ubuntu-24.04
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-24.04 ]
+      fail-fast: false
 
     steps:
       - name: Checkout code
