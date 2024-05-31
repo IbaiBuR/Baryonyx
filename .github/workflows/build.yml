@@ -18,6 +18,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Remove conflicting packages
+        run: |
+          sudo apt remove needrestart
+
       - name: Install latest GCC
         run: |
           sudo add-apt-repository universe -y
