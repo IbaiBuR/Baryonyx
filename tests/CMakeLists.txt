@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.27)
 project(NibbleTests)
 
 set(CMAKE_CXX_STANDARD 23)
-set(CMAKE_CXX_FLAGS_RELEASE "-O3 -march=native -Wall -Wextra")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3 -funroll-loops -flto -DNDEBUG -std=c++23 -march=native -mtune=native -Wall -Wextra")
 
 file(GLOB SRCS "*.cpp"
         "../src/*.hpp"

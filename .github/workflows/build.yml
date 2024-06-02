@@ -36,7 +36,7 @@ jobs:
           echo "CXX=$(which g++-14)" >> $GITHUB_ENV
 
       - name: Build
-        run: make debug COMP=${{ env.CXX }}
+        run: make debug CXX=${{ env.CXX }}
 
       - name: Clean
         run: make clean
