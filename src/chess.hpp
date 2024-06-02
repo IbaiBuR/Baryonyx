@@ -104,6 +104,14 @@ constexpr Square operator-(const Square sq, const Direction dir) {
 
 constexpr Square flip(const Square sq) { return static_cast<Square>(static_cast<int>(sq) ^ 56); }
 
+template <Color c>
+constexpr Square relativeSquare(const Square sq) {
+    if constexpr (c == Color::WHITE)
+        return flip(sq);
+    else
+        return sq;
+}
+
 constexpr Direction operator*(const Direction dir, const int mul) {
     return static_cast<Direction>(static_cast<int>(dir) * mul);
 }
