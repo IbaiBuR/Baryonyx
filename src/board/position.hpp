@@ -151,17 +151,8 @@ class Position {
         template <Color c>
         [[nodiscard]] bool canCastleQueenSide() const;
 
-            if constexpr (c == Color::WHITE)
-                return castlingRights().queenSideAvailable<Color::WHITE>()
-                    && !isSquareAttackedBy(Square::D1, Color::BLACK)
-                    && !isSquareAttackedBy(Square::C1, Color::BLACK)
-                    && !(occupied & Bitboards::Bitboard(0xEULL));
-            else
-                return castlingRights().queenSideAvailable<Color::BLACK>()
-                    && !isSquareAttackedBy(Square::D8, Color::WHITE)
-                    && !isSquareAttackedBy(Square::C8, Color::WHITE)
-                    && !(occupied & Bitboards::Bitboard(0xE00000000000000ULL));
-        }
+        template <Color c>
+        [[nodiscard]] int pieceCount(PieceType pt) const;
 
         [[nodiscard]] Bitboards::Bitboard attacksToKing(Square kingSquare, Color c) const;
 

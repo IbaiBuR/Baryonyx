@@ -102,6 +102,16 @@ bool Position::canCastleQueenSide() const {
 template bool Position::canCastleQueenSide<Color::WHITE>() const;
 template bool Position::canCastleQueenSide<Color::BLACK>() const;
 
+template <Color c>
+int Position::pieceCount(const PieceType pt) const {
+    if constexpr (c == Color::WHITE)
+        return (pieceTypeBB(pt) & occupancies(Color::WHITE)).bitCount();
+    else
+        return (pieceTypeBB(pt) & occupancies(Color::BLACK)).bitCount();
+}
+
+template int Position::pieceCount<Color::WHITE>(PieceType pt) const;
+template int Position::pieceCount<Color::BLACK>(PieceType pt) const;
 
 Bitboards::Bitboard Position::attacksToKing(const Square kingSquare, const Color c) const {
     const auto &oppOccupancies   = occupancies(~c);
