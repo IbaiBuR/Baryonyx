@@ -15,7 +15,7 @@ class PackedScore {
             score(score) {}
 
         constexpr PackedScore(const i16 mgScore, const i16 egScore) {
-            score = (egScore << 16) + mgScore;
+            score = static_cast<Score>((static_cast<u32>(egScore) << 16) + mgScore);
         }
 
         constexpr PackedScore operator*(const int mul) const { return PackedScore(score * mul); }
@@ -41,7 +41,7 @@ class PackedScore {
         [[nodiscard]] constexpr Score midgame() const { return static_cast<i16>(score); }
 
         [[nodiscard]] constexpr Score endgame() const {
-            return static_cast<i16>((score + 0X8000) >> 16);
+            return static_cast<i16>(static_cast<u32>(score + 0X8000) >> 16);
         }
 
     private:
