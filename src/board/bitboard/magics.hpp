@@ -13,8 +13,7 @@ struct MagicEntry {
 };
 
 constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> bishopMasks = {
-    {
-     Bitboard(0x0040201008040200ULL), Bitboard(0x0000402010080400ULL),
+    {Bitboard(0x0040201008040200ULL), Bitboard(0x0000402010080400ULL),
      Bitboard(0x0000004020100A00ULL), Bitboard(0x0000000040221400ULL),
      Bitboard(0x0000000002442800ULL), Bitboard(0x0000000204085000ULL),
      Bitboard(0x0000020408102000ULL), Bitboard(0x0002040810204000ULL),
@@ -45,13 +44,11 @@ constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> bishopMask
      Bitboard(0x0002040810204000ULL), Bitboard(0x0004081020400000ULL),
      Bitboard(0x000A102040000000ULL), Bitboard(0x0014224000000000ULL),
      Bitboard(0x0028440200000000ULL), Bitboard(0x0050080402000000ULL),
-     Bitboard(0x0020100804020000ULL), Bitboard(0x0040201008040200ULL),
-     }
+     Bitboard(0x0020100804020000ULL), Bitboard(0x0040201008040200ULL)}
 };
 
 constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> rookMasks = {
-    {
-     Bitboard(0x000101010101017EULL), Bitboard(0x000202020202027CULL),
+    {Bitboard(0x000101010101017EULL), Bitboard(0x000202020202027CULL),
      Bitboard(0x000404040404047AULL), Bitboard(0x0008080808080876ULL),
      Bitboard(0x001010101010106EULL), Bitboard(0x002020202020205EULL),
      Bitboard(0x004040404040403EULL), Bitboard(0x008080808080807EULL),
@@ -82,8 +79,7 @@ constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> rookMasks 
      Bitboard(0x7E01010101010100ULL), Bitboard(0x7C02020202020200ULL),
      Bitboard(0x7A04040404040400ULL), Bitboard(0x7608080808080800ULL),
      Bitboard(0x6E10101010101000ULL), Bitboard(0x5E20202020202000ULL),
-     Bitboard(0x3E40404040404000ULL), Bitboard(0x7E80808080808000ULL),
-     }
+     Bitboard(0x3E40404040404000ULL), Bitboard(0x7E80808080808000ULL)}
 };
 
 constexpr std::array<MagicEntry, std::to_underlying(Square::SQUARE_NB)> bishopMagics = {

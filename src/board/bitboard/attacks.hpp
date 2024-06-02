@@ -19,8 +19,7 @@ extern std::array<std::array<Bitboard, maxRookBlockersConfig>,
     rookAttacks;
 
 constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> whitePawnAttacks = {
-    {
-     Bitboard(0x200ULL),
+    {Bitboard(0x200ULL),
      Bitboard(0x500ULL),
      Bitboard(0xA00ULL),
      Bitboard(0x1400ULL),
@@ -83,13 +82,11 @@ constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> whitePawnA
      Bitboard(0x0ULL),
      Bitboard(0x0ULL),
      Bitboard(0x0ULL),
-     Bitboard(0x0ULL),
-     }
+     Bitboard(0x0ULL)}
 };
 
 constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> blackPawnAttacks = {
-    {
-     Bitboard(0x0ULL),
+    {Bitboard(0x0ULL),
      Bitboard(0x0ULL),
      Bitboard(0x0ULL),
      Bitboard(0x0ULL),
@@ -152,15 +149,13 @@ constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> blackPawnA
      Bitboard(0x28000000000000ULL),
      Bitboard(0x50000000000000ULL),
      Bitboard(0xA0000000000000ULL),
-     Bitboard(0x40000000000000ULL),
-     }
+     Bitboard(0x40000000000000ULL)}
 };
 
 constexpr std::array pawnAttacks = {whitePawnAttacks, blackPawnAttacks};
 
 constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> knightAttacks = {
-    {
-     Bitboard(0x20400ULL),
+    {Bitboard(0x20400ULL),
      Bitboard(0x50800ULL),
      Bitboard(0xA1100ULL),
      Bitboard(0x142200ULL),
@@ -223,13 +218,11 @@ constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> knightAtta
      Bitboard(0x44280000000000ULL),
      Bitboard(0x88500000000000ULL),
      Bitboard(0x10A00000000000ULL),
-     Bitboard(0x20400000000000ULL),
-     }
+     Bitboard(0x20400000000000ULL)}
 };
 
 constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> kingAttacks = {
-    {
-     Bitboard(0x302ULL),
+    {Bitboard(0x302ULL),
      Bitboard(0x705ULL),
      Bitboard(0xE0AULL),
      Bitboard(0x1C14ULL),
@@ -292,8 +285,7 @@ constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> kingAttack
      Bitboard(0x2838000000000000ULL),
      Bitboard(0x5070000000000000ULL),
      Bitboard(0xA0E0000000000000ULL),
-     Bitboard(0x40C0000000000000ULL),
-     }
+     Bitboard(0x40C0000000000000ULL)}
 };
 
 void init();
