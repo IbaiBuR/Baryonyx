@@ -8,13 +8,39 @@ namespace Eval {
 
 class PackedScore {
     public:
+        constexpr PackedScore() :
+            score(0) {}
+
+        constexpr explicit PackedScore(const int score) :
+            score(score) {}
+
         constexpr PackedScore(const i16 mgScore, const i16 egScore) {
             score = (egScore << 16) + mgScore;
         }
 
-        [[nodiscard]] constexpr i16 midgame() const { return static_cast<i16>(score); }
+        constexpr PackedScore operator*(const int mul) const { return PackedScore(score * mul); }
 
-        [[nodiscard]] constexpr i16 endgame() const {
+        constexpr PackedScore operator+(const PackedScore &other) const {
+            return PackedScore(score + other.score);
+        }
+
+        constexpr PackedScore operator-(const PackedScore &other) const {
+            return PackedScore(score - other.score);
+        }
+
+        constexpr PackedScore &operator+=(const PackedScore &other) {
+            score += other.score;
+            return *this;
+        }
+
+        constexpr PackedScore &operator-=(const PackedScore &other) {
+            score -= other.score;
+            return *this;
+        }
+
+        [[nodiscard]] constexpr Score midgame() const { return static_cast<i16>(score); }
+
+        [[nodiscard]] constexpr Score endgame() const {
             return static_cast<i16>((score + 0X8000) >> 16);
         }
 
@@ -27,8 +53,8 @@ constexpr PackedScore S(i16 mg, i16 eg) { return {mg, eg}; }
 constexpr std::array pieceValues = {S(82, 94),   S(337, 281),  S(365, 297),
                                     S(477, 512), S(1025, 936), S(0, 0)};
 
-///@note Piece-Square Tables taken from PeSTO -> https://www.chessprogramming.org/PeSTO%27s_Evaluation_Function.
-///Looking forward to tuning this values in the future to feel like I did more than just stealing them
+/// @note Piece-Square Tables taken from PeSTO -> https://www.chessprogramming.org/PeSTO%27s_Evaluation_Function.
+/// Looking forward to tuning this values in the future to feel like I did more than just stealing them
 namespace PSQT {
 
 constexpr std::array pawnTable = {
