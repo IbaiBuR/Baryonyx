@@ -64,6 +64,45 @@ Position::Position(const std::string &fen) :
         throw std::invalid_argument("Invalid FEN string: illegal position.\n");
 }
 
+template <Color c>
+bool Position::canCastleKingSide() const {
+    const Bitboards::Bitboard &occupied = occupancies(Color::WHITE) | occupancies(Color::BLACK);
+
+    if constexpr (c == Color::WHITE)
+        return castlingRights().kingSideAvailable<Color::WHITE>()
+            && !isSquareAttackedBy(Square::F1, Color::BLACK)
+            && !isSquareAttackedBy(Square::G1, Color::BLACK)
+            && !(occupied & Bitboards::Bitboard(0x60ULL));
+    else
+        return castlingRights().kingSideAvailable<Color::BLACK>()
+            && !isSquareAttackedBy(Square::F8, Color::WHITE)
+            && !isSquareAttackedBy(Square::G8, Color::WHITE)
+            && !(occupied & Bitboards::Bitboard(0x6000000000000000ULL));
+}
+
+template bool Position::canCastleKingSide<Color::WHITE>() const;
+template bool Position::canCastleKingSide<Color::BLACK>() const;
+
+template <Color c>
+bool Position::canCastleQueenSide() const {
+    const Bitboards::Bitboard &occupied = occupancies(Color::WHITE) | occupancies(Color::BLACK);
+
+    if constexpr (c == Color::WHITE)
+        return castlingRights().queenSideAvailable<Color::WHITE>()
+            && !isSquareAttackedBy(Square::D1, Color::BLACK)
+            && !isSquareAttackedBy(Square::C1, Color::BLACK)
+            && !(occupied & Bitboards::Bitboard(0xEULL));
+    else
+        return castlingRights().queenSideAvailable<Color::BLACK>()
+            && !isSquareAttackedBy(Square::D8, Color::WHITE)
+            && !isSquareAttackedBy(Square::C8, Color::WHITE)
+            && !(occupied & Bitboards::Bitboard(0xE00000000000000ULL));
+}
+
+template bool Position::canCastleQueenSide<Color::WHITE>() const;
+template bool Position::canCastleQueenSide<Color::BLACK>() const;
+
+
 Bitboards::Bitboard Position::attacksToKing(const Square kingSquare, const Color c) const {
     const auto &oppOccupancies   = occupancies(~c);
     const auto &oppPawns         = pieceTypeBB(PieceType::PAWN) & oppOccupancies;
