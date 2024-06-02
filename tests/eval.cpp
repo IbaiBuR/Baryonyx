@@ -1,4 +1,4 @@
-#include "../src/eval/eval.hpp"
+#include "../src/eval/evalterms.hpp"
 #include "doctest/doctest.hpp"
 
 using namespace Eval;
