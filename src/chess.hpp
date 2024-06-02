@@ -102,6 +102,8 @@ constexpr Square operator-(const Square sq, const Direction dir) {
     return static_cast<Square>(static_cast<int>(sq) - static_cast<int>(dir));
 }
 
+constexpr Square flip(const Square sq) { return static_cast<Square>(static_cast<int>(sq) ^ 56); }
+
 constexpr Direction operator*(const Direction dir, const int mul) {
     return static_cast<Direction>(static_cast<int>(dir) * mul);
 }
