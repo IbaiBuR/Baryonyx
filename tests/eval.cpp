@@ -1,3 +1,4 @@
+#include "../src/eval/eval.hpp"
 #include "../src/eval/evalterms.hpp"
 #include "doctest/doctest.hpp"
 
@@ -17,6 +18,28 @@ TEST_SUITE("Eval Tests") {
             CHECK(PSQT::pawnTable[63].endgame() == 0);
             CHECK(PSQT::knightTable[0].endgame() == -58);
             CHECK(PSQT::knightTable[63].endgame() == -64);
+        }
+    }
+
+    TEST_CASE("static eval") {
+        SUBCASE("start position") {
+            CHECK(evaluate(Board::Position(Board::Util::startPosFen)) == 0);
+        }
+
+        SUBCASE("3k4/8/8/8/8/8/8/3K3R w - - 0 1") {
+            CHECK(evaluate(Board::Position("3k4/8/8/8/8/8/8/3K3R w - - 0 1")) == 488);
+        }
+
+        SUBCASE("3k3r/8/8/8/8/8/8/3K4 w - - 0 1") {
+            CHECK(evaluate(Board::Position("3k3r/8/8/8/8/8/8/3K4 w - - 0 1")) == -488);
+        }
+
+        SUBCASE("3k4/8/8/8/8/3N4/8/3K4 w - - 0 1") {
+            CHECK(evaluate(Board::Position("3k4/8/8/8/8/3N4/8/3K4 w - - 0 1")) == 298);
+        }
+
+        SUBCASE("3k4/8/3n4/8/8/8/8/3K4 w - - 0 1") {
+            CHECK(evaluate(Board::Position("3k4/8/3n4/8/8/8/8/3K4 w - - 0 1")) == -298);
         }
     }
 }
