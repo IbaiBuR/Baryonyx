@@ -12,6 +12,8 @@ file(GLOB SRCS "*.cpp"
         "../src/board/bitboard/*.hpp"
         "../src/board/bitboard/*.cpp"
         "../src/board/*.cpp"
-        "../src/board/*.hpp")
+        "../src/board/*.hpp"
+        "../src/eval/*.hpp"
+        "../src/eval/*.cpp")
 
 add_executable(NibbleTests ${SRCS})
