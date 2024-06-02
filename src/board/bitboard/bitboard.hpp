@@ -2,6 +2,7 @@
 
 #include <bit>
 #include <cassert>
+#include <stdexcept>
 #include <utility>
 
 #include "../../chess.hpp"
@@ -153,35 +154,24 @@ void printBB(Bitboard bitboard);
 /// @returns The shifted bitboard
 template <Direction d>
 constexpr Bitboard shift(const Bitboard &bb) {
-    switch (d) {
-    case Direction::NORTH:
+    if constexpr (d == Direction::NORTH)
         return Bitboard(bb << 8);
-        break;
-    case Direction::SOUTH:
+    else if constexpr (d == Direction::SOUTH)
         return Bitboard(bb >> 8);
-        break;
-    case Direction::EAST:
+    else if constexpr (d == Direction::EAST)
         return Bitboard(bb << 1) & ~Util::FileABB;
-        break;
-    case Direction::WEST:
+    else if constexpr (d == Direction::WEST)
         return Bitboard(bb >> 1) & ~Util::FileHBB;
-        break;
-    case Direction::NORTH_EAST:
+    else if constexpr (d == Direction::NORTH_EAST)
         return Bitboard(bb << 9) & ~Util::FileABB;
-        break;
-    case Direction::NORTH_WEST:
+    else if constexpr (d == Direction::NORTH_WEST)
         return Bitboard(bb << 7) & ~Util::FileHBB;
-        break;
-    case Direction::SOUTH_EAST:
+    else if constexpr (d == Direction::SOUTH_EAST)
         return Bitboard(bb >> 7) & ~Util::FileABB;
-        break;
-    case Direction::SOUTH_WEST:
+    else if constexpr (d == Direction::SOUTH_WEST)
         return Bitboard(bb >> 9) & ~Util::FileHBB;
-        break;
-    default:
-        return Bitboard(0ULL);
-        break;
-    }
+    else
+        throw std::invalid_argument("Invalid direction provided.\n");
 }
 
 } // namespace Board::Bitboards
