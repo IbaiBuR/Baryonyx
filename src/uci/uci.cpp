@@ -1,5 +1,6 @@
 #include "uci.hpp"
 
+#include "../eval/eval.hpp"
 #include "../moves/movegen.hpp"
 #include "../perft/perft.hpp"
 #include "../utils.hpp"
@@ -11,6 +12,10 @@
 namespace UCI {
 
 void CommandHandler::handleBoard() const { printBoard(pos); }
+
+void CommandHandler::handleEval() const {
+    std::println("\nStatic evaluation: {}", Eval::evaluate(pos));
+}
 
 void CommandHandler::handleIsReady() {
     std::print("readyok");
@@ -69,6 +74,8 @@ void CommandHandler::loop() {
 
         if (command[0] == "board")
             handleBoard();
+        else if (command[0] == "eval")
+            handleEval();
         else if (command[0] == "isready")
             handleIsReady();
         else if (command[0] == "go")

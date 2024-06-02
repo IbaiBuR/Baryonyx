@@ -19,6 +19,7 @@ class CommandHandler {
         Board::Position pos;
 
         void        handleBoard() const;
+        void        handleEval() const;
         static void handleIsReady();
         void        handleGo(const std::vector<std::string> &command);
         void        handlePosition(const std::vector<std::string> &command);
