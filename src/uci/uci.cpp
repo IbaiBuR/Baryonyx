@@ -1,26 +1,23 @@
 #include "uci.hpp"
 
+#include <format>
+#include <iostream>
+#include <numeric>
+
 #include "../eval/eval.hpp"
 #include "../moves/movegen.hpp"
 #include "../perft/perft.hpp"
 #include "../utils.hpp"
-
-#include <iostream>
-#include <numeric>
-#include <print>
 
 namespace UCI {
 
 void CommandHandler::handleBoard() const { printBoard(pos); }
 
 void CommandHandler::handleEval() const {
-    std::println("\nStatic evaluation: {}", Eval::evaluate(pos));
+    std::cout << std::format("\nStatic evaluation: {}", Eval::evaluate(pos)) << std::endl;
 }
 
-void CommandHandler::handleIsReady() {
-    std::print("readyok");
-    std::cout << std::endl;
-}
+void CommandHandler::handleIsReady() { std::cout << std::format("readyok") << std::endl; }
 
 void CommandHandler::handleGo(const std::vector<std::string> &command) {
     if (command[1] == "perft")
@@ -55,10 +52,9 @@ void CommandHandler::handlePosition(const std::vector<std::string> &command) {
 }
 
 void CommandHandler::handleUci() {
-    std::println("id name {} {}", engineName, engineVersion);
-    std::println("id author {}", engineAuthor);
-    std::print("uciok");
-    std::cout << std::endl;
+    std::cout << std::format("id name {} {}", engineName, engineVersion) << std::endl;
+    std::cout << std::format("id author {}", engineAuthor) << std::endl;
+    std::cout << std::format("uciok") << std::endl;
 }
 
 void CommandHandler::handleUciNewGame() { pos.resetToStartPos(); }
@@ -89,8 +85,7 @@ void CommandHandler::loop() {
         else if (command[0] == "ucinewgame")
             handleUciNewGame();
         else {
-            std::print("Unknown command: {}", command[0]);
-            std::cout << std::endl;
+            std::cout << std::format("Unknown command: {}", command[0]) << std::endl;
         }
     }
 }

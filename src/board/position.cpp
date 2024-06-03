@@ -1,7 +1,7 @@
 #include "position.hpp"
 
+#include <format>
 #include <iostream>
-#include <print>
 
 #include "bitboard/attacks.hpp"
 #include "piece.hpp"
@@ -291,39 +291,40 @@ bool Position::isSquareAttackedBy(const Square sq, const Color c) const {
 
 bool Position::isValid() const {
     if (pieceTypeBB(PieceType::KING).bitCount() != 2) {
-        std::println(std::cerr, "There must be 2 kings on the board.");
+        std::cerr << std::format("There must be 2 kings on the board.") << std::endl;
         return false;
     }
 
     const auto &whiteOccupancies = occupancies(Color::WHITE);
 
     if (whiteOccupancies.bitCount() > 16) {
-        std::println(std::cerr, "White must have 16 or less pieces.");
+        std::cerr << std::format("White must have 16 or less pieces.") << std::endl;
         return false;
     }
 
     const auto &blackOccupancies = occupancies(Color::BLACK);
 
     if (blackOccupancies.bitCount() > 16) {
-        std::println(std::cerr, "Black must have 16 or less pieces.");
+        std::cerr << std::format("Black must have 16 or less pieces.") << std::endl;
         return false;
     }
 
     const auto &pawns = pieceTypeBB(PieceType::PAWN);
 
     if ((pawns & whiteOccupancies).bitCount() > 8) {
-        std::println(std::cerr, "White must have 8 or less pawns.");
+        std::cerr << std::format("White must have 8 or less pawns.") << std::endl;
         return false;
     }
 
     if ((pawns & blackOccupancies).bitCount() > 8) {
-        std::println(std::cerr, "Black must have 8 or less pawns.");
+        std::cerr << std::format("Black must have 8 or less pawns.") << std::endl;
         return false;
     }
 
     if (isSquareAttackedBy(kingSquare(~stm), stm)) {
-        std::println(std::cerr,
-                     "The king of the player whose turn it is not to move must not be in check.");
+        std::cout << std::format(
+            "The king of the player whose turn it is not to move must not be in check.")
+                  << std::endl;
         return false;
     }
 
@@ -368,34 +369,38 @@ std::string Position::toFen() const {
 
 
 void printBoard(const Position &pos) {
-    std::println("\n+---+---+---+---+---+---+---+---+");
+    std::cout << std::format("\n+---+---+---+---+---+---+---+---+") << std::endl;
 
     for (int rank = 7; rank >= 0; --rank) {
         for (int file = 0; file < 8; ++file) {
             const auto  sq           = Bitboards::Util::squareOf(file, rank);
             const Piece currentPiece = pos.pieceOn(sq);
-            std::print("| {}", currentPiece == Piece::NO_PIECE
-                                   ? ' '
-                                   : Pieces::pieceToChar[std::to_underlying(currentPiece)]);
+            std::cout << std::format("| {}",
+                                     currentPiece == Piece::NO_PIECE
+                                         ? ' '
+                                         : Pieces::pieceToChar[std::to_underlying(currentPiece)]);
 
             if (file != 7)
-                std::print(" ");
+                std::cout << std::format(" ");
         }
-        std::println(" | {}\n+---+---+---+---+---+---+---+---+", rank + 1);
+        std::cout << std::format(" | {}\n+---+---+---+---+---+---+---+---+", rank + 1) << std::endl;
     }
 
-    std::println("  A   B   C   D   E   F   G   H\n");
-    std::println("Side to move    : {}", pos.sideToMove() == Color::WHITE ? "white" : "black");
+    std::cout << std::format("  A   B   C   D   E   F   G   H\n") << std::endl;
+    std::cout << std::format("Side to move    : {}",
+                             pos.sideToMove() == Color::WHITE ? "white" : "black")
+              << std::endl;
 
     const auto enpassant = pos.epSquare();
 
-    std::println("En passant      : {}", enpassant != Square::NO_SQ
-                                             ? Util::sqToCoords[std::to_underlying(enpassant)]
-                                             : "-");
-    std::println("Castling rights : {}", pos.castlingRights().toString());
-    std::println("Halfmove clock  : {}", pos.fiftyMoveRule());
-    std::println("Fullmove number : {}", pos.fullMoves());
-    std::println("FEN             : {}\n", pos.toFen());
+    std::cout << std::format(
+        "En passant      : {}",
+        enpassant != Square::NO_SQ ? Util::sqToCoords[std::to_underlying(enpassant)] : "-")
+              << std::endl;
+    std::cout << std::format("Castling rights : {}", pos.castlingRights().toString()) << std::endl;
+    std::cout << std::format("Halfmove clock  : {}", pos.fiftyMoveRule()) << std::endl;
+    std::cout << std::format("Fullmove number : {}", pos.fullMoves()) << std::endl;
+    std::cout << std::format("FEN             : {}\n", pos.toFen()) << std::endl;
 }
 
 } // namespace Board

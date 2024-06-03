@@ -1,6 +1,7 @@
 #include "magics.hpp"
 
-#include <print>
+#include <format>
+#include <iostream>
 #include <random>
 
 #include "attacks.hpp"
@@ -103,21 +104,22 @@ constexpr MagicEntry findMagic(const Square sq) {
 
 template <PieceType pt>
 void printMagicsByPieceType() {
-    std::println(
+    std::cout << std::format(
         "constexpr std::array<MagicEntry, std::to_underlying(Square::SQUARE_NB)> {} = {}\n {}",
-        pt == PieceType::BISHOP ? "bishopMagics" : "rookMagics", "{", "{");
+        pt == PieceType::BISHOP ? "bishopMagics" : "rookMagics", "{", "{")
+              << std::endl;
 
     for (u8 sq = 0; sq < 64; ++sq) {
         auto [mask, magic, shift] = findMagic<pt>(static_cast<Square>(sq));
-        std::print(" MagicEntry(Bitboard(0x{:016X}ULL), 0x{:016X}ULL, {})", mask.asU64(), magic,
-                   shift);
+        std::cout << std::format(" MagicEntry(Bitboard(0x{:016X}ULL), 0x{:016X}ULL, {})",
+                                 mask.asU64(), magic, shift);
 
         if (sq < 63)
-            std::print(",");
+            std::cout << std::format(",");
 
-        std::println("");
+        std::cout << std::endl;
     }
-    std::println(" {}\n{};\n", "}", "}");
+    std::cout << std::format(" {}\n{};\n", "}", "}") << std::endl;
 }
 
 void printMagics() {
