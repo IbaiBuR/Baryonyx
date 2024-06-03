@@ -322,7 +322,7 @@ bool Position::isValid() const {
     }
 
     if (isSquareAttackedBy(kingSquare(~stm), stm)) {
-        std::cout << std::format(
+        std::cerr << std::format(
             "The king of the player whose turn it is not to move must not be in check.")
                   << std::endl;
         return false;
