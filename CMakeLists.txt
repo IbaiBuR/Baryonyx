@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.27)
-project(NibbleCpp)
+project(Baryonyx)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -funroll-loops -flto -DNDEBUG -std=c++23 -march=native -mtune=native -Wall -Wextra")
@@ -16,4 +16,4 @@ file(GLOB SRCS
         "src/uci/*.hpp" "src/uci/*.cpp"
         "src/eval/*.hpp" "src/eval/*.cpp")
 
-add_executable(NibbleCpp ${SRCS})
+add_executable(Baryonyx ${SRCS})
