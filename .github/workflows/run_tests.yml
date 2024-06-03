@@ -48,7 +48,7 @@ jobs:
           make
 
       - name: Run Tests
-        run: ./build/NibbleTests
+        run: ./build/BaryonyxTests
 
       - name: Clean
         run: make clean
