@@ -14,6 +14,8 @@ file(GLOB SRCS
         "src/moves/*.hpp" "src/moves/*.cpp"
         "src/perft/*.hpp" "src/perft/*.cpp"
         "src/uci/*.hpp" "src/uci/*.cpp"
-        "src/eval/*.hpp" "src/eval/*.cpp")
+        "src/eval/*.hpp" "src/eval/*.cpp"
+        "src/search/*.hpp" "src/search/*.cpp"
+        "src/tt/*.hpp" "src/tt/*.cpp")
 
 add_executable(Baryonyx ${SRCS})
