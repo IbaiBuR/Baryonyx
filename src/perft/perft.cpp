@@ -56,6 +56,7 @@ void splitPerft(const Board::Position &pos, const int depth) {
     std::cout << std::format("\nDepth           : {}", depth) << std::endl;
     std::cout << std::format("Total nodes     : {}", totalNodes) << std::endl;
     std::cout << std::format("Total time      : {} ms", elapsed) << std::endl;
-    std::cout << std::format("Nodes per second: {}\n", totalNodes / std::max(1UL, elapsed) * 1000)
+    std::cout << std::format("Nodes per second: {}\n",
+                             totalNodes / std::max<u64>(1, elapsed) * 1000)
               << std::endl;
 }

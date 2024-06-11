@@ -7,8 +7,6 @@
 
 namespace Moves {
 
-constexpr int maxMoves = 256;
-
 struct ScoredMove {
         Score score;
         Move  move;
@@ -17,27 +15,27 @@ struct ScoredMove {
 class MoveList {
     public:
         void push(const Move move) {
-            assert(count + 1 < maxMoves);
-            moves[count++].move = move;
+            assert(m_count + 1 < MAX_MOVES);
+            m_moves[m_count++].move = move;
         }
 
-        void clear() { count = 0; }
+        void clear() { m_count = 0; }
 
-        [[nodiscard]] u32 size() const { return count; }
+        [[nodiscard]] u32 size() const { return m_count; }
 
         [[nodiscard]] Move moveAt(const u32 index) const {
-            assert(index < maxMoves);
-            return moves[index].move;
+            assert(index < MAX_MOVES);
+            return m_moves[index].move;
         }
 
         [[nodiscard]] Score scoreAt(const u32 index) const {
-            assert(index < maxMoves);
-            return moves[index].score;
+            assert(index < MAX_MOVES);
+            return m_moves[index].score;
         }
 
     private:
-        std::array<ScoredMove, maxMoves> moves{};
-        u32                              count{};
+        std::array<ScoredMove, MAX_MOVES> m_moves{};
+        u32                               m_count{};
 };
 
 void printMoveList(const MoveList &moveList);

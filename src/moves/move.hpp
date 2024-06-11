@@ -30,19 +30,21 @@ class Move {
         constexpr Move() = default;
 
         constexpr Move(const Square from, const Square to, const MoveFlag flag) {
-            data = std::to_underlying(from) | std::to_underlying(to) << 6
-                 | std::to_underlying(flag) << 12;
+            m_data = std::to_underlying(from) | std::to_underlying(to) << 6
+                   | std::to_underlying(flag) << 12;
         }
 
         static constexpr Move none() { return {Square::A8, Square::A8, MoveFlag::NOMOVE}; }
         static constexpr Move null() { return {Square::A8, Square::A8, MoveFlag::NULLMOVE}; }
 
-        [[nodiscard]] constexpr Square from() const { return static_cast<Square>(data & 0X3F); }
+        [[nodiscard]] constexpr Square from() const { return static_cast<Square>(m_data & 0X3F); }
 
-        [[nodiscard]] constexpr Square to() const { return static_cast<Square>(data >> 6 & 0X3F); }
+        [[nodiscard]] constexpr Square to() const {
+            return static_cast<Square>(m_data >> 6 & 0X3F);
+        }
 
         [[nodiscard]] constexpr MoveFlag flag() const {
-            return static_cast<MoveFlag>(data >> 12 & 0x0F);
+            return static_cast<MoveFlag>(m_data >> 12 & 0x0F);
         }
 
         [[nodiscard]] constexpr bool isPromotion() const {
@@ -70,15 +72,15 @@ class Move {
             return !this->isCapture() && !this->isPromotion();
         }
 
-        constexpr bool operator==(const Move &other) const { return data == other.data; }
-        constexpr bool operator!=(const Move &other) const { return data != other.data; }
+        constexpr bool operator==(const Move &other) const { return m_data == other.m_data; }
+        constexpr bool operator!=(const Move &other) const { return m_data != other.m_data; }
 
         [[nodiscard]] std::string toString() const;
 
         [[nodiscard]] Piece getPromotedPiece(Color stm) const;
 
     private:
-        u16 data;
+        u16 m_data;
 };
 
 } // namespace Moves

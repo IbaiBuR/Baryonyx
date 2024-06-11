@@ -2,6 +2,13 @@
 
 #include "types.hpp"
 
+constexpr Score SCORE_INFINITE = 32000;
+constexpr Score SCORE_MATE     = 31500;
+
+constexpr int MAX_DEPTH = 100;
+constexpr int MAX_PLY   = 200;
+constexpr int MAX_MOVES = 256;
+
 enum class File : u8 {
     FILE_A,
     FILE_B,

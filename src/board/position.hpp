@@ -116,33 +116,33 @@ class CastlingRights {
 class Position {
     public:
         Position() :
-            stm(Color::WHITE),
-            epSq(Square::NO_SQ),
-            halfMoveClock(0),
-            fullMoveNumber(1),
-            pieces() {
-            pieces.fill(Piece::NO_PIECE);
+            m_stm(Color::WHITE),
+            m_epSq(Square::NO_SQ),
+            m_halfMoveClock(0),
+            m_fullMoveNumber(1),
+            m_pieces() {
+            m_pieces.fill(Piece::NO_PIECE);
         }
 
         explicit Position(const std::string &fen);
 
-        [[nodiscard]] Bitboards::Bitboard checkers() const { return checkersBB; }
-        [[nodiscard]] Color               sideToMove() const { return stm; }
-        [[nodiscard]] Square              epSquare() const { return epSq; }
-        [[nodiscard]] CastlingRights      castlingRights() const { return castling; }
-        [[nodiscard]] u8                  fiftyMoveRule() const { return halfMoveClock; }
-        [[nodiscard]] u16                 fullMoves() const { return fullMoveNumber; }
+        [[nodiscard]] Bitboards::Bitboard checkers() const { return m_checkersBB; }
+        [[nodiscard]] Color               sideToMove() const { return m_stm; }
+        [[nodiscard]] Square              epSquare() const { return m_epSq; }
+        [[nodiscard]] CastlingRights      castlingRights() const { return m_castling; }
+        [[nodiscard]] u8                  fiftyMoveRule() const { return m_halfMoveClock; }
+        [[nodiscard]] u16                 fullMoves() const { return m_fullMoveNumber; }
 
         [[nodiscard]] Piece pieceOn(const Square sq) const {
-            return pieces[std::to_underlying(sq)];
+            return m_pieces[std::to_underlying(sq)];
         }
 
         [[nodiscard]] Bitboards::Bitboard occupancies(const Color c) const {
-            return occupiedBB[std::to_underlying(c)];
+            return m_occupiedBB[std::to_underlying(c)];
         }
 
         [[nodiscard]] Bitboards::Bitboard pieceTypeBB(const PieceType pt) const {
-            return pieceBB[std::to_underlying(pt)];
+            return m_pieceBB[std::to_underlying(pt)];
         }
 
         template <Color c>
@@ -177,15 +177,15 @@ class Position {
         [[nodiscard]] std::string toFen() const;
 
     private:
-        Bitboards::Bitboard                                                          checkersBB;
-        Color                                                                        stm;
-        Square                                                                       epSq;
-        CastlingRights                                                               castling;
-        u8                                                                           halfMoveClock;
-        u16                                                                          fullMoveNumber;
-        std::array<Bitboards::Bitboard, std::to_underlying(PieceType::PIECETYPE_NB)> pieceBB;
-        std::array<Bitboards::Bitboard, std::to_underlying(Color::COLOR_NB)>         occupiedBB;
-        std::array<Piece, std::to_underlying(Square::SQUARE_NB)>                     pieces;
+        Bitboards::Bitboard m_checkersBB;
+        Color               m_stm;
+        Square              m_epSq;
+        CastlingRights      m_castling;
+        u8                  m_halfMoveClock;
+        u16                 m_fullMoveNumber;
+        std::array<Bitboards::Bitboard, std::to_underlying(PieceType::PIECETYPE_NB)> m_pieceBB;
+        std::array<Bitboards::Bitboard, std::to_underlying(Color::COLOR_NB)>         m_occupiedBB;
+        std::array<Piece, std::to_underlying(Square::SQUARE_NB)>                     m_pieces;
 };
 
 namespace Util {

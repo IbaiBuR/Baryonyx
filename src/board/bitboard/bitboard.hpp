@@ -12,130 +12,130 @@ namespace Board::Bitboards {
 class Bitboard {
     public:
         constexpr Bitboard() :
-            data(0ULL){};
+            m_data(0ULL){};
         constexpr explicit Bitboard(const u64 bb) :
-            data(bb){};
+            m_data(bb){};
 
         static constexpr Bitboard fromSquare(const Square sq) {
             return Bitboard(1ULL << std::to_underlying(sq));
         }
 
         static constexpr bool isBitSet(const Bitboard &bitboard, const Square sq) {
-            return static_cast<bool>(bitboard.data & 1ULL << std::to_underlying(sq));
+            return static_cast<bool>(bitboard.m_data & 1ULL << std::to_underlying(sq));
         }
 
         static constexpr void setBit(Bitboard &bitboard, const Square sq) {
-            bitboard.data |= 1ULL << std::to_underlying(sq);
+            bitboard.m_data |= 1ULL << std::to_underlying(sq);
         }
 
         static constexpr void clearBit(Bitboard &bitboard, const Square sq) {
-            bitboard.data &= ~(1ULL << std::to_underlying(sq));
+            bitboard.m_data &= ~(1ULL << std::to_underlying(sq));
         }
 
-        [[nodiscard]] constexpr u64 asU64() const { return data; }
+        [[nodiscard]] constexpr u64 asU64() const { return m_data; }
 
-        [[nodiscard]] constexpr bool empty() const { return data == 0ULL; }
+        [[nodiscard]] constexpr bool empty() const { return m_data == 0ULL; }
 
-        [[nodiscard]] constexpr int bitCount() const { return std::popcount(data); }
+        [[nodiscard]] constexpr int bitCount() const { return std::popcount(m_data); }
 
         [[nodiscard]] constexpr int getLSB() const {
-            assert(data);
-            return std::countr_zero(data);
+            assert(m_data);
+            return std::countr_zero(m_data);
         }
 
-        [[nodiscard]] constexpr int getMSB() const { return 63 - std::countl_zero(data); }
+        [[nodiscard]] constexpr int getMSB() const { return 63 - std::countl_zero(m_data); }
 
         [[nodiscard]] constexpr int popLSB() {
             const int lsbIndex = getLSB();
-            data &= data - 1;
+            m_data &= m_data - 1;
             return lsbIndex;
         }
 
-        constexpr explicit operator bool() const { return data != 0ULL; }
+        constexpr explicit operator bool() const { return m_data != 0ULL; }
 
-        constexpr bool operator==(const Bitboard &other) const { return data == other.data; }
-        constexpr bool operator!=(const Bitboard &other) const { return data != other.data; }
+        constexpr bool operator==(const Bitboard &other) const { return m_data == other.m_data; }
+        constexpr bool operator!=(const Bitboard &other) const { return m_data != other.m_data; }
 
         constexpr Bitboard operator&(const Bitboard &other) const {
-            return Bitboard(data & other.data);
+            return Bitboard(m_data & other.m_data);
         }
 
         constexpr Bitboard operator|(const Bitboard &other) const {
-            return Bitboard(data | other.data);
+            return Bitboard(m_data | other.m_data);
         }
 
         constexpr Bitboard operator^(const Bitboard &other) const {
-            return Bitboard(data ^ other.data);
+            return Bitboard(m_data ^ other.m_data);
         }
 
-        constexpr Bitboard operator~() const { return Bitboard(~data); }
+        constexpr Bitboard operator~() const { return Bitboard(~m_data); }
 
         constexpr Bitboard operator<<(const Bitboard &other) const {
-            return Bitboard(data << other.data);
+            return Bitboard(m_data << other.m_data);
         }
 
         constexpr Bitboard operator>>(const Bitboard &other) const {
-            return Bitboard(data >> other.data);
+            return Bitboard(m_data >> other.m_data);
         }
 
         constexpr Bitboard operator&=(const Bitboard &other) {
-            data &= other.data;
+            m_data &= other.m_data;
             return *this;
         }
 
         constexpr Bitboard operator*=(const u64 value) {
-            data *= value;
+            m_data *= value;
             return *this;
         }
 
         constexpr Bitboard operator|=(const Bitboard &other) {
-            data |= other.data;
+            m_data |= other.m_data;
             return *this;
         }
 
         constexpr Bitboard operator^=(const Bitboard &other) {
-            data ^= other.data;
+            m_data ^= other.m_data;
             return *this;
         }
 
         constexpr Bitboard operator<<=(const Bitboard &other) {
-            data <<= other.data;
+            m_data <<= other.m_data;
             return *this;
         }
 
         constexpr Bitboard operator>>=(const Bitboard &other) {
-            data >>= other.data;
+            m_data >>= other.m_data;
             return *this;
         }
 
-        constexpr Bitboard operator<<(const int shift) const { return Bitboard(data << shift); }
-        constexpr Bitboard operator>>(const int shift) const { return Bitboard(data >> shift); }
+        constexpr Bitboard operator<<(const int shift) const { return Bitboard(m_data << shift); }
+        constexpr Bitboard operator>>(const int shift) const { return Bitboard(m_data >> shift); }
 
     private:
-        u64 data;
+        u64 m_data;
 };
 
 namespace Util {
 
-constexpr auto EmptyBB = Bitboard(0ULL);
+constexpr auto EMPTY_BB = Bitboard(0ULL);
 
-constexpr auto FileABB = Bitboard(0x101010101010101ULL);
-constexpr auto FileBBB = Bitboard(0x202020202020202ULL);
-constexpr auto FileCBB = Bitboard(0x404040404040404ULL);
-constexpr auto FileDBB = Bitboard(0x808080808080808ULL);
-constexpr auto FileEBB = Bitboard(0x1010101010101010ULL);
-constexpr auto FileFBB = Bitboard(0x2020202020202020ULL);
-constexpr auto FileGBB = Bitboard(0x4040404040404040ULL);
-constexpr auto FileHBB = Bitboard(0x8080808080808080ULL);
+constexpr auto FILE_A_BB = Bitboard(0x101010101010101ULL);
+constexpr auto FILE_B_BB = Bitboard(0x202020202020202ULL);
+constexpr auto FILE_C_BB = Bitboard(0x404040404040404ULL);
+constexpr auto FILE_D_BB = Bitboard(0x808080808080808ULL);
+constexpr auto FILE_E_BB = Bitboard(0x1010101010101010ULL);
+constexpr auto FILE_F_BB = Bitboard(0x2020202020202020ULL);
+constexpr auto FILE_G_BB = Bitboard(0x4040404040404040ULL);
+constexpr auto FILE_H_BB = Bitboard(0x8080808080808080ULL);
 
-constexpr auto Rank1BB = Bitboard(0x00000000000000FFULL);
-constexpr auto Rank2BB = Bitboard(0x000000000000FF00ULL);
-constexpr auto Rank3BB = Bitboard(0x0000000000FF0000ULL);
-constexpr auto Rank4BB = Bitboard(0x00000000FF000000ULL);
-constexpr auto Rank5BB = Bitboard(0x000000FF00000000ULL);
-constexpr auto Rank6BB = Bitboard(0x0000FF0000000000ULL);
-constexpr auto Rank7BB = Bitboard(0x00FF000000000000ULL);
-constexpr auto Rank8BB = Bitboard(0xFF00000000000000ULL);
+constexpr auto RANK_1_BB = Bitboard(0x00000000000000FFULL);
+constexpr auto RANK_2_BB = Bitboard(0x000000000000FF00ULL);
+constexpr auto RANK_3_BB = Bitboard(0x0000000000FF0000ULL);
+constexpr auto RANK_4_BB = Bitboard(0x00000000FF000000ULL);
+constexpr auto RANK_5_BB = Bitboard(0x000000FF00000000ULL);
+constexpr auto RANK_6_BB = Bitboard(0x0000FF0000000000ULL);
+constexpr auto RANK_7_BB = Bitboard(0x00FF000000000000ULL);
+constexpr auto RANK_8_BB = Bitboard(0xFF00000000000000ULL);
 
 constexpr File fileOf(const Square sq) { return static_cast<File>(std::to_underlying(sq) & 7); }
 constexpr Rank rankOf(const Square sq) { return static_cast<Rank>(std::to_underlying(sq) >> 3); }
@@ -159,17 +159,17 @@ constexpr Bitboard shift(const Bitboard &bb) {
     else if constexpr (d == Direction::SOUTH)
         return Bitboard(bb >> 8);
     else if constexpr (d == Direction::EAST)
-        return Bitboard(bb << 1) & ~Util::FileABB;
+        return Bitboard(bb << 1) & ~Util::FILE_A_BB;
     else if constexpr (d == Direction::WEST)
-        return Bitboard(bb >> 1) & ~Util::FileHBB;
+        return Bitboard(bb >> 1) & ~Util::FILE_H_BB;
     else if constexpr (d == Direction::NORTH_EAST)
-        return Bitboard(bb << 9) & ~Util::FileABB;
+        return Bitboard(bb << 9) & ~Util::FILE_A_BB;
     else if constexpr (d == Direction::NORTH_WEST)
-        return Bitboard(bb << 7) & ~Util::FileHBB;
+        return Bitboard(bb << 7) & ~Util::FILE_H_BB;
     else if constexpr (d == Direction::SOUTH_EAST)
-        return Bitboard(bb >> 7) & ~Util::FileABB;
+        return Bitboard(bb >> 7) & ~Util::FILE_A_BB;
     else if constexpr (d == Direction::SOUTH_WEST)
-        return Bitboard(bb >> 9) & ~Util::FileHBB;
+        return Bitboard(bb >> 9) & ~Util::FILE_H_BB;
     else
         throw std::invalid_argument("Invalid direction provided.\n");
 }

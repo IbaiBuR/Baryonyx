@@ -44,7 +44,7 @@ bool tryMagic(const u64                    magic,
     for (int i = 0; !collision && i < numOccupancies; ++i) {
         const u64 magicIndex = (blockers[i].asU64() * magic) >> shift;
 
-        if (attackTable[magicIndex] == Util::EmptyBB)
+        if (attackTable[magicIndex] == Util::EMPTY_BB)
             attackTable[magicIndex] = attacks[i];
         else if (attackTable[magicIndex] != attacks[i])
             collision = true;
