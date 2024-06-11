@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "../board/position.hpp"
+#include "../search/search.hpp"
 
 namespace UCI {
 
@@ -16,15 +17,15 @@ class CommandHandler {
         void loop();
 
     private:
-        Board::Position pos;
+        Search::Searcher m_searcher;
 
-        void        handleBoard() const;
-        void        handleEval() const;
+        static void handleD(const Board::Position &pos);
+        static void handleEval(const Board::Position &pos);
         static void handleIsReady();
-        void        handleGo(const std::vector<std::string> &command);
-        void        handlePosition(const std::vector<std::string> &command);
+        void        handleGo(const std::vector<std::string> &command, const Board::Position &pos);
+        static void handlePosition(const std::vector<std::string> &command, Board::Position &pos);
         static void handleUci();
-        void        handleUciNewGame();
+        static void handleUciNewGame(Board::Position &pos);
 };
 
 namespace Util {
