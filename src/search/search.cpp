@@ -122,7 +122,7 @@ bool Searcher::shouldStop() const {
         || elapsed >= m_timer.optimumTime();
 }
 
-void Searcher::reportInfo(u64 elapsed, int depth, Score score, const PVLine &pv) {
+void Searcher::reportInfo(u64 elapsed, int depth, Score score, const PVLine &pv) const {
     std::cout << std::format("info depth {} score cp {} time {} nodes {} nps {} pv {}", depth,
                              score, elapsed, m_info.searchedNodes,
                              m_info.searchedNodes / std::max<u64>(1, elapsed) * 1000, pv.toString())

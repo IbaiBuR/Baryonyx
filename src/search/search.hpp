@@ -68,7 +68,7 @@ class Searcher {
 
         [[nodiscard]] bool shouldStop() const;
 
-        void reportInfo(u64 elapsed, int depth, Score score, const PVLine &pv);
+        void reportInfo(u64 elapsed, int depth, Score score, const PVLine &pv) const;
 };
 
 } // namespace Search
