@@ -28,7 +28,8 @@ It is a personal project with the goal of learning modern C++ and chess programm
     - [PesTO Piece-Square Tables][psqts]
     - [Tapered Evaluation][tapered-eval]
 - Search
-    - TBD
+  - [Negamax with Alpha-beta pruning][negamax]
+  - [Iterative deepening][id]
 - Transposition Table
     - TBD
 
@@ -74,5 +75,9 @@ To create a working executable, follow this steps:
 [psqts]: https://www.chessprogramming.org/Piece-Square_Tables
 
 [tapered-eval]: https://www.chessprogramming.org/Tapered_Eval
+
+[negamax]: https://en.wikipedia.org/wiki/Negamax#Negamax_with_alpha_beta_pruning
+
+[id]: https://www.chessprogramming.org/Iterative_Deepening
 
 [compilers]: https://en.cppreference.com/w/cpp/compiler_support/23
