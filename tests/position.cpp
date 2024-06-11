@@ -22,7 +22,7 @@ TEST_SUITE("Position Tests") {
             CHECK(pos.epSquare() == Square::NO_SQ);
             CHECK(pos.fiftyMoveRule() == 0);
             CHECK(pos.fullMoves() == 1);
-            CHECK(pos.checkers() == Bitboards::Util::EmptyBB);
+            CHECK(pos.checkers() == Bitboards::Util::EMPTY_BB);
         }
 
         SUBCASE("illegal position: too many kings") {
