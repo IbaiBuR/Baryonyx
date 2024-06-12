@@ -71,6 +71,8 @@ void CommandHandler::handlePosition(const std::vector<std::string> &command, Boa
 void CommandHandler::handleUci() {
     std::cout << std::format("id name {} {}", engineName, engineVersion) << std::endl;
     std::cout << std::format("id author {}", engineAuthor) << std::endl;
+    std::cout << std::format("option name Hash type spin default 1 min 1 max 1") << std::endl;
+    std::cout << std::format("option name Threads type spin default 1 min 1 max 1") << std::endl;
     std::cout << std::format("uciok") << std::endl;
 }
 
