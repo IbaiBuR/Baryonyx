@@ -65,6 +65,7 @@ class Searcher {
         SearchInfo   m_info{};
         TimeManager  m_timer{};
 
+        Score qsearch(const Board::Position &pos, Score alpha, Score beta, int ply);
         Score negamax(
             const Board::Position &pos, Score alpha, Score beta, int depth, int ply, PVLine &pv);
 
