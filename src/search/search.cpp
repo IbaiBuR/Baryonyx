@@ -83,6 +83,7 @@ Score Searcher::negamax(const Board::Position &pos,
         return 0;
     }
 
+    u16             legalMoves{};
     PVLine          childPV{};
     Score           bestScore = -SCORE_INFINITE;
     Moves::MoveList moveList;
@@ -97,6 +98,7 @@ Score Searcher::negamax(const Board::Position &pos,
         if (!copy.wasLegal())
             continue;
 
+        ++legalMoves;
         const Score score = -negamax(copy, -beta, -alpha, depth - 1, ply + 1, childPV);
 
         if (m_info.stopped)
@@ -113,6 +115,15 @@ Score Searcher::negamax(const Board::Position &pos,
         if (alpha >= beta)
             break;
     }
+
+    // Checkmate / stalemate detection
+    if (!legalMoves) {
+        if (pos.checkers().bitCount() > 0)
+            return -SCORE_MATE + ply;
+        else
+            return 0;
+    }
+
     return bestScore;
 }
 
