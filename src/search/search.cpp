@@ -50,6 +50,7 @@ void Searcher::parseTimeControl(const std::vector<std::string> &command, const C
 void Searcher::mainSearch(const Board::Position &pos) {
     m_timer.setStartTime(Utils::getTimeMs());
     resetInfo();
+    auto bestMove = Moves::Move::none();
 
     // Iterative deepening loop
     for (int currentDepth = 1; currentDepth <= m_limits.depthLimit; ++currentDepth) {
@@ -60,9 +61,13 @@ void Searcher::mainSearch(const Board::Position &pos) {
             break;
         }
 
+        // Ensure we only update the best move if the search was not cancelled
+        // otherwise our best move may be terrible
+        bestMove = m_info.pv.bestMove();
+
         reportInfo(m_timer.elapsed(), currentDepth, bestScore, m_info.pv);
     }
-    std::cout << std::format("bestmove {}", m_info.pv.bestMove().toString()) << std::endl;
+    std::cout << std::format("bestmove {}", bestMove.toString()) << std::endl;
 }
 
 /// @brief Fail-soft negamax algorithm with alpha-beta pruning
@@ -78,7 +83,7 @@ Score Searcher::negamax(const Board::Position &pos,
 
     ++m_info.searchedNodes;
 
-    if (shouldStop()) {
+    if (depth > 1 && shouldStop()) {
         m_info.stopped = true;
         return 0;
     }
@@ -101,7 +106,8 @@ Score Searcher::negamax(const Board::Position &pos,
         ++legalMoves;
         const Score score = -negamax(copy, -beta, -alpha, depth - 1, ply + 1, childPV);
 
-        if (m_info.stopped)
+        // Double-check if search stopped to make sure we don't exceed the search limits
+        if (depth > 1 && m_info.stopped)
             return 0;
 
         if (score > bestScore)
@@ -119,8 +125,10 @@ Score Searcher::negamax(const Board::Position &pos,
     // Checkmate / stalemate detection
     if (!legalMoves) {
         if (pos.checkers().bitCount() > 0)
+            // Take the shortest available mate
             return -SCORE_MATE + ply;
         else
+            // Stalemate
             return 0;
     }
 
