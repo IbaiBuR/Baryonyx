@@ -369,7 +369,6 @@ std::string Position::toFen() const {
     return fen;
 }
 
-
 void printBoard(const Position &pos) {
     std::cout << std::format("\n+---+---+---+---+---+---+---+---+") << std::endl;
 

@@ -74,8 +74,10 @@ void Searcher::mainSearch(const Board::Position &pos) {
 Score Searcher::qsearch(const Board::Position &pos, Score alpha, const Score beta, const int ply) {
     ++m_info.searchedNodes;
 
-    if (m_info.stopped)
+    if (shouldStop()) {
+        m_info.stopped = true;
         return 0;
+    }
 
     const Score staticEval = Eval::evaluate(pos);
 
@@ -88,7 +90,7 @@ Score Searcher::qsearch(const Board::Position &pos, Score alpha, const Score bet
     if (staticEval > alpha)
         alpha = staticEval;
 
-    Score bestScore = staticEval;
+    Score           bestScore = staticEval;
     Moves::MoveList moveList;
     generateAllCaptures(pos, moveList);
 
@@ -102,6 +104,9 @@ Score Searcher::qsearch(const Board::Position &pos, Score alpha, const Score bet
             continue;
 
         const Score score = -qsearch(copy, -beta, -alpha, ply + 1);
+
+        if (m_info.stopped)
+            return 0;
 
         if (score > bestScore)
             bestScore = score;
@@ -123,6 +128,7 @@ Score Searcher::negamax(const Board::Position &pos,
                         const int              ply,
                         PVLine                &pv) {
     ++m_info.searchedNodes;
+    pv.length = 0;
 
     if (shouldStop()) {
         m_info.stopped = true;
