@@ -35,7 +35,7 @@ It is a personal project with the goal of learning modern C++ and chess programm
 
 ## Building
 
-Since Baryonyx is written in C++23, you'll need a recent version of g++/clang++ (g++ >= 13 / clang++ >= 15) to build it.
+Since Baryonyx is written in C++23, you'll need a recent version of g++/clang++ (g++ >= 13 / clang++ >= 17) to build it.
 See [compiler-support][compilers] for reference.
 
 To create a working executable, follow this steps:
@@ -45,7 +45,7 @@ To create a working executable, follow this steps:
 3. Run make: ```make```
 
 > [!NOTE]
-> It is recommended to use clang++ instead of g++, as it produces faster binaries.
+> It is recommended to use clang++ instead of g++, as it usually produces faster binaries.
 > If you prefer to use with g++, you can specify it when running make -> make CXX=g++
 
 [license-badge]: https://img.shields.io/github/license/IbaiBuR/Baryonyx?style=for-the-badge
