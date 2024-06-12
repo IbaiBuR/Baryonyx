@@ -53,6 +53,8 @@ struct SearchInfo {
 
 class Searcher {
     public:
+        [[nodiscard]] u64 searchedNodes() const { return m_info.searchedNodes; }
+
         void resetInfo();
         void setLimits(u64 nodesLimit, u64 timeLimit, u32 depthLimit);
         void parseTimeControl(const std::vector<std::string> &command, Color stm);
