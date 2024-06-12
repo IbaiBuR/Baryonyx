@@ -70,6 +70,56 @@ void Searcher::mainSearch(const Board::Position &pos) {
     std::cout << std::format("bestmove {}", bestMove.toString()) << std::endl;
 }
 
+/// @brief Quiescence search, to get rid of the horizon effect
+Score Searcher::qsearch(const Board::Position &pos, Score alpha, const Score beta, const int ply) {
+    ++m_info.searchedNodes;
+
+    if (shouldStop()) {
+        m_info.stopped = true;
+        return 0;
+    }
+
+    const Score staticEval = Eval::evaluate(pos);
+
+    if (ply >= MAX_PLY)
+        return staticEval;
+
+    if (staticEval >= beta)
+        return staticEval;
+
+    if (staticEval > alpha)
+        alpha = staticEval;
+
+    Score           bestScore = staticEval;
+    Moves::MoveList moveList;
+    generateAllCaptures(pos, moveList);
+
+    for (u32 i = 0; i < moveList.size(); i++) {
+        const auto currentMove = moveList.moveAt(i);
+
+        Board::Position copy = pos;
+        copy.makeMove(currentMove);
+
+        if (!copy.wasLegal())
+            continue;
+
+        const Score score = -qsearch(copy, -beta, -alpha, ply + 1);
+
+        if (m_info.stopped)
+            return 0;
+
+        if (score > bestScore)
+            bestScore = score;
+
+        if (score > alpha)
+            alpha = score;
+
+        if (alpha >= beta)
+            break;
+    }
+    return bestScore;
+}
+
 /// @brief Fail-soft negamax algorithm with alpha-beta pruning
 Score Searcher::negamax(const Board::Position &pos,
                         Score                  alpha,
@@ -77,16 +127,19 @@ Score Searcher::negamax(const Board::Position &pos,
                         const int              depth,
                         const int              ply,
                         PVLine                &pv) {
-
-    if (depth == 0)
-        return Eval::evaluate(pos);
-
     ++m_info.searchedNodes;
+    pv.length = 0;
 
-    if (depth > 1 && shouldStop()) {
+    if (shouldStop()) {
         m_info.stopped = true;
         return 0;
     }
+
+    if (depth <= 0)
+        return qsearch(pos, alpha, beta, ply);
+
+    if (ply >= MAX_PLY)
+        return Eval::evaluate(pos);
 
     u16             legalMoves{};
     PVLine          childPV{};
@@ -107,7 +160,7 @@ Score Searcher::negamax(const Board::Position &pos,
         const Score score = -negamax(copy, -beta, -alpha, depth - 1, ply + 1, childPV);
 
         // Double-check if search stopped to make sure we don't exceed the search limits
-        if (depth > 1 && m_info.stopped)
+        if (m_info.stopped)
             return 0;
 
         if (score > bestScore)
