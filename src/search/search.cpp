@@ -58,11 +58,15 @@ void Searcher::mainSearch(const Board::Position &pos) {
             negamax(pos, -SCORE_INFINITE, SCORE_INFINITE, currentDepth, 0, m_info.pv);
 
         if (m_info.stopped) {
+            // If search stopped and we don't have a bestMove, we update it in order to avoid
+            // sending illegal moves to GUI
+            if (bestMove == Moves::Move::none())
+                bestMove = m_info.pv.bestMove();
             break;
         }
 
-        // Ensure we only update the best move if the search was not cancelled
-        // otherwise our best move may be terrible
+        // Ensure we only update the best move if search was not cancelled. Otherwise, our best
+        // move may be terrible
         bestMove = m_info.pv.bestMove();
 
         reportInfo(m_timer.elapsed(), currentDepth, bestScore, m_info.pv);
