@@ -17,8 +17,8 @@ class TimeManager {
 
         void setStartTime(u64 startTime);
 
-        [[nodiscard]] u64  elapsed() const;
-        [[nodiscard]] u64  optimumTime() const;
+        [[nodiscard]] u64 elapsed() const;
+        [[nodiscard]] u64 optimumTime() const;
 
     private:
         u64 m_startTime;

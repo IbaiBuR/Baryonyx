@@ -12,9 +12,9 @@ namespace Board::Bitboards {
 class Bitboard {
     public:
         constexpr Bitboard() :
-            m_data(0ULL){};
+            m_data(0ULL) {}
         constexpr explicit Bitboard(const u64 bb) :
-            m_data(bb){};
+            m_data(bb) {}
 
         static constexpr Bitboard fromSquare(const Square sq) {
             return Bitboard(1ULL << std::to_underlying(sq));
