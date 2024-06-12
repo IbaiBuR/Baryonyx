@@ -27,14 +27,18 @@ void Searcher::parseTimeControl(const std::vector<std::string> &command, const C
 
     for (auto it = command.begin() + 1; it < command.end(); ++it) {
         if (stm == Color::WHITE) {
-            if (*it == "wtime")
+            if (*it == "wtime") {
                 baseTime = std::stoull(*(it + 1));
+                setLimits(UINT64_MAX, baseTime, MAX_DEPTH);
+            }
             if (*it == "winc")
                 increment = std::stoi(*(it + 1));
         }
         else {
-            if (*it == "btime")
+            if (*it == "btime") {
                 baseTime = std::stoull(*(it + 1));
+                setLimits(UINT64_MAX, baseTime, MAX_DEPTH);
+            }
             if (*it == "binc")
                 increment = std::stoi(*(it + 1));
         }

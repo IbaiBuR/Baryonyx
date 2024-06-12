@@ -33,7 +33,6 @@ void CommandHandler::handleGo(const std::vector<std::string> &command, const Boa
     else if (command[1] == "infinite")
         m_searcher.setLimits(UINT64_MAX, UINT64_MAX, MAX_DEPTH);
     else if (command[1] == "wtime" || command[1] == "btime") {
-        m_searcher.setLimits(UINT64_MAX, std::stoull(command[2]), MAX_DEPTH);
         m_searcher.parseTimeControl(command, pos.sideToMove());
     }
     else
