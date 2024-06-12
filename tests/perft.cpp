@@ -4,7 +4,7 @@
 
 TEST_SUITE("Perft tests") {
     // clang-format off
-    constexpr std::array perftSuite = {
+    const std::array perftSuite = {
         #include "./resources/perft_suite.txt"
     };
     // clang-format on
