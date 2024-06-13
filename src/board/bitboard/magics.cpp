@@ -2,9 +2,9 @@
 
 #include <format>
 #include <iostream>
-#include <random>
 
 #include "attacks.hpp"
+#include "../../utils.hpp"
 
 namespace Board::Bitboards::Magics {
 
@@ -78,16 +78,9 @@ constexpr MagicEntry findMagic(const Square sq) {
         attacks[i]  = Attacks::genSliding<pt>(sq, blockers[i]);
     }
 
-    // RNG using a fixed seed generated with an std::random_device
-    std::mt19937_64 magicsRng(979484151);
-    const auto      randomMagic = [&magicsRng]() {
-        std::uniform_int_distribution<u64> dis;
-        return dis(magicsRng) & dis(magicsRng) & dis(magicsRng);
-    };
-
     // Find the magic numbers by trial and error
     for (int i = 0; i < 10000000; ++i) {
-        const u64 magicCandidate = randomMagic();
+        const u64 magicCandidate = Utils::randomMagic();
 
         // Skip bad magics
         if (std::popcount((mask.asU64() * magicCandidate) & 0xFF00000000000000) < 6)
