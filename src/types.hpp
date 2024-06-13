@@ -13,4 +13,5 @@ using i8  = std::int8_t;
 using i16 = std::int16_t;
 using i32 = std::int32_t;
 
-using Score = i32;
+using Score      = i32;
+using ZobristKey = u64;
