@@ -19,8 +19,12 @@ void initSliders() {
         const int numOccupancies  = 1 << nBits;
 
         for (int i = 0; i < numOccupancies; i++) {
-            const Bitboard occupied   = Magics::setBlockers(i, nBits, mask);
-            const int      magicIndex = static_cast<int>((occupied.asU64() * magic) >> shift);
+            const Bitboard occupied = Magics::setBlockers(i, nBits, mask);
+#ifndef USE_PEXT
+            const auto magicIndex = (occupied.asU64() * magic) >> shift;
+#else
+            const auto magicIndex = _pext_u64(occupied.asU64(), mask.asU64());
+#endif
 
             if constexpr (isBishop)
                 bishopAttacks[sq][magicIndex] = genSliding<pt>(static_cast<Square>(sq), occupied);
