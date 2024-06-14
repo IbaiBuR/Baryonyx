@@ -2,6 +2,10 @@
 
 #include <array>
 
+#ifdef USE_PEXT
+    #include <immintrin.h>
+#endif
+
 #include "bitboard.hpp"
 
 namespace Board::Bitboards::Magics {
@@ -220,10 +224,14 @@ constexpr std::array<MagicEntry, std::to_underlying(Square::SQUARE_NB)> rookMagi
 /// @param entry MagicEntry
 /// @param occupied Bitboard of occupied squares on the board (Blockers)
 /// @returns The index
-inline int magicIndex(const MagicEntry &entry, Bitboard &occupied) {
+inline auto magicIndex(const MagicEntry &entry, Bitboard &occupied) {
+#ifndef USE_PEXT
     occupied &= entry.mask;
     occupied *= entry.magic;
-    return static_cast<int>(occupied.asU64() >> entry.shift);
+    return occupied.asU64() >> entry.shift;
+#else
+    return _pext_u64(occupied.asU64(), entry.mask.asU64());
+#endif
 }
 
 void printMagics();
