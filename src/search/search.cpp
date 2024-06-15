@@ -78,6 +78,9 @@ void Searcher::mainSearch(const Board::Position &pos) {
 Score Searcher::qsearch(const Board::Position &pos, Score alpha, const Score beta, const int ply) {
     ++m_info.searchedNodes;
 
+    if (m_info.stopped)
+        return 0;
+
     if (shouldStop()) {
         m_info.stopped = true;
         return 0;
@@ -134,6 +137,9 @@ Score Searcher::negamax(const Board::Position &pos,
     ++m_info.searchedNodes;
     pv.length = 0;
 
+    if (m_info.stopped)
+        return 0;
+
     if (shouldStop()) {
         m_info.stopped = true;
         return 0;
@@ -163,10 +169,6 @@ Score Searcher::negamax(const Board::Position &pos,
         ++legalMoves;
         const Score score = -negamax(copy, -beta, -alpha, depth - 1, ply + 1, childPV);
 
-        // Double-check if search stopped to make sure we don't exceed the search limits
-        if (m_info.stopped)
-            return 0;
-
         if (score > bestScore)
             bestScore = score;
 
@@ -174,6 +176,10 @@ Score Searcher::negamax(const Board::Position &pos,
             alpha = score;
             pv.update(currentMove, childPV);
         }
+
+        // Double-check if search stopped to make sure we don't exceed the search limits
+        if (m_info.stopped)
+            return 0;
 
         if (alpha >= beta)
             break;
