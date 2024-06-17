@@ -8,14 +8,14 @@ set(CMAKE_CXX_FLAGS_DEBUG "-O0")
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
 file(GLOB SRCS
-        "src/*.hpp" "src/*.cpp"
-        "src/board/*.hpp" "src/board/*.cpp"
-        "src/board/bitboard/*.hpp" "src/board/bitboard/*.cpp"
-        "src/moves/*.hpp" "src/moves/*.cpp"
-        "src/perft/*.hpp" "src/perft/*.cpp"
-        "src/uci/*.hpp" "src/uci/*.cpp"
-        "src/eval/*.hpp" "src/eval/*.cpp"
-        "src/search/*.hpp" "src/search/*.cpp"
-        "src/tt/*.hpp" "src/tt/*.cpp")
+        "src/*.cpp"
+        "src/board/*.cpp"
+        "src/board/bitboard/*.cpp"
+        "src/moves/*.cpp"
+        "src/perft/*.cpp"
+        "src/uci/*.cpp"
+        "src/eval/*.cpp"
+        "src/search/*.cpp"
+        "src/tt/*.cpp")
 
 add_executable(Baryonyx ${SRCS})
