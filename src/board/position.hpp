@@ -116,11 +116,11 @@ class CastlingRights {
 class Position {
     public:
         Position() :
+            m_pieces(),
+            m_fullMoveNumber(1),
             m_stm(Color::WHITE),
             m_epSq(Square::NO_SQ),
-            m_halfMoveClock(0),
-            m_fullMoveNumber(1),
-            m_pieces() {
+            m_halfMoveClock(0) {
             m_pieces.fill(Piece::NO_PIECE);
         }
 
@@ -177,15 +177,15 @@ class Position {
         [[nodiscard]] std::string toFen() const;
 
     private:
-        Bitboards::Bitboard m_checkersBB;
-        Color               m_stm;
-        Square              m_epSq;
-        CastlingRights      m_castling;
-        u8                  m_halfMoveClock;
-        u16                 m_fullMoveNumber;
+        std::array<Piece, std::to_underlying(Square::SQUARE_NB)>                     m_pieces;
         std::array<Bitboards::Bitboard, std::to_underlying(PieceType::PIECETYPE_NB)> m_pieceBB;
         std::array<Bitboards::Bitboard, std::to_underlying(Color::COLOR_NB)>         m_occupiedBB;
-        std::array<Piece, std::to_underlying(Square::SQUARE_NB)>                     m_pieces;
+        Bitboards::Bitboard                                                          m_checkersBB;
+        u16            m_fullMoveNumber;
+        Color          m_stm;
+        Square         m_epSq;
+        CastlingRights m_castling;
+        u8             m_halfMoveClock;
 };
 
 namespace Util {

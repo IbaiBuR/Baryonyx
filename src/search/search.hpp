@@ -47,8 +47,8 @@ struct SearchLimits {
 
 struct SearchInfo {
         u64    searchedNodes{};
-        bool   stopped{};
         PVLine pv;
+        bool   stopped{};
 };
 
 class Searcher {
@@ -61,8 +61,8 @@ class Searcher {
         void mainSearch(const Board::Position &pos);
 
     private:
-        SearchLimits m_limits{};
         SearchInfo   m_info{};
+        SearchLimits m_limits{};
         TimeManager  m_timer{};
 
         Score qsearch(const Board::Position &pos, Score alpha, Score beta, int ply);
