@@ -4,7 +4,7 @@ HEADERS = src/*.hpp src/board/*.hpp src/board/bitboard/*.hpp src/moves/*.hpp src
 
 STD        = -std=c++23
 WARNINGS   = -Wall -Wextra -Wpedantic
-CXXFLAGS   = -O3 -funroll-loops -flto -DNDEBUG $(STD) $(WARNINGS)
+CXXFLAGS   = -O3 -funroll-loops -flto=auto -DNDEBUG $(STD) $(WARNINGS)
 DEBUGFLAGS = -g -O0 $(STD) $(WARNINGS)
 
 NATIVE = -march=native -mtune=native
