@@ -12,6 +12,7 @@ namespace Board {
 Position::Position(const std::string &fen) :
     m_pieces() {
     this->m_pieces.fill(Piece::NO_PIECE);
+    m_pieces.fill(Piece::NONE);
     const auto tokens = Utils::splitString(fen, ' ');
 
     if (tokens.size() < 6)
@@ -40,6 +41,7 @@ Position::Position(const std::string &fen) :
                 const auto  sq    = Bitboards::Util::squareOf(fileIndex, rankIndex);
                 const Piece piece = Pieces::charToPiece.at(c);
                 const auto  sq    = squareOf(fileIndex, rankIndex);
+                const Piece piece = Pieces::charToPiece(c);
                 setPiece(piece, sq);
                 ++fileIndex;
             }
@@ -58,10 +60,12 @@ Position::Position(const std::string &fen) :
 
     this->m_halfMoveClock  = std::stoi(tokens[4]);
     this->m_fullMoveNumber = std::stoi(tokens[5]);
+    m_halfMoveClock  = std::stoi(tokens[4]);
+    m_fullMoveNumber = std::stoi(tokens[5]);
 
-    this->m_checkersBB = attacksToKing(kingSquare(this->m_stm), this->m_stm);
+    m_checkersBB = attacksToKing(kingSquare(m_stm), m_stm);
 
-    if (!this->isValid())
+    if (!isValid())
         throw std::invalid_argument("Invalid FEN string: illegal position.\n");
 }
 
@@ -142,6 +146,8 @@ void Position::setPiece(const Piece p, const Square sq) {
         m_pieceBB[std::to_underlying(Pieces::pieceToPieceType[std::to_underlying(p)])], sq);
     Bitboards::Bitboard::setBit(
         m_occupiedBB[std::to_underlying(Pieces::pieceColor[std::to_underlying(p)])], sq);
+    Bitboards::Bitboard::setBit(m_pieceBB[std::to_underlying(Pieces::pieceToPieceType(p))], sq);
+    Bitboards::Bitboard::setBit(m_occupiedBB[std::to_underlying(Pieces::pieceColor(p))], sq);
 }
 
 void Position::removePiece(const Piece p, const Square sq) {
@@ -150,6 +156,8 @@ void Position::removePiece(const Piece p, const Square sq) {
         m_pieceBB[std::to_underlying(Pieces::pieceToPieceType[std::to_underlying(p)])], sq);
     Bitboards::Bitboard::clearBit(
         m_occupiedBB[std::to_underlying(Pieces::pieceColor[std::to_underlying(p)])], sq);
+    Bitboards::Bitboard::clearBit(m_pieceBB[std::to_underlying(Pieces::pieceToPieceType(p))], sq);
+    Bitboards::Bitboard::clearBit(m_occupiedBB[std::to_underlying(Pieces::pieceColor(p))], sq);
 }
 
 void Position::movePiece(const Piece p, const Square from, const Square to) {
@@ -203,7 +211,7 @@ void Position::makeMove(const Moves::Move move) {
 
     m_fullMoveNumber += m_stm == Color::BLACK;
 
-    if (Pieces::pieceToPieceType[std::to_underlying(movingPiece)] == PieceType::PAWN)
+    if (Pieces::pieceToPieceType(movingPiece) == PieceType::PAWN)
         m_halfMoveClock = 0;
 
     m_stm        = ~m_stm;
@@ -349,7 +357,7 @@ std::string Position::toFen() const {
             if (currentPiece != Piece::NONE) {
                 if (emptySquares > 0)
                     fen += std::to_string(emptySquares);
-                fen += Pieces::pieceToChar[std::to_underlying(currentPiece)];
+                fen += Pieces::pieceToChar(currentPiece);
                 emptySquares = 0;
             }
             else

@@ -59,14 +59,14 @@ PackedScore evaluatePSQT(const Board::Position &pos) {
 
     while (!ourPieces.empty()) {
         const auto      sq = static_cast<Square>(ourPieces.popLSB());
-        const PieceType pt = Board::Pieces::pieceToPieceType[std::to_underlying(pos.pieceOn(sq))];
+        const PieceType pt = Board::Pieces::pieceToPieceType(pos.pieceOn(sq));
         psqtScore +=
             PSQT::allPSQT[std::to_underlying(pt)][std::to_underlying(relativeSquare<us>(sq))];
     }
 
     while (!theirPieces.empty()) {
         const auto      sq = static_cast<Square>(theirPieces.popLSB());
-        const PieceType pt = Board::Pieces::pieceToPieceType[std::to_underlying(pos.pieceOn(sq))];
+        const PieceType pt = Board::Pieces::pieceToPieceType(pos.pieceOn(sq));
         psqtScore -=
             PSQT::allPSQT[std::to_underlying(pt)][std::to_underlying(relativeSquare<them>(sq))];
     }
