@@ -13,7 +13,7 @@ void printBB(const Bitboard bitboard) {
 
         for (u8 file = 0; file < 8; file++) {
             std::cout << std::format(
-                "{} ", Bitboard::isBitSet(bitboard, Util::squareOf(file, rank)) ? '1' : '0');
+                "{} ", Bitboard::isBitSet(bitboard, squareOf(file, rank)) ? '1' : '0');
         }
 
         std::cout << std::endl;

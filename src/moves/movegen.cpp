@@ -38,7 +38,7 @@ void generatePawnPushes(const Board::Position &pos, MoveList &moveList) {
     while (!singlePush.empty()) {
         const auto to         = static_cast<Square>(singlePush.popLSB());
         const auto from       = to - offset;
-        const auto movingRank = BB::Util::rankOf(to);
+        const auto movingRank = rankOf(to);
 
         if (movingRank != Rank::RANK_1 && movingRank != Rank::RANK_8)
             moveList.push(Move(from, to, Move::MoveFlag::QUIET));
@@ -70,7 +70,7 @@ void generatePawnCaptures(const Board::Position &pos, MoveList &moveList) {
 
         while (!possiblePawnCaptures.empty()) {
             const auto to         = static_cast<Square>(possiblePawnCaptures.popLSB());
-            const auto movingRank = BB::Util::rankOf(to);
+            const auto movingRank = rankOf(to);
 
             if (movingRank != Rank::RANK_1 && movingRank != Rank::RANK_8)
                 moveList.push(Move(from, to, Move::MoveFlag::CAPTURE));
@@ -83,7 +83,7 @@ void generatePawnCaptures(const Board::Position &pos, MoveList &moveList) {
         }
     }
 
-    if (pos.epSquare() != Square::NO_SQ) {
+    if (pos.epSquare() != Square::NONE) {
         BB::Bitboard epPawns = BB::Attacks::getPawnAttacks(pos.epSquare(), them)
                              & (pos.pieceTypeBB(PieceType::PAWN) & pos.occupancies(us));
 

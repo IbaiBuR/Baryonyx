@@ -39,6 +39,7 @@ Position::Position(const std::string &fen) :
             else {
                 const auto  sq    = Bitboards::Util::squareOf(fileIndex, rankIndex);
                 const Piece piece = Pieces::charToPiece.at(c);
+                const auto  sq    = squareOf(fileIndex, rankIndex);
                 setPiece(piece, sq);
                 ++fileIndex;
             }
@@ -51,9 +52,9 @@ Position::Position(const std::string &fen) :
 
     const std::string &enpassant = tokens[3];
 
-    this->m_epSq = enpassant == "-"
-                     ? Square::NO_SQ
-                     : Bitboards::Util::squareOf(enpassant[0] - 'a', enpassant[1] - 1 - '0');
+    m_epSq =
+        enpassant == "-" ? Square::NONE : squareOf(enpassant[0] - 'a', enpassant[1] - 1 - '0');
+    m_key ^= TT::Zobrist::getEnPassantKey(m_epSq);
 
     this->m_halfMoveClock  = std::stoi(tokens[4]);
     this->m_fullMoveNumber = std::stoi(tokens[5]);
@@ -176,7 +177,7 @@ void Position::makeMove(const Moves::Move move) {
     if (move.isDoublePush())
         m_epSq = to - offset;
     else
-        m_epSq = Square::NO_SQ;
+        m_epSq = Square::NONE;
 
     if (move.isCastling()) {
         switch (to) {
@@ -212,7 +213,7 @@ void Position::makeMove(const Moves::Move move) {
 void Position::resetToStartPos() {
     m_checkersBB     = Bitboards::Util::EMPTY_BB;
     m_stm            = Color::WHITE;
-    m_epSq           = Square::NO_SQ;
+    m_epSq           = Square::NONE;
     m_castling       = CastlingRights(CastlingRights::Flags::ALL);
     m_halfMoveClock  = 0;
     m_fullMoveNumber = 1;
@@ -227,7 +228,7 @@ void Position::resetToStartPos() {
     m_occupiedBB[std::to_underlying(Color::WHITE)] = Bitboards::Bitboard(0xFFFFULL);
     m_occupiedBB[std::to_underlying(Color::BLACK)] = Bitboards::Bitboard(0xFFFF000000000000ULL);
 
-    m_pieces.fill(Piece::NO_PIECE);
+    m_pieces.fill(Piece::NONE);
 
     for (u8 sq = std::to_underlying(Square::A2); sq <= std::to_underlying(Square::H2); ++sq)
         m_pieces[sq] = Piece::W_PAWN;
@@ -342,10 +343,10 @@ std::string Position::toFen() const {
         u16 emptySquares = 0;
 
         for (int file = 0; file < 8; ++file) {
-            const Square sq           = Bitboards::Util::squareOf(file, rank);
+            const Square sq           = squareOf(file, rank);
             const Piece  currentPiece = pieceOn(sq);
 
-            if (currentPiece != Piece::NO_PIECE) {
+            if (currentPiece != Piece::NONE) {
                 if (emptySquares > 0)
                     fen += std::to_string(emptySquares);
                 fen += Pieces::pieceToChar[std::to_underlying(currentPiece)];
@@ -363,7 +364,7 @@ std::string Position::toFen() const {
 
     fen += std::format("{} {} {} {} {}", m_stm == Color::WHITE ? "w" : "b",
                        castlingRights().toString(),
-                       m_epSq != Square::NO_SQ ? Util::sqToCoords[std::to_underlying(m_epSq)] : "-",
+                       m_epSq != Square::NONE ? Util::sqToCoords[std::to_underlying(m_epSq)] : "-",
                        m_halfMoveClock, m_fullMoveNumber);
 
     return fen;
@@ -374,12 +375,10 @@ void printBoard(const Position &pos) {
 
     for (int rank = 7; rank >= 0; --rank) {
         for (int file = 0; file < 8; ++file) {
-            const auto  sq           = Bitboards::Util::squareOf(file, rank);
+            const auto  sq           = squareOf(file, rank);
             const Piece currentPiece = pos.pieceOn(sq);
-            std::cout << std::format("| {}",
-                                     currentPiece == Piece::NO_PIECE
-                                         ? ' '
-                                         : Pieces::pieceToChar[std::to_underlying(currentPiece)]);
+            std::cout << std::format(
+                "| {}", currentPiece == Piece::NONE ? ' ' : Pieces::pieceToChar(currentPiece));
 
             if (file != 7)
                 std::cout << std::format(" ");
@@ -396,7 +395,7 @@ void printBoard(const Position &pos) {
 
     std::cout << std::format(
         "En passant      : {}",
-        enpassant != Square::NO_SQ ? Util::sqToCoords[std::to_underlying(enpassant)] : "-")
+        enpassant != Square::NONE ? Util::sqToCoords[std::to_underlying(enpassant)] : "-")
               << std::endl;
     std::cout << std::format("Castling rights : {}", pos.castlingRights().toString()) << std::endl;
     std::cout << std::format("Halfmove clock  : {}", pos.fiftyMoveRule()) << std::endl;
