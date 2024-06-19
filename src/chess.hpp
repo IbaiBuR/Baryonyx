@@ -43,14 +43,15 @@ enum class Square : u8 {
     A6, B6, C6, D6, E6, F6, G6, H6,
     A7, B7, C7, D7, E7, F7, G7, H7,
     A8, B8, C8, D8, E8, F8, G8, H8,
-    SQUARE_NB, NO_SQ
+    SQUARE_NB, NONE
 };
 // clang-format on
 
 enum class Color : u8 {
     WHITE,
     BLACK,
-    COLOR_NB
+    COLOR_NB,
+    NONE
 };
 
 enum class PieceType : u8 {
@@ -60,10 +61,11 @@ enum class PieceType : u8 {
     ROOK,
     QUEEN,
     KING,
-    PIECETYPE_NB
+    PIECETYPE_NB,
+    NONE
 };
 
-enum class Piece : i8 {
+enum class Piece : u8 {
     W_PAWN,
     W_KNIGHT,
     W_BISHOP,
@@ -77,7 +79,7 @@ enum class Piece : i8 {
     B_QUEEN,
     B_KING,
     PIECE_NB,
-    NO_PIECE = -1
+    NONE
 };
 
 enum class Direction : i8 {
@@ -110,6 +112,13 @@ constexpr Square operator-(const Square sq, const Direction dir) {
 }
 
 constexpr Square flip(const Square sq) { return static_cast<Square>(static_cast<int>(sq) ^ 56); }
+
+constexpr Square squareOf(const u8 file, const u8 rank) {
+    return static_cast<Square>((rank << 3) + file);
+}
+
+constexpr File fileOf(const Square sq) { return static_cast<File>(static_cast<u8>(sq) & 7); }
+constexpr Rank rankOf(const Square sq) { return static_cast<Rank>(static_cast<u8>(sq) >> 3); }
 
 template <Color c>
 constexpr Square relativeSquare(const Square sq) {

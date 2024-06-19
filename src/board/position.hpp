@@ -119,9 +119,9 @@ class Position {
             m_pieces(),
             m_fullMoveNumber(1),
             m_stm(Color::WHITE),
-            m_epSq(Square::NO_SQ),
+            m_epSq(Square::NONE),
             m_halfMoveClock(0) {
-            m_pieces.fill(Piece::NO_PIECE);
+            m_pieces.fill(Piece::NONE);
         }
 
         explicit Position(const std::string &fen);

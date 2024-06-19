@@ -5,19 +5,19 @@ using namespace Board::Bitboards;
 
 TEST_SUITE("Bitboards Tests") {
     TEST_CASE("fileOf") {
-        CHECK(Util::fileOf(Square::A1) == File::FILE_A);
-        CHECK(Util::fileOf(Square::H1) == File::FILE_H);
+        CHECK(fileOf(Square::A1) == File::FILE_A);
+        CHECK(fileOf(Square::H1) == File::FILE_H);
     }
 
     TEST_CASE("rankOf") {
-        CHECK(Util::rankOf(Square::A1) == Rank::RANK_1);
-        CHECK(Util::rankOf(Square::H8) == Rank::RANK_8);
+        CHECK(rankOf(Square::A1) == Rank::RANK_1);
+        CHECK(rankOf(Square::H8) == Rank::RANK_8);
     }
 
     TEST_CASE("squareOf") {
-        CHECK(Util::squareOf(std::to_underlying(File::FILE_A), std::to_underlying(Rank::RANK_1))
+        CHECK(squareOf(std::to_underlying(File::FILE_A), std::to_underlying(Rank::RANK_1))
               == Square::A1);
-        CHECK(Util::squareOf(std::to_underlying(File::FILE_H), std::to_underlying(Rank::RANK_8))
+        CHECK(squareOf(std::to_underlying(File::FILE_H), std::to_underlying(Rank::RANK_8))
               == Square::H8);
     }
 
