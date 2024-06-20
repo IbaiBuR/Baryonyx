@@ -10,7 +10,7 @@ namespace UCI {
 
 constexpr auto engineAuthor  = "Ibai Burgos";
 constexpr auto engineName    = "Baryonyx";
-constexpr auto engineVersion = "0.1";
+constexpr auto engineVersion = "0.1.6";
 
 class CommandHandler {
     public:
