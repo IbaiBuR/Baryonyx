@@ -5,20 +5,21 @@
 
 #include "bitboard/attacks.hpp"
 #include "piece.hpp"
-#include "../utils.hpp"
+#include "../utils/split.hpp"
+#include "../tt/zobrist.hpp"
 
 namespace Board {
 
 Position::Position(const std::string &fen) :
-    m_pieces() {
-    this->m_pieces.fill(Piece::NO_PIECE);
+    m_pieces(),
+    m_key(0ULL) {
     m_pieces.fill(Piece::NONE);
-    const auto tokens = Utils::splitString(fen, ' ');
+    const auto tokens = Utils::Split::splitString(fen, ' ');
 
     if (tokens.size() < 6)
         throw std::invalid_argument("Invalid FEN string: missing fields.\n");
 
-    const auto ranks = Utils::splitString(tokens[0], '/');
+    const auto ranks = Utils::Split::splitString(tokens[0], '/');
 
     if (ranks.size() > 8)
         throw std::invalid_argument("Invalid FEN string: too many ranks.\n");
@@ -38,8 +39,6 @@ Position::Position(const std::string &fen) :
             if (std::isdigit(c))
                 fileIndex += c - '0';
             else {
-                const auto  sq    = Bitboards::Util::squareOf(fileIndex, rankIndex);
-                const Piece piece = Pieces::charToPiece.at(c);
                 const auto  sq    = squareOf(fileIndex, rankIndex);
                 const Piece piece = Pieces::charToPiece(c);
                 setPiece(piece, sq);
@@ -49,17 +48,17 @@ Position::Position(const std::string &fen) :
         --rankIndex;
     }
 
-    this->m_stm      = tokens[1] == "w" ? Color::WHITE : Color::BLACK;
-    this->m_castling = CastlingRights(tokens[2]);
+    m_stm = tokens[1] == "w" ? Color::WHITE : Color::BLACK;
+    m_key ^= TT::Zobrist::getSideKey(m_stm);
+
+    m_castling = CastlingRights(tokens[2]);
+    m_key ^= TT::Zobrist::getCastlingKey(m_castling);
 
     const std::string &enpassant = tokens[3];
 
-    m_epSq =
-        enpassant == "-" ? Square::NONE : squareOf(enpassant[0] - 'a', enpassant[1] - 1 - '0');
+    m_epSq = enpassant == "-" ? Square::NONE : squareOf(enpassant[0] - 'a', enpassant[1] - 1 - '0');
     m_key ^= TT::Zobrist::getEnPassantKey(m_epSq);
 
-    this->m_halfMoveClock  = std::stoi(tokens[4]);
-    this->m_fullMoveNumber = std::stoi(tokens[5]);
     m_halfMoveClock  = std::stoi(tokens[4]);
     m_fullMoveNumber = std::stoi(tokens[5]);
 
@@ -142,22 +141,20 @@ Square Position::kingSquare(const Color c) const {
 
 void Position::setPiece(const Piece p, const Square sq) {
     m_pieces[std::to_underlying(sq)] = p;
-    Bitboards::Bitboard::setBit(
-        m_pieceBB[std::to_underlying(Pieces::pieceToPieceType[std::to_underlying(p)])], sq);
-    Bitboards::Bitboard::setBit(
-        m_occupiedBB[std::to_underlying(Pieces::pieceColor[std::to_underlying(p)])], sq);
+
     Bitboards::Bitboard::setBit(m_pieceBB[std::to_underlying(Pieces::pieceToPieceType(p))], sq);
     Bitboards::Bitboard::setBit(m_occupiedBB[std::to_underlying(Pieces::pieceColor(p))], sq);
+
+    m_key ^= TT::Zobrist::getPieceKey(p, sq);
 }
 
 void Position::removePiece(const Piece p, const Square sq) {
-    m_pieces[std::to_underlying(sq)] = Piece::NO_PIECE;
-    Bitboards::Bitboard::clearBit(
-        m_pieceBB[std::to_underlying(Pieces::pieceToPieceType[std::to_underlying(p)])], sq);
-    Bitboards::Bitboard::clearBit(
-        m_occupiedBB[std::to_underlying(Pieces::pieceColor[std::to_underlying(p)])], sq);
+    m_pieces[std::to_underlying(sq)] = Piece::NONE;
+
     Bitboards::Bitboard::clearBit(m_pieceBB[std::to_underlying(Pieces::pieceToPieceType(p))], sq);
     Bitboards::Bitboard::clearBit(m_occupiedBB[std::to_underlying(Pieces::pieceColor(p))], sq);
+
+    m_key ^= TT::Zobrist::getPieceKey(p, sq);
 }
 
 void Position::movePiece(const Piece p, const Square from, const Square to) {
@@ -408,7 +405,8 @@ void printBoard(const Position &pos) {
     std::cout << std::format("Castling rights : {}", pos.castlingRights().toString()) << std::endl;
     std::cout << std::format("Halfmove clock  : {}", pos.fiftyMoveRule()) << std::endl;
     std::cout << std::format("Fullmove number : {}", pos.fullMoves()) << std::endl;
-    std::cout << std::format("FEN             : {}\n", pos.toFen()) << std::endl;
+    std::cout << std::format("FEN             : {}", pos.toFen()) << std::endl;
+    std::cout << std::format("Hash            : 0x{:016X}\n", pos.key()) << std::endl;
 }
 
 } // namespace Board
