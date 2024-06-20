@@ -1,28 +1,21 @@
 #include "zobrist.hpp"
 
-#include "../utils.hpp"
-
 namespace TT::Zobrist {
 
-std::array<std::array<ZobristKey, 64>, 12> pieceKeys;
-std::array<ZobristKey, 16>                 castlingRightsKeys;
-std::array<ZobristKey, 8>                  enPassantKeys;
-ZobristKey                                 sideToMoveKey;
+/// @brief Generates the Zobrist keys at compile time
+/// @tparam T Type of the array
+/// @tparam size Size of the array
+/// @returns An array of random Zobrist keys
+template <typename T, usize size>
+consteval std::array<T, size> generate_keys() {
+    std::array<T, size>     keys{};
+    Utils::Random::Sfc64Rng prng{};
 
-void init() {
-    for (int i = 0; i < 12; ++i) {
-        for (int j = 0; j < 64; ++j) {
-            pieceKeys[i][j] = Utils::randomU64();
-        }
-    }
+    std::ranges::for_each(keys.begin(), keys.end(), [&](auto &key) { key = prng.next_u64(); });
 
-    for (int i = 0; i < 16; ++i)
-        castlingRightsKeys[i] = Utils::randomU64();
-
-    for (int i = 0; i < 8; ++i)
-        enPassantKeys[i] = Utils::randomU64();
-
-    sideToMoveKey = Utils::randomU64();
+    return keys;
 }
+
+constexpr std::array<ZobristKey, totalKeys> allKeys = generate_keys<ZobristKey, totalKeys>();
 
 } // namespace TT::Zobrist
