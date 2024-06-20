@@ -8,11 +8,6 @@
 
 namespace Board::Bitboards::Magics {
 
-/// @brief Utility used to generate all the blocker combinations of a mask
-/// @param index Index for blocker configuration
-/// @param nBits Number of bits set in the mask
-/// @param mask Attack mask
-/// @returns The generated blocker configuration for the index
 Bitboard setBlockers(const int index, const int nBits, Bitboard mask) {
     Bitboard blockers;
 
@@ -54,7 +49,7 @@ bool tryMagic(const u64                    magic,
 }
 
 /// @brief Generates a MagicEntry for the given square depending on piece type
-/// @tparam pt Piece type
+/// @tparam pt Piece type (Slider)
 /// @param sq Square
 /// @returns The MagicEntry (empty if it fails to find a valid candidate)
 template <PieceType pt>
