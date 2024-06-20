@@ -1,6 +1,6 @@
 #pragma once
 
-#include "utils.hpp"
+#include "types.hpp"
 
 class TimeManager {
     public:

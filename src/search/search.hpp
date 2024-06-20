@@ -1,5 +1,8 @@
 #pragma once
 
+#include <format>
+#include <vector>
+
 #include "../board/position.hpp"
 #include "../timeman.hpp"
 

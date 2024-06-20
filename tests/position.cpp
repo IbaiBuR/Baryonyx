@@ -19,7 +19,7 @@ TEST_SUITE("Position Tests") {
 
             CHECK(pos.sideToMove() == Color::WHITE);
             CHECK(pos.castlingRights() == CastlingRights(CastlingRights::Flags::ALL));
-            CHECK(pos.epSquare() == Square::NO_SQ);
+            CHECK(pos.epSquare() == Square::NONE);
             CHECK(pos.fiftyMoveRule() == 0);
             CHECK(pos.fullMoves() == 1);
             CHECK(pos.checkers() == Bitboards::Util::EMPTY_BB);
