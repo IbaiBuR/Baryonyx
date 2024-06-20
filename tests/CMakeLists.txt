@@ -14,6 +14,8 @@ file(GLOB SRCS "*.cpp"
         "../src/board/*.cpp"
         "../src/board/*.hpp"
         "../src/eval/*.hpp"
-        "../src/eval/*.cpp")
+        "../src/eval/*.cpp"
+        "../src/tt/*.hpp"
+        "../src/tt/*.cpp")
 
 add_executable(BaryonyxTests ${SRCS})
