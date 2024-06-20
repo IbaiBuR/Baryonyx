@@ -2,7 +2,6 @@
 
 #include <bit>
 #include <cassert>
-#include <stdexcept>
 #include <utility>
 
 #include "../../chess.hpp"
@@ -78,32 +77,32 @@ class Bitboard {
             return Bitboard(m_data >> other.m_data);
         }
 
-        constexpr Bitboard operator&=(const Bitboard &other) {
+        constexpr Bitboard &operator&=(const Bitboard &other) {
             m_data &= other.m_data;
             return *this;
         }
 
-        constexpr Bitboard operator*=(const u64 value) {
+        constexpr Bitboard &operator*=(const u64 value) {
             m_data *= value;
             return *this;
         }
 
-        constexpr Bitboard operator|=(const Bitboard &other) {
+        constexpr Bitboard &operator|=(const Bitboard &other) {
             m_data |= other.m_data;
             return *this;
         }
 
-        constexpr Bitboard operator^=(const Bitboard &other) {
+        constexpr Bitboard &operator^=(const Bitboard &other) {
             m_data ^= other.m_data;
             return *this;
         }
 
-        constexpr Bitboard operator<<=(const Bitboard &other) {
+        constexpr Bitboard &operator<<=(const Bitboard &other) {
             m_data <<= other.m_data;
             return *this;
         }
 
-        constexpr Bitboard operator>>=(const Bitboard &other) {
+        constexpr Bitboard &operator>>=(const Bitboard &other) {
             m_data >>= other.m_data;
             return *this;
         }
@@ -137,13 +136,6 @@ constexpr auto RANK_6_BB = Bitboard(0x0000FF0000000000ULL);
 constexpr auto RANK_7_BB = Bitboard(0x00FF000000000000ULL);
 constexpr auto RANK_8_BB = Bitboard(0xFF00000000000000ULL);
 
-constexpr File fileOf(const Square sq) { return static_cast<File>(std::to_underlying(sq) & 7); }
-constexpr Rank rankOf(const Square sq) { return static_cast<Rank>(std::to_underlying(sq) >> 3); }
-
-constexpr Square squareOf(const u8 file, const u8 rank) {
-    return static_cast<Square>((rank << 3) + file);
-}
-
 } // namespace Util
 
 void printBB(Bitboard bitboard);
@@ -171,7 +163,7 @@ constexpr Bitboard shift(const Bitboard &bb) {
     else if constexpr (d == Direction::SOUTH_WEST)
         return Bitboard(bb >> 9) & ~Util::FILE_H_BB;
     else
-        throw std::invalid_argument("Invalid direction provided.\n");
+        std::unreachable();
 }
 
 } // namespace Board::Bitboards
