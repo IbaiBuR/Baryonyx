@@ -5,7 +5,7 @@
 
 #include "../moves/movegen.hpp"
 #include "../moves/movelist.hpp"
-#include "../utils.hpp"
+#include "../utils/time.hpp"
 
 u64 perft(const Board::Position &pos, const int depth) {
     if (depth == 0)
@@ -35,7 +35,7 @@ void splitPerft(const Board::Position &pos, const int depth) {
     generateAllMoves(pos, moveList);
 
     u64        totalNodes = 0ULL;
-    const auto startTime  = Utils::getTimeMs();
+    const auto startTime  = Utils::Time::getTimeMs();
 
     for (u32 i = 0; i < moveList.size(); ++i) {
         Board::Position   copy        = pos;
@@ -51,7 +51,7 @@ void splitPerft(const Board::Position &pos, const int depth) {
         std::cout << std::format("{}: {}", currentMove.toString(), value) << std::endl;
     }
 
-    const auto elapsed = Utils::getTimeMs() - startTime;
+    const auto elapsed = Utils::Time::getTimeMs() - startTime;
 
     std::cout << std::format("\nDepth           : {}", depth) << std::endl;
     std::cout << std::format("Total nodes     : {}", totalNodes) << std::endl;

@@ -3,6 +3,8 @@
 #include <format>
 #include <iostream>
 
+#include "../utils/time.hpp"
+
 void Search::Bench::run(Searcher &searcher, const u32 depth) {
     // clang-format off
     const std::array benchFens = {
@@ -10,7 +12,7 @@ void Search::Bench::run(Searcher &searcher, const u32 depth) {
     };
     // clang-format on
 
-    const u64 startTime = Utils::getTimeMs();
+    const u64 startTime = Utils::Time::getTimeMs();
     u64       totalNodes{};
     searcher.setLimits(UINT64_MAX, UINT64_MAX, depth);
 
@@ -22,7 +24,7 @@ void Search::Bench::run(Searcher &searcher, const u32 depth) {
         totalNodes += searcher.searchedNodes();
     }
 
-    const u64  elapsed = Utils::getTimeMs() - startTime;
+    const u64  elapsed = Utils::Time::getTimeMs() - startTime;
     const auto seconds = elapsed / 1000;
 
     std::cout << std::format("\ninfo string {} seconds", seconds) << std::endl;

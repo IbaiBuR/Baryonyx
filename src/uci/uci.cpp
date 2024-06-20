@@ -7,7 +7,7 @@
 #include "../eval/eval.hpp"
 #include "../moves/movegen.hpp"
 #include "../perft/perft.hpp"
-#include "../utils.hpp"
+#include "../utils/split.hpp"
 
 namespace UCI {
 
@@ -83,7 +83,7 @@ void CommandHandler::loop() {
     auto        pos = Board::Position(Board::Util::startPosFen);
 
     while (std::getline(std::cin, input)) {
-        const auto command = Utils::splitString(input, ' ');
+        const auto command = Utils::Split::splitString(input, ' ');
 
         if (command.empty())
             continue;

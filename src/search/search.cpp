@@ -5,7 +5,7 @@
 
 #include "../eval/eval.hpp"
 #include "../moves/movegen.hpp"
-#include "../utils.hpp"
+#include "../utils/time.hpp"
 
 namespace Search {
 
@@ -43,12 +43,12 @@ void Searcher::parseTimeControl(const std::vector<std::string> &command, const C
                 increment = std::stoi(*(it + 1));
         }
     }
-    m_timer = TimeManager(Utils::getTimeMs(), baseTime, increment);
+    m_timer = TimeManager(Utils::Time::getTimeMs(), baseTime, increment);
 }
 
 /// @brief Main entrypoint for the search function
 void Searcher::mainSearch(const Board::Position &pos) {
-    m_timer.setStartTime(Utils::getTimeMs());
+    m_timer.setStartTime(Utils::Time::getTimeMs());
     resetInfo();
     auto bestMove = Moves::Move::none();
 

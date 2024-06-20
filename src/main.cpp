@@ -3,11 +3,9 @@
 #include "board/bitboard/attacks.hpp"
 #include "search/bench.hpp"
 #include "uci/uci.hpp"
-#include "tt/zobrist.hpp"
 
 int main(const int argc, const char *argv[]) {
     Board::Bitboards::Attacks::init();
-    TT::Zobrist::init();
 
     if (argc > 1 && !strcmp(argv[1], "bench")) {
         constexpr int benchDepth = 5;

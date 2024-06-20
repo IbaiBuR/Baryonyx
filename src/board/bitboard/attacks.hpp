@@ -1,7 +1,6 @@
 #pragma once
 
 #include <array>
-#include <stdexcept>
 
 #include "bitboard.hpp"
 #include "magics.hpp"
@@ -364,7 +363,6 @@ constexpr Bitboard genSliding(const Square sq, const Bitboard &occupied) {
 /// @param sq Square to generate the attacks from
 /// @param occupied Bitboard of occupied squares on the board (Blockers)
 /// @returns A bitboard representing the squares that the piece can attack from the given square
-/// @throws std::invalid_argument If an invalid piece type is provided
 /// @note Pawns are not taken into account since this function is primarily used during movegen
 /// and pawns are treated separately there
 constexpr Bitboard
@@ -372,22 +370,16 @@ getAttacksByPieceType(const PieceType pt, const Square sq, const Bitboard occupi
     switch (pt) {
     case PieceType::KNIGHT:
         return knightAttacks[std::to_underlying(sq)];
-        break;
     case PieceType::KING:
         return kingAttacks[std::to_underlying(sq)];
-        break;
     case PieceType::BISHOP:
         return getBishopAttacks(sq, occupied);
-        break;
     case PieceType::ROOK:
         return getRookAttacks(sq, occupied);
-        break;
     case PieceType::QUEEN:
         return getBishopAttacks(sq, occupied) | getRookAttacks(sq, occupied);
-        break;
     default:
-        throw std::invalid_argument("Invalid piece type provided.");
-        break;
+        std::unreachable();
     }
 }
 

@@ -4,7 +4,7 @@
 #include <iostream>
 
 #include "attacks.hpp"
-#include "../../utils.hpp"
+#include "../../utils/random.hpp"
 
 namespace Board::Bitboards::Magics {
 
@@ -73,9 +73,15 @@ constexpr MagicEntry findMagic(const Square sq) {
         attacks[i]  = Attacks::genSliding<pt>(sq, blockers[i]);
     }
 
+    static Utils::Random::Sfc64Rng prng;
+
+    auto random_magic = [&]() -> u64 {
+        return prng.next_u64() & prng.next_u64() & prng.next_u64();
+    };
+
     // Find the magic numbers by trial and error
     for (int i = 0; i < 10000000; ++i) {
-        const u64 magicCandidate = Utils::randomMagic();
+        const u64 magicCandidate = random_magic();
 
         // Skip bad magics
         if (std::popcount((mask.asU64() * magicCandidate) & 0xFF00000000000000) < 6)

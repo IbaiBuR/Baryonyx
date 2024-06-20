@@ -51,7 +51,7 @@ std::string Move::toString() const {
     const auto to   = Board::Util::sqToCoords[std::to_underlying(this->to())];
 
     if (this->isPromotion()) {
-        result = std::format("{}{}{}", from, to, promoFlagToChar(this->flag()));
+        result = std::format("{}{}{}", from, to, promoFlagToChar(flag()));
     }
     else {
         result = std::format("{}{}", from, to);
