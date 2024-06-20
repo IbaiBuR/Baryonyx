@@ -152,8 +152,10 @@ constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> blackPawnA
      Bitboard(0x40000000000000ULL)}
 };
 
+/// @brief Pre-calculated lookup table for pawn attacks
 constexpr std::array pawnAttacks = {whitePawnAttacks, blackPawnAttacks};
 
+/// @brief Pre-calculated lookup table for knight attacks
 constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> knightAttacks = {
     {Bitboard(0x20400ULL),
      Bitboard(0x50800ULL),
@@ -221,6 +223,7 @@ constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> knightAtta
      Bitboard(0x20400000000000ULL)}
 };
 
+/// @brief Pre-calculated lookup table for king attacks
 constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> kingAttacks = {
     {Bitboard(0x302ULL),
      Bitboard(0x705ULL),

@@ -16,6 +16,7 @@ struct MagicEntry {
         int      shift;
 };
 
+/// @brief Pre-calculated bishop attack masks
 constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> bishopMasks = {
     {Bitboard(0x0040201008040200ULL), Bitboard(0x0000402010080400ULL),
      Bitboard(0x0000004020100A00ULL), Bitboard(0x0000000040221400ULL),
@@ -51,6 +52,7 @@ constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> bishopMask
      Bitboard(0x0020100804020000ULL), Bitboard(0x0040201008040200ULL)}
 };
 
+/// @brief Pre-calculated rook attack masks
 constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> rookMasks = {
     {Bitboard(0x000101010101017EULL), Bitboard(0x000202020202027CULL),
      Bitboard(0x000404040404047AULL), Bitboard(0x0008080808080876ULL),
@@ -224,6 +226,9 @@ constexpr std::array<MagicEntry, std::to_underlying(Square::SQUARE_NB)> rookMagi
 /// @param entry MagicEntry
 /// @param occupied Bitboard of occupied squares on the board (Blockers)
 /// @returns The index
+/// @note If USE_PEXT is defined, the function uses the _pext_u64 intrinsic function for
+/// efficient bit manipulation. This function is available on CPUs that support the BMI2
+/// instruction set, which can significantly speed up the operation
 inline auto magicIndex(const MagicEntry &entry, Bitboard &occupied) {
 #ifndef USE_PEXT
     occupied &= entry.mask;
@@ -236,6 +241,11 @@ inline auto magicIndex(const MagicEntry &entry, Bitboard &occupied) {
 
 void printMagics();
 
+/// @brief Utility used to generate all the blocker combinations of a mask
+/// @param index Index for blocker configuration
+/// @param nBits Number of bits set in the mask
+/// @param mask Attack mask
+/// @returns The generated blocker configuration for the index
 Bitboard setBlockers(int index, int nBits, Bitboard mask);
 
 } // namespace Board::Bitboards::Magics
