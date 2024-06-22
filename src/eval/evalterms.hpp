@@ -21,20 +21,20 @@ class PackedScore {
 
         constexpr PackedScore operator*(const int mul) const { return PackedScore(m_score * mul); }
 
-        constexpr PackedScore operator+(const PackedScore &other) const {
+        constexpr PackedScore operator+(const PackedScore& other) const {
             return PackedScore(m_score + other.m_score);
         }
 
-        constexpr PackedScore operator-(const PackedScore &other) const {
+        constexpr PackedScore operator-(const PackedScore& other) const {
             return PackedScore(m_score - other.m_score);
         }
 
-        constexpr PackedScore &operator+=(const PackedScore &other) {
+        constexpr PackedScore& operator+=(const PackedScore& other) {
             m_score += other.m_score;
             return *this;
         }
 
-        constexpr PackedScore &operator-=(const PackedScore &other) {
+        constexpr PackedScore& operator-=(const PackedScore& other) {
             m_score -= other.m_score;
             return *this;
         }
@@ -133,4 +133,4 @@ constexpr std::array allPSQT = {pawnTable, knightTable, bishopTable,
 
 } // namespace PSQT
 
-} // namespace Eval
+} // namespace eval

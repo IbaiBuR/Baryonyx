@@ -4,6 +4,6 @@
 
 namespace search::bench {
 
-void run(Searcher &searcher, u32 depth);
+void run(Searcher& searcher, u32 depth);
 
 }

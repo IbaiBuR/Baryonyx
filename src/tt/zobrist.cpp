@@ -11,11 +11,11 @@ consteval std::array<T, size> generate_keys() {
     std::array<T, size>     keys{};
     utils::random::Sfc64Rng prng{};
 
-    std::ranges::for_each(keys.begin(), keys.end(), [&](auto &key) { key = prng.next_u64(); });
+    std::ranges::for_each(keys.begin(), keys.end(), [&](auto& key) { key = prng.next_u64(); });
 
     return keys;
 }
 
 constexpr std::array<ZobristKey, totalKeys> allKeys = generate_keys<ZobristKey, totalKeys>();
 
-} // namespace TT::Zobrist
+} // namespace tt::zobrist

@@ -29,10 +29,10 @@ Bitboard set_blockers(const int index, const int nBits, Bitboard mask) {
 /// @param attacks Pre-calculated attacks
 /// @returns True if no collisions found while trying to fill in the attack table
 bool try_magic(const u64                    magic,
-              const int                    shift,
-              const int                    numOccupancies,
-              const std::vector<Bitboard> &blockers,
-              const std::vector<Bitboard> &attacks) {
+               const int                    shift,
+               const int                    numOccupancies,
+               const std::vector<Bitboard>& blockers,
+               const std::vector<Bitboard>& attacks) {
     std::vector<Bitboard> attackTable(numOccupancies);
     bool                  collision = false;
 
@@ -121,4 +121,4 @@ void print_magics() {
     print_magics_by_piece_type<PieceType::ROOK>();
 }
 
-} // namespace Board::Bitboards::Magics
+} // namespace board::bitboards::magics

@@ -28,7 +28,7 @@ class Sfc64Rng {
         constexpr Sfc64Rng() :
             Sfc64Rng(defaultSeed) {}
 
-        constexpr explicit Sfc64Rng(const seed_type &seed) :
+        constexpr explicit Sfc64Rng(const seed_type& seed) :
             m_a(seed[0]),
             m_b(seed[1]),
             m_c(seed[2]),
@@ -70,11 +70,11 @@ inline seed_type generate_seed() {
     std::random_device rd;
     seed_type          seed;
 
-    std::ranges::for_each(seed.begin(), seed.end(), [&](auto &seed_part) {
+    std::ranges::for_each(seed.begin(), seed.end(), [&](auto& seed_part) {
         seed_part = static_cast<u64>(rd()) << 32 | rd();
     });
 
     return seed;
 }
 
-} // namespace Utils::Random
+} // namespace utils::random

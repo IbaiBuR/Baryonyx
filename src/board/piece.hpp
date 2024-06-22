@@ -112,4 +112,4 @@ constexpr Color piece_color(const Piece p) {
     }
 }
 
-} // namespace Board::Pieces
+} // namespace board::pieces

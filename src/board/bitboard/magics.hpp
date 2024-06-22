@@ -229,7 +229,7 @@ constexpr std::array<MagicEntry, std::to_underlying(Square::SQUARE_NB)> rookMagi
 /// @note If USE_PEXT is defined, the function uses the _pext_u64 intrinsic function for
 /// efficient bit manipulation. This function is available on CPUs that support the BMI2
 /// instruction set, which can significantly speed up the operation
-inline auto magic_index(const MagicEntry &entry, Bitboard &occupied) {
+inline auto magic_index(const MagicEntry& entry, Bitboard& occupied) {
 #ifndef USE_PEXT
     occupied &= entry.mask;
     occupied *= entry.magic;
@@ -248,4 +248,4 @@ void print_magics();
 /// @returns The generated blocker configuration for the index
 Bitboard set_blockers(int index, int nBits, Bitboard mask);
 
-} // namespace Board::Bitboards::Magics
+} // namespace board::bitboards::magics

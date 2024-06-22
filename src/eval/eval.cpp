@@ -7,7 +7,7 @@
 
 namespace eval {
 
-int get_game_phase(const board::Position &pos) {
+int get_game_phase(const board::Position& pos) {
     const int gamePhase = gamePhaseIncrements[std::to_underlying(PieceType::KNIGHT)]
                             * pos.piece_type_bb(PieceType::KNIGHT).bit_count()
                         + gamePhaseIncrements[std::to_underlying(PieceType::BISHOP)]
@@ -21,7 +21,7 @@ int get_game_phase(const board::Position &pos) {
 }
 
 template <Color stm>
-PackedScore evaluate_material(const board::Position &pos) {
+PackedScore evaluate_material(const board::Position& pos) {
     constexpr Color us   = stm;
     constexpr Color them = ~us;
 
@@ -48,7 +48,7 @@ PackedScore evaluate_material(const board::Position &pos) {
 }
 
 template <Color stm>
-PackedScore evaluate_psqt(const board::Position &pos) {
+PackedScore evaluate_psqt(const board::Position& pos) {
     constexpr Color us   = stm;
     constexpr Color them = ~us;
 
@@ -75,7 +75,7 @@ PackedScore evaluate_psqt(const board::Position &pos) {
 }
 
 template <Color stm>
-Score evaluate(const board::Position &pos) {
+Score evaluate(const board::Position& pos) {
     const PackedScore score     = evaluate_material<stm>(pos) + evaluate_psqt<stm>(pos);
     const int         gamePhase = get_game_phase(pos);
     const Score       eval =
@@ -84,9 +84,9 @@ Score evaluate(const board::Position &pos) {
     return eval;
 }
 
-Score evaluate(const board::Position &pos) {
+Score evaluate(const board::Position& pos) {
     return pos.side_to_move() == Color::WHITE ? evaluate<Color::WHITE>(pos)
-                                            : evaluate<Color::BLACK>(pos);
+                                              : evaluate<Color::BLACK>(pos);
 }
 
-} // namespace Eval
+} // namespace eval

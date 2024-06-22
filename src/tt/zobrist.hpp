@@ -29,7 +29,7 @@ inline ZobristKey get_piece_key(const Piece p, const Square sq) {
              : allKeys[std::to_underlying(p) + std::to_underlying(sq) * 12];
 }
 
-inline ZobristKey get_castling_key(const board::CastlingRights &castlingRights) {
+inline ZobristKey get_castling_key(const board::CastlingRights& castlingRights) {
     return allKeys[castlingKeysOffset + castlingRights.as_u8()];
 }
 
@@ -45,4 +45,4 @@ inline ZobristKey get_side_key(const Color c) {
     return c == Color::WHITE ? 0ULL : allKeys[sideToMoveKeyOffset];
 }
 
-} // namespace TT::Zobrist
+} // namespace tt::zobrist

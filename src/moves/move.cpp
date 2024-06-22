@@ -65,4 +65,4 @@ Piece Move::get_promoted_piece(const Color stm) const {
                               + std::to_underlying(stm) * 6);
 }
 
-} // namespace Moves
+} // namespace moves

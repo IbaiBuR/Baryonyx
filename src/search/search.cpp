@@ -21,7 +21,7 @@ void Searcher::set_limits(const u64 nodesLimit, const u64 timeLimit, const u32 d
     m_limits.depthLimit = depthLimit;
 }
 
-void Searcher::parse_time_control(const std::vector<std::string> &command, const Color stm) {
+void Searcher::parse_time_control(const std::vector<std::string>& command, const Color stm) {
     u64 baseTime{};
     u16 increment{};
 
@@ -47,7 +47,7 @@ void Searcher::parse_time_control(const std::vector<std::string> &command, const
 }
 
 /// @brief Main entrypoint for the search function
-void Searcher::main_search(const board::Position &pos) {
+void Searcher::main_search(const board::Position& pos) {
     m_timer.set_start_time(utils::time::get_time_ms());
     reset_info();
     auto bestMove = moves::Move::none();
@@ -75,7 +75,7 @@ void Searcher::main_search(const board::Position &pos) {
 }
 
 /// @brief Quiescence search, to get rid of the horizon effect
-Score Searcher::qsearch(const board::Position &pos, Score alpha, const Score beta, const int ply) {
+Score Searcher::qsearch(const board::Position& pos, Score alpha, const Score beta, const int ply) {
     ++m_info.searchedNodes;
 
     if (m_info.stopped)
@@ -128,12 +128,12 @@ Score Searcher::qsearch(const board::Position &pos, Score alpha, const Score bet
 }
 
 /// @brief Fail-soft negamax algorithm with alpha-beta pruning
-Score Searcher::negamax(const board::Position &pos,
+Score Searcher::negamax(const board::Position& pos,
                         Score                  alpha,
                         const Score            beta,
                         const int              depth,
                         const int              ply,
-                        PVLine                &pv) {
+                        PVLine&                pv) {
     ++m_info.searchedNodes;
     pv.length = 0;
 
@@ -208,11 +208,12 @@ bool Searcher::should_stop() const {
         || elapsed >= m_timer.optimum_time();
 }
 
-void Searcher::report_info(u64 elapsed, int depth, Score score, const PVLine &pv) const {
+void Searcher::report_info(u64 elapsed, int depth, Score score, const PVLine& pv) const {
     std::cout << std::format("info depth {} score cp {} time {} nodes {} nps {} pv {}", depth,
                              score, elapsed, m_info.searchedNodes,
-                             m_info.searchedNodes / std::max<u64>(1, elapsed) * 1000, pv.to_string())
+                             m_info.searchedNodes / std::max<u64>(1, elapsed) * 1000,
+                             pv.to_string())
               << std::endl;
 }
 
-} // namespace Search
+} // namespace search

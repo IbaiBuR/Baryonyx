@@ -25,7 +25,7 @@ class CastlingRights {
         constexpr explicit CastlingRights(const Flags flag) :
             m_castlingFlags(flag) {}
 
-        constexpr explicit CastlingRights(const std::string &flags) :
+        constexpr explicit CastlingRights(const std::string& flags) :
             m_castlingFlags(Flags::NONE) {
             for (const char c : flags) {
                 switch (c) {
@@ -47,20 +47,20 @@ class CastlingRights {
             }
         }
 
-        constexpr bool operator==(const CastlingRights &other) const {
+        constexpr bool operator==(const CastlingRights& other) const {
             return std::to_underlying(m_castlingFlags) == std::to_underlying(other.m_castlingFlags);
         }
 
-        constexpr bool operator!=(const CastlingRights &other) const {
+        constexpr bool operator!=(const CastlingRights& other) const {
             return std::to_underlying(m_castlingFlags) != std::to_underlying(other.m_castlingFlags);
         }
 
-        constexpr CastlingRights operator|(const CastlingRights &other) const {
+        constexpr CastlingRights operator|(const CastlingRights& other) const {
             return CastlingRights(static_cast<Flags>(std::to_underlying(m_castlingFlags)
                                                      | std::to_underlying(other.m_castlingFlags)));
         }
 
-        constexpr CastlingRights &operator|=(const CastlingRights &other) {
+        constexpr CastlingRights& operator|=(const CastlingRights& other) {
             m_castlingFlags = static_cast<Flags>(std::to_underlying(m_castlingFlags)
                                                  | std::to_underlying(other.m_castlingFlags));
             return *this;
@@ -70,7 +70,7 @@ class CastlingRights {
             return CastlingRights(static_cast<Flags>(std::to_underlying(m_castlingFlags) & update));
         }
 
-        constexpr CastlingRights &operator&=(const int update) {
+        constexpr CastlingRights& operator&=(const int update) {
             m_castlingFlags = static_cast<Flags>(std::to_underlying(m_castlingFlags) & update);
             return *this;
         }
@@ -127,7 +127,7 @@ class Position {
             m_pieces.fill(Piece::NONE);
         }
 
-        explicit Position(const std::string &fen);
+        explicit Position(const std::string& fen);
 
         [[nodiscard]] bitboards::Bitboard checkers() const { return m_checkersBB; }
         [[nodiscard]] Color               side_to_move() const { return m_stm; }
@@ -221,8 +221,8 @@ constexpr std::array castlingRightsUpdate = {
 };
 // clang-format on
 
-} // namespace Util
+} // namespace util
 
-void print_board(const Position &pos);
+void print_board(const Position& pos);
 
-} // namespace Board
+} // namespace board

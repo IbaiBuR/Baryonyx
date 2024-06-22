@@ -19,15 +19,15 @@ class Bitboard {
             return Bitboard(1ULL << std::to_underlying(sq));
         }
 
-        static constexpr bool is_bit_set(const Bitboard &bitboard, const Square sq) {
+        static constexpr bool is_bit_set(const Bitboard& bitboard, const Square sq) {
             return static_cast<bool>(bitboard.m_data & 1ULL << std::to_underlying(sq));
         }
 
-        static constexpr void set_bit(Bitboard &bitboard, const Square sq) {
+        static constexpr void set_bit(Bitboard& bitboard, const Square sq) {
             bitboard.m_data |= 1ULL << std::to_underlying(sq);
         }
 
-        static constexpr void clear_bit(Bitboard &bitboard, const Square sq) {
+        static constexpr void clear_bit(Bitboard& bitboard, const Square sq) {
             bitboard.m_data &= ~(1ULL << std::to_underlying(sq));
         }
 
@@ -52,57 +52,57 @@ class Bitboard {
 
         constexpr explicit operator bool() const { return m_data != 0ULL; }
 
-        constexpr bool operator==(const Bitboard &other) const { return m_data == other.m_data; }
-        constexpr bool operator!=(const Bitboard &other) const { return m_data != other.m_data; }
+        constexpr bool operator==(const Bitboard& other) const { return m_data == other.m_data; }
+        constexpr bool operator!=(const Bitboard& other) const { return m_data != other.m_data; }
 
-        constexpr Bitboard operator&(const Bitboard &other) const {
+        constexpr Bitboard operator&(const Bitboard& other) const {
             return Bitboard(m_data & other.m_data);
         }
 
-        constexpr Bitboard operator|(const Bitboard &other) const {
+        constexpr Bitboard operator|(const Bitboard& other) const {
             return Bitboard(m_data | other.m_data);
         }
 
-        constexpr Bitboard operator^(const Bitboard &other) const {
+        constexpr Bitboard operator^(const Bitboard& other) const {
             return Bitboard(m_data ^ other.m_data);
         }
 
         constexpr Bitboard operator~() const { return Bitboard(~m_data); }
 
-        constexpr Bitboard operator<<(const Bitboard &other) const {
+        constexpr Bitboard operator<<(const Bitboard& other) const {
             return Bitboard(m_data << other.m_data);
         }
 
-        constexpr Bitboard operator>>(const Bitboard &other) const {
+        constexpr Bitboard operator>>(const Bitboard& other) const {
             return Bitboard(m_data >> other.m_data);
         }
 
-        constexpr Bitboard &operator&=(const Bitboard &other) {
+        constexpr Bitboard& operator&=(const Bitboard& other) {
             m_data &= other.m_data;
             return *this;
         }
 
-        constexpr Bitboard &operator*=(const u64 value) {
+        constexpr Bitboard& operator*=(const u64 value) {
             m_data *= value;
             return *this;
         }
 
-        constexpr Bitboard &operator|=(const Bitboard &other) {
+        constexpr Bitboard& operator|=(const Bitboard& other) {
             m_data |= other.m_data;
             return *this;
         }
 
-        constexpr Bitboard &operator^=(const Bitboard &other) {
+        constexpr Bitboard& operator^=(const Bitboard& other) {
             m_data ^= other.m_data;
             return *this;
         }
 
-        constexpr Bitboard &operator<<=(const Bitboard &other) {
+        constexpr Bitboard& operator<<=(const Bitboard& other) {
             m_data <<= other.m_data;
             return *this;
         }
 
-        constexpr Bitboard &operator>>=(const Bitboard &other) {
+        constexpr Bitboard& operator>>=(const Bitboard& other) {
             m_data >>= other.m_data;
             return *this;
         }
@@ -136,7 +136,7 @@ constexpr auto RANK_6_BB = Bitboard(0x0000FF0000000000ULL);
 constexpr auto RANK_7_BB = Bitboard(0x00FF000000000000ULL);
 constexpr auto RANK_8_BB = Bitboard(0xFF00000000000000ULL);
 
-} // namespace Util
+} // namespace util
 
 void print_bb(Bitboard bitboard);
 
@@ -145,7 +145,7 @@ void print_bb(Bitboard bitboard);
 /// @param bb Bitboard to shift
 /// @returns The shifted bitboard
 template <Direction d>
-constexpr Bitboard shift(const Bitboard &bb) {
+constexpr Bitboard shift(const Bitboard& bb) {
     if constexpr (d == Direction::NORTH)
         return Bitboard(bb << 8);
     else if constexpr (d == Direction::SOUTH)
@@ -166,4 +166,4 @@ constexpr Bitboard shift(const Bitboard &bb) {
         std::unreachable();
 }
 
-} // namespace Board::Bitboards
+} // namespace board::bitboards
