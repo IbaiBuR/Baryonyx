@@ -6,7 +6,7 @@
 #include "bitboard/bitboard.hpp"
 #include "../moves/move.hpp"
 
-namespace Board {
+namespace board {
 
 class CastlingRights {
     public:
@@ -75,10 +75,10 @@ class CastlingRights {
             return *this;
         }
 
-        [[nodiscard]] constexpr u8 asU8() const { return static_cast<u8>(m_castlingFlags); }
+        [[nodiscard]] constexpr u8 as_u8() const { return static_cast<u8>(m_castlingFlags); }
 
         template <Color c>
-        [[nodiscard]] bool kingSideAvailable() const {
+        [[nodiscard]] bool king_side_available() const {
             if constexpr (c == Color::WHITE)
                 return std::to_underlying(m_castlingFlags) & std::to_underlying(Flags::WK);
             else
@@ -86,23 +86,23 @@ class CastlingRights {
         }
 
         template <Color c>
-        [[nodiscard]] bool queenSideAvailable() const {
+        [[nodiscard]] bool queen_side_available() const {
             if constexpr (c == Color::WHITE)
                 return std::to_underlying(m_castlingFlags) & std::to_underlying(Flags::WQ);
             else
                 return std::to_underlying(m_castlingFlags) & std::to_underlying(Flags::BQ);
         }
 
-        [[nodiscard]] std::string toString() const {
+        [[nodiscard]] std::string to_string() const {
             std::string result;
 
-            if (kingSideAvailable<Color::WHITE>())
+            if (king_side_available<Color::WHITE>())
                 result += 'K';
-            if (queenSideAvailable<Color::WHITE>())
+            if (queen_side_available<Color::WHITE>())
                 result += 'Q';
-            if (kingSideAvailable<Color::BLACK>())
+            if (king_side_available<Color::BLACK>())
                 result += 'k';
-            if (queenSideAvailable<Color::BLACK>())
+            if (queen_side_available<Color::BLACK>())
                 result += 'q';
 
             if (result.empty())
@@ -129,62 +129,62 @@ class Position {
 
         explicit Position(const std::string &fen);
 
-        [[nodiscard]] Bitboards::Bitboard checkers() const { return m_checkersBB; }
-        [[nodiscard]] Color               sideToMove() const { return m_stm; }
-        [[nodiscard]] Square              epSquare() const { return m_epSq; }
-        [[nodiscard]] CastlingRights      castlingRights() const { return m_castling; }
-        [[nodiscard]] u8                  fiftyMoveRule() const { return m_halfMoveClock; }
-        [[nodiscard]] u16                 fullMoves() const { return m_fullMoveNumber; }
+        [[nodiscard]] bitboards::Bitboard checkers() const { return m_checkersBB; }
+        [[nodiscard]] Color               side_to_move() const { return m_stm; }
+        [[nodiscard]] Square              ep_square() const { return m_epSq; }
+        [[nodiscard]] CastlingRights      castling_rights() const { return m_castling; }
+        [[nodiscard]] u8                  fifty_move_rule() const { return m_halfMoveClock; }
+        [[nodiscard]] u16                 full_moves() const { return m_fullMoveNumber; }
         [[nodiscard]] ZobristKey          key() const { return m_key; }
 
-        [[nodiscard]] Piece pieceOn(const Square sq) const {
+        [[nodiscard]] Piece piece_on(const Square sq) const {
             return m_pieces[std::to_underlying(sq)];
         }
 
-        [[nodiscard]] Bitboards::Bitboard occupancies(const Color c) const {
+        [[nodiscard]] bitboards::Bitboard occupancies(const Color c) const {
             return m_occupiedBB[std::to_underlying(c)];
         }
 
-        [[nodiscard]] Bitboards::Bitboard pieceTypeBB(const PieceType pt) const {
+        [[nodiscard]] bitboards::Bitboard piece_type_bb(const PieceType pt) const {
             return m_pieceBB[std::to_underlying(pt)];
         }
 
         template <Color c>
-        [[nodiscard]] bool canCastleKingSide() const;
+        [[nodiscard]] bool can_castle_king_side() const;
 
         template <Color c>
-        [[nodiscard]] bool canCastleQueenSide() const;
+        [[nodiscard]] bool can_castle_queen_side() const;
 
         template <Color c>
-        [[nodiscard]] int pieceCount(PieceType pt) const;
+        [[nodiscard]] int piece_count(PieceType pt) const;
 
-        [[nodiscard]] Bitboards::Bitboard attacksToKing(Square kingSquare, Color c) const;
+        [[nodiscard]] bitboards::Bitboard attacks_to_king(Square kingSquare, Color c) const;
 
-        [[nodiscard]] Square kingSquare(Color c) const;
+        [[nodiscard]] Square king_square(Color c) const;
 
-        void setPiece(Piece p, Square sq);
+        void set_piece(Piece p, Square sq);
 
-        void removePiece(Piece p, Square sq);
+        void remove_piece(Piece p, Square sq);
 
-        void movePiece(Piece p, Square from, Square to);
+        void move_piece(Piece p, Square from, Square to);
 
-        void makeMove(Moves::Move move);
+        void make_move(moves::Move move);
 
-        void resetToStartPos();
+        void reset_to_start_pos();
 
-        [[nodiscard]] bool isSquareAttackedBy(Square sq, Color c) const;
+        [[nodiscard]] bool is_square_attacked_by(Square sq, Color c) const;
 
-        [[nodiscard]] bool isValid() const;
+        [[nodiscard]] bool is_valid() const;
 
-        [[nodiscard]] bool wasLegal() const;
+        [[nodiscard]] bool was_legal() const;
 
-        [[nodiscard]] std::string toFen() const;
+        [[nodiscard]] std::string to_fen() const;
 
     private:
         std::array<Piece, std::to_underlying(Square::SQUARE_NB)>                     m_pieces;
-        std::array<Bitboards::Bitboard, std::to_underlying(PieceType::PIECETYPE_NB)> m_pieceBB;
-        std::array<Bitboards::Bitboard, std::to_underlying(Color::COLOR_NB)>         m_occupiedBB;
-        Bitboards::Bitboard                                                          m_checkersBB;
+        std::array<bitboards::Bitboard, std::to_underlying(PieceType::PIECETYPE_NB)> m_pieceBB;
+        std::array<bitboards::Bitboard, std::to_underlying(Color::COLOR_NB)>         m_occupiedBB;
+        bitboards::Bitboard                                                          m_checkersBB;
         ZobristKey                                                                   m_key;
         u16            m_fullMoveNumber;
         Color          m_stm;
@@ -193,7 +193,7 @@ class Position {
         u8             m_halfMoveClock;
 };
 
-namespace Util {
+namespace util {
 
 constexpr auto startPosFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
@@ -223,6 +223,6 @@ constexpr std::array castlingRightsUpdate = {
 
 } // namespace Util
 
-void printBoard(const Position &pos);
+void print_board(const Position &pos);
 
 } // namespace Board

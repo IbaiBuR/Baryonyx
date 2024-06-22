@@ -5,7 +5,7 @@
 
 #include "move.hpp"
 
-namespace Moves {
+namespace moves {
 
 struct ScoredMove {
         Score score;
@@ -23,12 +23,12 @@ class MoveList {
 
         [[nodiscard]] u32 size() const { return m_count; }
 
-        [[nodiscard]] Move moveAt(const u32 index) const {
+        [[nodiscard]] Move move_at(const u32 index) const {
             assert(index < MAX_MOVES);
             return m_moves[index].move;
         }
 
-        [[nodiscard]] Score scoreAt(const u32 index) const {
+        [[nodiscard]] Score score_at(const u32 index) const {
             assert(index < MAX_MOVES);
             return m_moves[index].score;
         }

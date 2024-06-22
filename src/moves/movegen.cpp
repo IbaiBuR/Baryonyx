@@ -2,43 +2,43 @@
 
 #include "../board/bitboard/attacks.hpp"
 
-namespace Moves {
+namespace moves {
 
-namespace BB = Board::Bitboards;
+namespace bb = board::bitboards;
 
 template <Color c>
-constexpr BB::Bitboard singlePawnPush(const BB::Bitboard &pawns, const BB::Bitboard &empty) {
+constexpr bb::Bitboard single_pawn_push(const bb::Bitboard &pawns, const bb::Bitboard &empty) {
     if constexpr (c == Color::WHITE)
-        return BB::shift<Direction::NORTH>(pawns) & empty;
+        return bb::shift<Direction::NORTH>(pawns) & empty;
     else
-        return BB::shift<Direction::SOUTH>(pawns) & empty;
+        return bb::shift<Direction::SOUTH>(pawns) & empty;
 }
 
 template <Color c>
-constexpr BB::Bitboard doublePawnPush(const BB::Bitboard &pawns, const BB::Bitboard &empty) {
+constexpr bb::Bitboard double_pawn_push(const bb::Bitboard &pawns, const bb::Bitboard &empty) {
     if constexpr (c == Color::WHITE)
-        return BB::shift<Direction::NORTH>(singlePawnPush<c>(pawns, empty)) & empty
-             & BB::Util::RANK_4_BB;
+        return bb::shift<Direction::NORTH>(single_pawn_push<c>(pawns, empty)) & empty
+             & bb::util::RANK_4_BB;
     else
-        return BB::shift<Direction::SOUTH>(singlePawnPush<c>(pawns, empty)) & empty
-             & BB::Util::RANK_5_BB;
+        return bb::shift<Direction::SOUTH>(single_pawn_push<c>(pawns, empty)) & empty
+             & bb::util::RANK_5_BB;
 }
 
 template <Color c>
-void generatePawnPushes(const Board::Position &pos, MoveList &moveList) {
+void generate_pawn_pushes(const board::Position &pos, MoveList &moveList) {
     constexpr Color     us       = c;
     constexpr Color     them     = ~us;
     constexpr Direction offset   = us == Color::WHITE ? Direction::NORTH : Direction::SOUTH;
-    const BB::Bitboard &ourPawns = pos.pieceTypeBB(PieceType::PAWN) & pos.occupancies(us);
-    const BB::Bitboard &empty    = ~(pos.occupancies(us) | pos.occupancies(them));
+    const bb::Bitboard &ourPawns = pos.piece_type_bb(PieceType::PAWN) & pos.occupancies(us);
+    const bb::Bitboard &empty    = ~(pos.occupancies(us) | pos.occupancies(them));
 
-    BB::Bitboard singlePush = singlePawnPush<us>(ourPawns, empty);
-    BB::Bitboard doublePush = doublePawnPush<us>(ourPawns, empty);
+    bb::Bitboard singlePush = single_pawn_push<us>(ourPawns, empty);
+    bb::Bitboard doublePush = double_pawn_push<us>(ourPawns, empty);
 
     while (!singlePush.empty()) {
-        const auto to         = static_cast<Square>(singlePush.popLSB());
+        const auto to         = static_cast<Square>(singlePush.pop_lsb());
         const auto from       = to - offset;
-        const auto movingRank = rankOf(to);
+        const auto movingRank = rank_of(to);
 
         if (movingRank != Rank::RANK_1 && movingRank != Rank::RANK_8)
             moveList.push(Move(from, to, Move::MoveFlag::QUIET));
@@ -51,26 +51,26 @@ void generatePawnPushes(const Board::Position &pos, MoveList &moveList) {
     }
 
     while (!doublePush.empty()) {
-        const auto to   = static_cast<Square>(doublePush.popLSB());
+        const auto to   = static_cast<Square>(doublePush.pop_lsb());
         const auto from = to - offset * 2;
         moveList.push(Move(from, to, Move::MoveFlag::DOUBLEPUSH));
     }
 }
 
 template <Color c>
-void generatePawnCaptures(const Board::Position &pos, MoveList &moveList) {
+void generate_pawn_captures(const board::Position &pos, MoveList &moveList) {
     constexpr Color us       = c;
     constexpr Color them     = ~us;
-    BB::Bitboard    ourPawns = pos.pieceTypeBB(PieceType::PAWN) & pos.occupancies(us);
+    bb::Bitboard    ourPawns = pos.piece_type_bb(PieceType::PAWN) & pos.occupancies(us);
 
     while (!ourPawns.empty()) {
-        const auto   from = static_cast<Square>(ourPawns.popLSB());
-        BB::Bitboard possiblePawnCaptures =
-            BB::Attacks::getPawnAttacks(from, us) & pos.occupancies(them);
+        const auto   from = static_cast<Square>(ourPawns.pop_lsb());
+        bb::Bitboard possiblePawnCaptures =
+            bb::attacks::get_pawn_attacks(from, us) & pos.occupancies(them);
 
         while (!possiblePawnCaptures.empty()) {
-            const auto to         = static_cast<Square>(possiblePawnCaptures.popLSB());
-            const auto movingRank = rankOf(to);
+            const auto to         = static_cast<Square>(possiblePawnCaptures.pop_lsb());
+            const auto movingRank = rank_of(to);
 
             if (movingRank != Rank::RANK_1 && movingRank != Rank::RANK_8)
                 moveList.push(Move(from, to, Move::MoveFlag::CAPTURE));
@@ -83,137 +83,137 @@ void generatePawnCaptures(const Board::Position &pos, MoveList &moveList) {
         }
     }
 
-    if (pos.epSquare() != Square::NONE) {
-        BB::Bitboard epPawns = BB::Attacks::getPawnAttacks(pos.epSquare(), them)
-                             & (pos.pieceTypeBB(PieceType::PAWN) & pos.occupancies(us));
+    if (pos.ep_square() != Square::NONE) {
+        bb::Bitboard epPawns = bb::attacks::get_pawn_attacks(pos.ep_square(), them)
+                             & (pos.piece_type_bb(PieceType::PAWN) & pos.occupancies(us));
 
         while (!epPawns.empty()) {
-            const auto from = static_cast<Square>(epPawns.popLSB());
-            moveList.push(Move(from, pos.epSquare(), Move::MoveFlag::ENPASSANT));
+            const auto from = static_cast<Square>(epPawns.pop_lsb());
+            moveList.push(Move(from, pos.ep_square(), Move::MoveFlag::ENPASSANT));
         }
     }
 }
 
 template <Color c>
-void generateQuietsByPieceType(const Board::Position &pos, MoveList &moveList, const PieceType pt) {
+void generate_quiets_by_piece_type(const board::Position &pos, MoveList &moveList, const PieceType pt) {
     constexpr Color     us        = c;
     constexpr Color     them      = ~us;
-    const BB::Bitboard &occupied  = pos.occupancies(us) | pos.occupancies(them);
-    BB::Bitboard        ourPieces = pos.pieceTypeBB(pt) & pos.occupancies(us);
+    const bb::Bitboard &occupied  = pos.occupancies(us) | pos.occupancies(them);
+    bb::Bitboard        ourPieces = pos.piece_type_bb(pt) & pos.occupancies(us);
 
     while (!ourPieces.empty()) {
-        const auto   from = static_cast<Square>(ourPieces.popLSB());
-        BB::Bitboard possiblePieceMoves =
-            BB::Attacks::getAttacksByPieceType(pt, from, occupied) & ~occupied;
+        const auto   from = static_cast<Square>(ourPieces.pop_lsb());
+        bb::Bitboard possiblePieceMoves =
+            bb::attacks::get_attacks_by_piece_type(pt, from, occupied) & ~occupied;
 
         while (!possiblePieceMoves.empty()) {
-            const auto to = static_cast<Square>(possiblePieceMoves.popLSB());
+            const auto to = static_cast<Square>(possiblePieceMoves.pop_lsb());
             moveList.push(Move(from, to, Move::MoveFlag::QUIET));
         }
     }
 }
 
 template <Color c>
-void generateCapturesByPieceType(const Board::Position &pos,
+void generate_captures_by_piece_type(const board::Position &pos,
                                  MoveList              &moveList,
                                  const PieceType        pt) {
     constexpr Color     us        = c;
     constexpr Color     them      = ~us;
-    const BB::Bitboard &occupied  = pos.occupancies(us) | pos.occupancies(them);
-    BB::Bitboard        ourPieces = pos.pieceTypeBB(pt) & pos.occupancies(us);
+    const bb::Bitboard &occupied  = pos.occupancies(us) | pos.occupancies(them);
+    bb::Bitboard        ourPieces = pos.piece_type_bb(pt) & pos.occupancies(us);
 
     while (!ourPieces.empty()) {
-        const auto   from = static_cast<Square>(ourPieces.popLSB());
-        BB::Bitboard possiblePieceCaptures =
-            BB::Attacks::getAttacksByPieceType(pt, from, occupied) & pos.occupancies(them);
+        const auto   from = static_cast<Square>(ourPieces.pop_lsb());
+        bb::Bitboard possiblePieceCaptures =
+            bb::attacks::get_attacks_by_piece_type(pt, from, occupied) & pos.occupancies(them);
 
         while (!possiblePieceCaptures.empty()) {
-            const auto to = static_cast<Square>(possiblePieceCaptures.popLSB());
+            const auto to = static_cast<Square>(possiblePieceCaptures.pop_lsb());
             moveList.push(Move(from, to, Move::MoveFlag::CAPTURE));
         }
     }
 }
 
 template <Color c>
-void generateCastlingMoves(const Board::Position &pos, MoveList &moveList) {
+void generate_castling_moves(const board::Position &pos, MoveList &moveList) {
     if constexpr (c == Color::WHITE) {
-        if (pos.canCastleKingSide<Color::WHITE>())
+        if (pos.can_castle_king_side<Color::WHITE>())
             moveList.push(Move(Square::E1, Square::G1, Move::MoveFlag::CASTLE));
-        if (pos.canCastleQueenSide<Color::WHITE>())
+        if (pos.can_castle_queen_side<Color::WHITE>())
             moveList.push(Move(Square::E1, Square::C1, Move::MoveFlag::CASTLE));
     }
     else {
-        if (pos.canCastleKingSide<Color::BLACK>())
+        if (pos.can_castle_king_side<Color::BLACK>())
             moveList.push(Move(Square::E8, Square::G8, Move::MoveFlag::CASTLE));
-        if (pos.canCastleQueenSide<Color::BLACK>())
+        if (pos.can_castle_queen_side<Color::BLACK>())
             moveList.push(Move(Square::E8, Square::C8, Move::MoveFlag::CASTLE));
     }
 }
 
-void generateAllQuiets(const Board::Position &pos, MoveList &moveList) {
-    if (pos.sideToMove() == Color::WHITE) {
+void generate_all_quiets(const board::Position &pos, MoveList &moveList) {
+    if (pos.side_to_move() == Color::WHITE) {
         for (const PieceType pt : {PieceType::KNIGHT, PieceType::BISHOP, PieceType::ROOK,
                                    PieceType::QUEEN, PieceType::KING})
-            generateQuietsByPieceType<Color::WHITE>(pos, moveList, pt);
+            generate_quiets_by_piece_type<Color::WHITE>(pos, moveList, pt);
     }
     else {
         for (const PieceType pt : {PieceType::KNIGHT, PieceType::BISHOP, PieceType::ROOK,
                                    PieceType::QUEEN, PieceType::KING})
-            generateQuietsByPieceType<Color::BLACK>(pos, moveList, pt);
+            generate_quiets_by_piece_type<Color::BLACK>(pos, moveList, pt);
     }
 }
 
-void generateAllCaptures(const Board::Position &pos, MoveList &moveList) {
-    if (pos.sideToMove() == Color::WHITE) {
-        generatePawnCaptures<Color::WHITE>(pos, moveList);
+void generate_all_captures(const board::Position &pos, MoveList &moveList) {
+    if (pos.side_to_move() == Color::WHITE) {
+        generate_pawn_captures<Color::WHITE>(pos, moveList);
         for (const PieceType pt : {PieceType::KNIGHT, PieceType::BISHOP, PieceType::ROOK,
                                    PieceType::QUEEN, PieceType::KING})
-            generateCapturesByPieceType<Color::WHITE>(pos, moveList, pt);
+            generate_captures_by_piece_type<Color::WHITE>(pos, moveList, pt);
     }
     else {
-        generatePawnCaptures<Color::BLACK>(pos, moveList);
+        generate_pawn_captures<Color::BLACK>(pos, moveList);
         for (const PieceType pt : {PieceType::KNIGHT, PieceType::BISHOP, PieceType::ROOK,
                                    PieceType::QUEEN, PieceType::KING})
-            generateCapturesByPieceType<Color::BLACK>(pos, moveList, pt);
+            generate_captures_by_piece_type<Color::BLACK>(pos, moveList, pt);
     }
 }
 
-void generateAllMoves(const Board::Position &pos, MoveList &moveList) {
-    const int numCheckers = pos.checkers().bitCount();
+void generate_all_moves(const board::Position &pos, MoveList &moveList) {
+    const int numCheckers = pos.checkers().bit_count();
 
     if (numCheckers == 0) {
-        generateAllCaptures(pos, moveList);
+        generate_all_captures(pos, moveList);
 
-        if (pos.sideToMove() == Color::WHITE) {
-            generatePawnPushes<Color::WHITE>(pos, moveList);
-            generateCastlingMoves<Color::WHITE>(pos, moveList);
+        if (pos.side_to_move() == Color::WHITE) {
+            generate_pawn_pushes<Color::WHITE>(pos, moveList);
+            generate_castling_moves<Color::WHITE>(pos, moveList);
         }
         else {
-            generatePawnPushes<Color::BLACK>(pos, moveList);
-            generateCastlingMoves<Color::BLACK>(pos, moveList);
+            generate_pawn_pushes<Color::BLACK>(pos, moveList);
+            generate_castling_moves<Color::BLACK>(pos, moveList);
         }
 
-        generateAllQuiets(pos, moveList);
+        generate_all_quiets(pos, moveList);
     }
     else if (numCheckers == 1) {
-        generateAllCaptures(pos, moveList);
+        generate_all_captures(pos, moveList);
 
-        if (pos.sideToMove() == Color::WHITE)
-            generatePawnPushes<Color::WHITE>(pos, moveList);
+        if (pos.side_to_move() == Color::WHITE)
+            generate_pawn_pushes<Color::WHITE>(pos, moveList);
         else {
-            generatePawnPushes<Color::BLACK>(pos, moveList);
+            generate_pawn_pushes<Color::BLACK>(pos, moveList);
         }
 
-        generateAllQuiets(pos, moveList);
+        generate_all_quiets(pos, moveList);
     }
     else {
-        if (pos.sideToMove() == Color::WHITE) {
-            generateCapturesByPieceType<Color::WHITE>(pos, moveList, PieceType::KING);
-            generateQuietsByPieceType<Color::WHITE>(pos, moveList, PieceType::KING);
+        if (pos.side_to_move() == Color::WHITE) {
+            generate_captures_by_piece_type<Color::WHITE>(pos, moveList, PieceType::KING);
+            generate_quiets_by_piece_type<Color::WHITE>(pos, moveList, PieceType::KING);
         }
         else {
-            generateCapturesByPieceType<Color::BLACK>(pos, moveList, PieceType::KING);
-            generateQuietsByPieceType<Color::BLACK>(pos, moveList, PieceType::KING);
+            generate_captures_by_piece_type<Color::BLACK>(pos, moveList, PieceType::KING);
+            generate_quiets_by_piece_type<Color::BLACK>(pos, moveList, PieceType::KING);
         }
     }
 }

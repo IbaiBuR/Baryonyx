@@ -7,21 +7,21 @@
 #include "../moves/movegen.hpp"
 #include "../utils/time.hpp"
 
-namespace Search {
+namespace search {
 
-void Searcher::resetInfo() {
+void Searcher::reset_info() {
     m_info.stopped       = false;
     m_info.searchedNodes = 0ULL;
     m_info.pv.clear();
 }
 
-void Searcher::setLimits(const u64 nodesLimit, const u64 timeLimit, const u32 depthLimit) {
+void Searcher::set_limits(const u64 nodesLimit, const u64 timeLimit, const u32 depthLimit) {
     m_limits.nodesLimit = nodesLimit;
     m_limits.timeLimit  = timeLimit;
     m_limits.depthLimit = depthLimit;
 }
 
-void Searcher::parseTimeControl(const std::vector<std::string> &command, const Color stm) {
+void Searcher::parse_time_control(const std::vector<std::string> &command, const Color stm) {
     u64 baseTime{};
     u16 increment{};
 
@@ -29,7 +29,7 @@ void Searcher::parseTimeControl(const std::vector<std::string> &command, const C
         if (stm == Color::WHITE) {
             if (*it == "wtime") {
                 baseTime = std::stoull(*(it + 1));
-                setLimits(UINT64_MAX, baseTime, MAX_DEPTH);
+                set_limits(UINT64_MAX, baseTime, MAX_DEPTH);
             }
             if (*it == "winc")
                 increment = std::stoi(*(it + 1));
@@ -37,20 +37,20 @@ void Searcher::parseTimeControl(const std::vector<std::string> &command, const C
         else {
             if (*it == "btime") {
                 baseTime = std::stoull(*(it + 1));
-                setLimits(UINT64_MAX, baseTime, MAX_DEPTH);
+                set_limits(UINT64_MAX, baseTime, MAX_DEPTH);
             }
             if (*it == "binc")
                 increment = std::stoi(*(it + 1));
         }
     }
-    m_timer = TimeManager(Utils::Time::getTimeMs(), baseTime, increment);
+    m_timer = TimeManager(utils::time::get_time_ms(), baseTime, increment);
 }
 
 /// @brief Main entrypoint for the search function
-void Searcher::mainSearch(const Board::Position &pos) {
-    m_timer.setStartTime(Utils::Time::getTimeMs());
-    resetInfo();
-    auto bestMove = Moves::Move::none();
+void Searcher::main_search(const board::Position &pos) {
+    m_timer.set_start_time(utils::time::get_time_ms());
+    reset_info();
+    auto bestMove = moves::Move::none();
 
     // Iterative deepening loop
     for (int currentDepth = 1; currentDepth <= m_limits.depthLimit; ++currentDepth) {
@@ -60,33 +60,33 @@ void Searcher::mainSearch(const Board::Position &pos) {
         if (m_info.stopped) {
             // If search stopped and we don't have a bestMove, we update it in order to avoid
             // sending illegal moves to GUI
-            if (bestMove == Moves::Move::none())
-                bestMove = m_info.pv.bestMove();
+            if (bestMove == moves::Move::none())
+                bestMove = m_info.pv.best_move();
             break;
         }
 
         // Ensure we only update the best move if search was not cancelled. Otherwise, our best
         // move may be terrible
-        bestMove = m_info.pv.bestMove();
+        bestMove = m_info.pv.best_move();
 
-        reportInfo(m_timer.elapsed(), currentDepth, bestScore, m_info.pv);
+        report_info(m_timer.elapsed(), currentDepth, bestScore, m_info.pv);
     }
-    std::cout << std::format("bestmove {}", bestMove.toString()) << std::endl;
+    std::cout << std::format("bestmove {}", bestMove.to_string()) << std::endl;
 }
 
 /// @brief Quiescence search, to get rid of the horizon effect
-Score Searcher::qsearch(const Board::Position &pos, Score alpha, const Score beta, const int ply) {
+Score Searcher::qsearch(const board::Position &pos, Score alpha, const Score beta, const int ply) {
     ++m_info.searchedNodes;
 
     if (m_info.stopped)
         return 0;
 
-    if (shouldStop()) {
+    if (should_stop()) {
         m_info.stopped = true;
         return 0;
     }
 
-    const Score staticEval = Eval::evaluate(pos);
+    const Score staticEval = eval::evaluate(pos);
 
     if (ply >= MAX_PLY)
         return staticEval;
@@ -98,16 +98,16 @@ Score Searcher::qsearch(const Board::Position &pos, Score alpha, const Score bet
         alpha = staticEval;
 
     Score           bestScore = staticEval;
-    Moves::MoveList moveList;
-    generateAllCaptures(pos, moveList);
+    moves::MoveList moveList;
+    generate_all_captures(pos, moveList);
 
     for (u32 i = 0; i < moveList.size(); i++) {
-        const auto currentMove = moveList.moveAt(i);
+        const auto currentMove = moveList.move_at(i);
 
-        Board::Position copy = pos;
-        copy.makeMove(currentMove);
+        board::Position copy = pos;
+        copy.make_move(currentMove);
 
-        if (!copy.wasLegal())
+        if (!copy.was_legal())
             continue;
 
         const Score score = -qsearch(copy, -beta, -alpha, ply + 1);
@@ -128,7 +128,7 @@ Score Searcher::qsearch(const Board::Position &pos, Score alpha, const Score bet
 }
 
 /// @brief Fail-soft negamax algorithm with alpha-beta pruning
-Score Searcher::negamax(const Board::Position &pos,
+Score Searcher::negamax(const board::Position &pos,
                         Score                  alpha,
                         const Score            beta,
                         const int              depth,
@@ -140,7 +140,7 @@ Score Searcher::negamax(const Board::Position &pos,
     if (m_info.stopped)
         return 0;
 
-    if (shouldStop()) {
+    if (should_stop()) {
         m_info.stopped = true;
         return 0;
     }
@@ -149,21 +149,21 @@ Score Searcher::negamax(const Board::Position &pos,
         return qsearch(pos, alpha, beta, ply);
 
     if (ply >= MAX_PLY)
-        return Eval::evaluate(pos);
+        return eval::evaluate(pos);
 
     u16             legalMoves{};
     PVLine          childPV{};
     Score           bestScore = -SCORE_INFINITE;
-    Moves::MoveList moveList;
-    generateAllMoves(pos, moveList);
+    moves::MoveList moveList;
+    generate_all_moves(pos, moveList);
 
     for (u32 i = 0; i < moveList.size(); ++i) {
-        const auto currentMove = moveList.moveAt(i);
+        const auto currentMove = moveList.move_at(i);
 
-        Board::Position copy = pos;
-        copy.makeMove(currentMove);
+        board::Position copy = pos;
+        copy.make_move(currentMove);
 
-        if (!copy.wasLegal())
+        if (!copy.was_legal())
             continue;
 
         ++legalMoves;
@@ -187,7 +187,7 @@ Score Searcher::negamax(const Board::Position &pos,
 
     // Checkmate / stalemate detection
     if (!legalMoves) {
-        if (pos.checkers().bitCount() > 0)
+        if (pos.checkers().bit_count() > 0)
             // Take the shortest available mate
             return -SCORE_MATE + ply;
         else
@@ -198,20 +198,20 @@ Score Searcher::negamax(const Board::Position &pos,
     return bestScore;
 }
 
-bool Searcher::shouldStop() const {
+bool Searcher::should_stop() const {
     if (m_info.searchedNodes % 1024 != 0)
         return false;
 
     const u64 elapsed = m_timer.elapsed();
 
     return m_info.searchedNodes >= m_limits.nodesLimit || elapsed >= m_limits.timeLimit
-        || elapsed >= m_timer.optimumTime();
+        || elapsed >= m_timer.optimum_time();
 }
 
-void Searcher::reportInfo(u64 elapsed, int depth, Score score, const PVLine &pv) const {
+void Searcher::report_info(u64 elapsed, int depth, Score score, const PVLine &pv) const {
     std::cout << std::format("info depth {} score cp {} time {} nodes {} nps {} pv {}", depth,
                              score, elapsed, m_info.searchedNodes,
-                             m_info.searchedNodes / std::max<u64>(1, elapsed) * 1000, pv.toString())
+                             m_info.searchedNodes / std::max<u64>(1, elapsed) * 1000, pv.to_string())
               << std::endl;
 }
 

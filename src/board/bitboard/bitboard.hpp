@@ -6,7 +6,7 @@
 
 #include "../../chess.hpp"
 
-namespace Board::Bitboards {
+namespace board::bitboards {
 
 class Bitboard {
     public:
@@ -15,37 +15,37 @@ class Bitboard {
         constexpr explicit Bitboard(const u64 bb) :
             m_data(bb) {}
 
-        static constexpr Bitboard fromSquare(const Square sq) {
+        static constexpr Bitboard from_square(const Square sq) {
             return Bitboard(1ULL << std::to_underlying(sq));
         }
 
-        static constexpr bool isBitSet(const Bitboard &bitboard, const Square sq) {
+        static constexpr bool is_bit_set(const Bitboard &bitboard, const Square sq) {
             return static_cast<bool>(bitboard.m_data & 1ULL << std::to_underlying(sq));
         }
 
-        static constexpr void setBit(Bitboard &bitboard, const Square sq) {
+        static constexpr void set_bit(Bitboard &bitboard, const Square sq) {
             bitboard.m_data |= 1ULL << std::to_underlying(sq);
         }
 
-        static constexpr void clearBit(Bitboard &bitboard, const Square sq) {
+        static constexpr void clear_bit(Bitboard &bitboard, const Square sq) {
             bitboard.m_data &= ~(1ULL << std::to_underlying(sq));
         }
 
-        [[nodiscard]] constexpr u64 asU64() const { return m_data; }
+        [[nodiscard]] constexpr u64 as_u64() const { return m_data; }
 
         [[nodiscard]] constexpr bool empty() const { return m_data == 0ULL; }
 
-        [[nodiscard]] constexpr int bitCount() const { return std::popcount(m_data); }
+        [[nodiscard]] constexpr int bit_count() const { return std::popcount(m_data); }
 
-        [[nodiscard]] constexpr int getLSB() const {
+        [[nodiscard]] constexpr int get_lsb() const {
             assert(m_data);
             return std::countr_zero(m_data);
         }
 
-        [[nodiscard]] constexpr int getMSB() const { return 63 - std::countl_zero(m_data); }
+        [[nodiscard]] constexpr int get_msb() const { return 63 - std::countl_zero(m_data); }
 
-        [[nodiscard]] constexpr int popLSB() {
-            const int lsbIndex = getLSB();
+        [[nodiscard]] constexpr int pop_lsb() {
+            const int lsbIndex = get_lsb();
             m_data &= m_data - 1;
             return lsbIndex;
         }
@@ -114,7 +114,7 @@ class Bitboard {
         u64 m_data;
 };
 
-namespace Util {
+namespace util {
 
 constexpr auto EMPTY_BB = Bitboard(0ULL);
 
@@ -138,7 +138,7 @@ constexpr auto RANK_8_BB = Bitboard(0xFF00000000000000ULL);
 
 } // namespace Util
 
-void printBB(Bitboard bitboard);
+void print_bb(Bitboard bitboard);
 
 /// @brief Shifts a bitboard to the specified direction
 /// @tparam d Direction to shift the bitboard to
@@ -151,17 +151,17 @@ constexpr Bitboard shift(const Bitboard &bb) {
     else if constexpr (d == Direction::SOUTH)
         return Bitboard(bb >> 8);
     else if constexpr (d == Direction::EAST)
-        return Bitboard(bb << 1) & ~Util::FILE_A_BB;
+        return Bitboard(bb << 1) & ~util::FILE_A_BB;
     else if constexpr (d == Direction::WEST)
-        return Bitboard(bb >> 1) & ~Util::FILE_H_BB;
+        return Bitboard(bb >> 1) & ~util::FILE_H_BB;
     else if constexpr (d == Direction::NORTH_EAST)
-        return Bitboard(bb << 9) & ~Util::FILE_A_BB;
+        return Bitboard(bb << 9) & ~util::FILE_A_BB;
     else if constexpr (d == Direction::NORTH_WEST)
-        return Bitboard(bb << 7) & ~Util::FILE_H_BB;
+        return Bitboard(bb << 7) & ~util::FILE_H_BB;
     else if constexpr (d == Direction::SOUTH_EAST)
-        return Bitboard(bb >> 7) & ~Util::FILE_A_BB;
+        return Bitboard(bb >> 7) & ~util::FILE_A_BB;
     else if constexpr (d == Direction::SOUTH_WEST)
-        return Bitboard(bb >> 9) & ~Util::FILE_H_BB;
+        return Bitboard(bb >> 9) & ~util::FILE_H_BB;
     else
         std::unreachable();
 }

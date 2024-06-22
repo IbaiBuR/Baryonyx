@@ -7,7 +7,7 @@
 
 #include "../types.hpp"
 
-namespace Utils::Random {
+namespace utils::random {
 
 using seed_type = std::array<u64, 3>;
 

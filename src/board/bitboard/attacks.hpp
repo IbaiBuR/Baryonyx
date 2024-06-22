@@ -5,7 +5,7 @@
 #include "bitboard.hpp"
 #include "magics.hpp"
 
-namespace Board::Bitboards::Attacks {
+namespace board::bitboards::attacks {
 
 constexpr int maxBishopBlockersConfig = 1 << 9;
 constexpr int maxRookBlockersConfig   = 1 << 12;
@@ -13,6 +13,7 @@ constexpr int maxRookBlockersConfig   = 1 << 12;
 extern std::array<std::array<Bitboard, maxBishopBlockersConfig>,
                   std::to_underlying(Square::SQUARE_NB)>
     bishopAttacks;
+
 extern std::array<std::array<Bitboard, maxRookBlockersConfig>,
                   std::to_underlying(Square::SQUARE_NB)>
     rookAttacks;
@@ -292,26 +293,26 @@ constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> kingAttack
 
 void init();
 
-inline Bitboard getPawnAttacks(const Square sq, const Color c) {
+inline Bitboard get_pawn_attacks(const Square sq, const Color c) {
     return pawnAttacks[std::to_underlying(c)][std::to_underlying(sq)];
 }
 
-inline Bitboard getKnightAttacks(const Square sq) { return knightAttacks[std::to_underlying(sq)]; }
+inline Bitboard get_knight_attacks(const Square sq) { return knightAttacks[std::to_underlying(sq)]; }
 
-inline Bitboard getBishopAttacks(const Square sq, Bitboard blockers) {
+inline Bitboard get_bishop_attacks(const Square sq, Bitboard blockers) {
     return bishopAttacks[std::to_underlying(sq)]
-                        [magicIndex(Magics::bishopMagics[std::to_underlying(sq)], blockers)];
+                        [magic_index(magics::bishopMagics[std::to_underlying(sq)], blockers)];
 }
 
-inline Bitboard getRookAttacks(const Square sq, Bitboard blockers) {
+inline Bitboard get_rook_attacks(const Square sq, Bitboard blockers) {
     return rookAttacks[std::to_underlying(sq)]
-                      [magicIndex(Magics::rookMagics[std::to_underlying(sq)], blockers)];
+                      [magic_index(magics::rookMagics[std::to_underlying(sq)], blockers)];
 }
 
-inline Bitboard getKingAttacks(const Square sq) { return kingAttacks[std::to_underlying(sq)]; }
+inline Bitboard get_king_attacks(const Square sq) { return kingAttacks[std::to_underlying(sq)]; }
 
-inline Bitboard getQueenAttacks(const Square sq, const Bitboard blockers) {
-    return getBishopAttacks(sq, blockers) | getRookAttacks(sq, blockers);
+inline Bitboard get_queen_attacks(const Square sq, const Bitboard blockers) {
+    return get_bishop_attacks(sq, blockers) | get_rook_attacks(sq, blockers);
 }
 
 /// @brief Creates the sliding attacks for the specified direction
@@ -320,10 +321,10 @@ inline Bitboard getQueenAttacks(const Square sq, const Bitboard blockers) {
 /// @param occupied Bitboard of occupied squares on the board (Blockers)
 /// @returns A bitboard with the sliding attacks in the given direction
 template <Direction d>
-constexpr Bitboard slidingAttacks(const Square sq, const Bitboard &occupied) {
+constexpr Bitboard sliding_attacks(const Square sq, const Bitboard &occupied) {
     Bitboard attacks;
 
-    for (Bitboard b = shift<d>(Bitboard::fromSquare(sq)); !b.empty(); b = shift<d>(b)) {
+    for (Bitboard b = shift<d>(Bitboard::from_square(sq)); !b.empty(); b = shift<d>(b)) {
         attacks |= b;
 
         if (b & occupied)
@@ -341,20 +342,20 @@ constexpr Bitboard slidingAttacks(const Square sq, const Bitboard &occupied) {
 /// @note An assert is used to ensure the function is only used with sliders. The queen is not
 /// included since we can obtain it by combining the attacks of the bishop and the rook
 template <PieceType pt>
-constexpr Bitboard genSliding(const Square sq, const Bitboard &occupied) {
+constexpr Bitboard gen_sliding(const Square sq, const Bitboard &occupied) {
     assert(pt == PieceType::BISHOP || pt == PieceType::ROOK);
 
     if constexpr (pt == PieceType::BISHOP) {
-        return slidingAttacks<Direction::NORTH_EAST>(sq, occupied)
-             | slidingAttacks<Direction::NORTH_WEST>(sq, occupied)
-             | slidingAttacks<Direction::SOUTH_EAST>(sq, occupied)
-             | slidingAttacks<Direction::SOUTH_WEST>(sq, occupied);
+        return sliding_attacks<Direction::NORTH_EAST>(sq, occupied)
+             | sliding_attacks<Direction::NORTH_WEST>(sq, occupied)
+             | sliding_attacks<Direction::SOUTH_EAST>(sq, occupied)
+             | sliding_attacks<Direction::SOUTH_WEST>(sq, occupied);
     }
     else {
-        return slidingAttacks<Direction::NORTH>(sq, occupied)
-             | slidingAttacks<Direction::SOUTH>(sq, occupied)
-             | slidingAttacks<Direction::EAST>(sq, occupied)
-             | slidingAttacks<Direction::WEST>(sq, occupied);
+        return sliding_attacks<Direction::NORTH>(sq, occupied)
+             | sliding_attacks<Direction::SOUTH>(sq, occupied)
+             | sliding_attacks<Direction::EAST>(sq, occupied)
+             | sliding_attacks<Direction::WEST>(sq, occupied);
     }
 }
 
@@ -366,18 +367,18 @@ constexpr Bitboard genSliding(const Square sq, const Bitboard &occupied) {
 /// @note Pawns are not taken into account since this function is primarily used during movegen
 /// and pawns are treated separately there
 constexpr Bitboard
-getAttacksByPieceType(const PieceType pt, const Square sq, const Bitboard occupied) {
+get_attacks_by_piece_type(const PieceType pt, const Square sq, const Bitboard occupied) {
     switch (pt) {
     case PieceType::KNIGHT:
         return knightAttacks[std::to_underlying(sq)];
     case PieceType::KING:
         return kingAttacks[std::to_underlying(sq)];
     case PieceType::BISHOP:
-        return getBishopAttacks(sq, occupied);
+        return get_bishop_attacks(sq, occupied);
     case PieceType::ROOK:
-        return getRookAttacks(sq, occupied);
+        return get_rook_attacks(sq, occupied);
     case PieceType::QUEEN:
-        return getBishopAttacks(sq, occupied) | getRookAttacks(sq, occupied);
+        return get_bishop_attacks(sq, occupied) | get_rook_attacks(sq, occupied);
     default:
         std::unreachable();
     }

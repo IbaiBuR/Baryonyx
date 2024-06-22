@@ -2,7 +2,7 @@
 
 #include "search.hpp"
 
-namespace Search::Bench {
+namespace search::bench {
 
 void run(Searcher &searcher, u32 depth);
 

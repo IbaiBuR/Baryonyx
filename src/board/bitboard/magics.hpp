@@ -8,7 +8,7 @@
 
 #include "bitboard.hpp"
 
-namespace Board::Bitboards::Magics {
+namespace board::bitboards::magics {
 
 struct MagicEntry {
         Bitboard mask;
@@ -229,23 +229,23 @@ constexpr std::array<MagicEntry, std::to_underlying(Square::SQUARE_NB)> rookMagi
 /// @note If USE_PEXT is defined, the function uses the _pext_u64 intrinsic function for
 /// efficient bit manipulation. This function is available on CPUs that support the BMI2
 /// instruction set, which can significantly speed up the operation
-inline auto magicIndex(const MagicEntry &entry, Bitboard &occupied) {
+inline auto magic_index(const MagicEntry &entry, Bitboard &occupied) {
 #ifndef USE_PEXT
     occupied &= entry.mask;
     occupied *= entry.magic;
-    return occupied.asU64() >> entry.shift;
+    return occupied.as_u64() >> entry.shift;
 #else
     return _pext_u64(occupied.asU64(), entry.mask.asU64());
 #endif
 }
 
-void printMagics();
+void print_magics();
 
 /// @brief Utility used to generate all the blocker combinations of a mask
 /// @param index Index for blocker configuration
 /// @param nBits Number of bits set in the mask
 /// @param mask Attack mask
 /// @returns The generated blocker configuration for the index
-Bitboard setBlockers(int index, int nBits, Bitboard mask);
+Bitboard set_blockers(int index, int nBits, Bitboard mask);
 
 } // namespace Board::Bitboards::Magics

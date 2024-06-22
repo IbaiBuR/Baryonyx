@@ -2,7 +2,7 @@
 #include "../src/eval/evalterms.hpp"
 #include "doctest/doctest.hpp"
 
-using namespace Eval;
+using namespace eval;
 
 TEST_SUITE("Eval Tests") {
     TEST_CASE("packed score") {
@@ -23,23 +23,23 @@ TEST_SUITE("Eval Tests") {
 
     TEST_CASE("static eval") {
         SUBCASE("start position") {
-            CHECK(evaluate(Board::Position(Board::Util::startPosFen)) == 0);
+            CHECK(evaluate(board::Position(board::util::startPosFen)) == 0);
         }
 
         SUBCASE("3k4/8/8/8/8/8/8/3K3R w - - 0 1") {
-            CHECK(evaluate(Board::Position("3k4/8/8/8/8/8/8/3K3R w - - 0 1")) == 488);
+            CHECK(evaluate(board::Position("3k4/8/8/8/8/8/8/3K3R w - - 0 1")) == 488);
         }
 
         SUBCASE("3k3r/8/8/8/8/8/8/3K4 w - - 0 1") {
-            CHECK(evaluate(Board::Position("3k3r/8/8/8/8/8/8/3K4 w - - 0 1")) == -488);
+            CHECK(evaluate(board::Position("3k3r/8/8/8/8/8/8/3K4 w - - 0 1")) == -488);
         }
 
         SUBCASE("3k4/8/8/8/8/3N4/8/3K4 w - - 0 1") {
-            CHECK(evaluate(Board::Position("3k4/8/8/8/8/3N4/8/3K4 w - - 0 1")) == 298);
+            CHECK(evaluate(board::Position("3k4/8/8/8/8/3N4/8/3K4 w - - 0 1")) == 298);
         }
 
         SUBCASE("3k4/8/3n4/8/8/8/8/3K4 w - - 0 1") {
-            CHECK(evaluate(Board::Position("3k4/8/3n4/8/8/8/8/3K4 w - - 0 1")) == -298);
+            CHECK(evaluate(board::Position("3k4/8/3n4/8/8/8/8/3K4 w - - 0 1")) == -298);
         }
     }
 }

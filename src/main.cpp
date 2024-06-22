@@ -5,18 +5,18 @@
 #include "uci/uci.hpp"
 
 int main(const int argc, const char *argv[]) {
-    Board::Bitboards::Attacks::init();
+    board::bitboards::attacks::init();
 
     if (argc > 1 && !strcmp(argv[1], "bench")) {
         constexpr int benchDepth = 5;
 
-        Search::Searcher searcher;
-        Search::Bench::run(searcher, benchDepth);
+        search::Searcher searcher;
+        search::bench::run(searcher, benchDepth);
 
         return 0;
     }
 
-    UCI::CommandHandler commandHandler;
+    uci::CommandHandler commandHandler;
     commandHandler.loop();
 
     return 0;

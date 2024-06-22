@@ -5,7 +5,7 @@
 
 #include "../chess.hpp"
 
-namespace Moves {
+namespace moves {
 
 class Move {
     public:
@@ -47,37 +47,39 @@ class Move {
             return static_cast<MoveFlag>(m_data >> 12 & 0x0F);
         }
 
-        [[nodiscard]] constexpr bool isPromotion() const {
+        [[nodiscard]] constexpr bool is_promotion() const {
             return this->flag() >= MoveFlag::KNIGHT_PROMO;
         }
 
-        [[nodiscard]] constexpr bool isCapture() const {
+        [[nodiscard]] constexpr bool is_capture() const {
             const MoveFlag flag = this->flag();
 
             return flag == MoveFlag::CAPTURE || flag >= MoveFlag::KNIGHT_CAPTURE_PROMO
                 || flag == MoveFlag::ENPASSANT;
         }
 
-        [[nodiscard]] constexpr bool isEnPassant() const {
+        [[nodiscard]] constexpr bool is_en_passant() const {
             return this->flag() == MoveFlag::ENPASSANT;
         }
 
-        [[nodiscard]] constexpr bool isDoublePush() const {
+        [[nodiscard]] constexpr bool is_double_push() const {
             return this->flag() == MoveFlag::DOUBLEPUSH;
         }
 
-        [[nodiscard]] constexpr bool isCastling() const { return this->flag() == MoveFlag::CASTLE; }
-
-        [[nodiscard]] constexpr bool isQuiet() const {
-            return !this->isCapture() && !this->isPromotion();
+        [[nodiscard]] constexpr bool is_castling() const {
+            return this->flag() == MoveFlag::CASTLE;
         }
+
+        [[nodiscard]] constexpr bool is_quiet() const {
+            return !this->is_capture() && !this->is_promotion();
+        }
+
+        [[nodiscard]] std::string to_string() const;
+
+        [[nodiscard]] Piece get_promoted_piece(Color stm) const;
 
         constexpr bool operator==(const Move &other) const { return m_data == other.m_data; }
         constexpr bool operator!=(const Move &other) const { return m_data != other.m_data; }
-
-        [[nodiscard]] std::string toString() const;
-
-        [[nodiscard]] Piece getPromotedPiece(Color stm) const;
 
     private:
         u16 m_data;

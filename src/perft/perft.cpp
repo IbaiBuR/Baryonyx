@@ -7,19 +7,19 @@
 #include "../moves/movelist.hpp"
 #include "../utils/time.hpp"
 
-u64 perft(const Board::Position &pos, const int depth) {
+u64 perft(const board::Position &pos, const int depth) {
     if (depth == 0)
         return 1ULL;
 
     u64             nodes = 0ULL;
-    Moves::MoveList moveList;
-    generateAllMoves(pos, moveList);
+    moves::MoveList moveList;
+    generate_all_moves(pos, moveList);
 
     for (u32 i = 0; i < moveList.size(); ++i) {
-        Board::Position copy = pos;
-        copy.makeMove(moveList.moveAt(i));
+        board::Position copy = pos;
+        copy.make_move(moveList.move_at(i));
 
-        if (!copy.wasLegal())
+        if (!copy.was_legal())
             continue;
 
         nodes += perft(copy, depth - 1);
@@ -28,30 +28,30 @@ u64 perft(const Board::Position &pos, const int depth) {
     return nodes;
 }
 
-void splitPerft(const Board::Position &pos, const int depth) {
+void split_perft(const board::Position &pos, const int depth) {
     std::cout << std::format("\nRunning performance test...\n") << std::endl;
 
-    Moves::MoveList moveList;
-    generateAllMoves(pos, moveList);
+    moves::MoveList moveList;
+    generate_all_moves(pos, moveList);
 
     u64        totalNodes = 0ULL;
-    const auto startTime  = Utils::Time::getTimeMs();
+    const auto startTime  = utils::time::get_time_ms();
 
     for (u32 i = 0; i < moveList.size(); ++i) {
-        Board::Position   copy        = pos;
-        const Moves::Move currentMove = moveList.moveAt(i);
-        copy.makeMove(currentMove);
+        board::Position   copy        = pos;
+        const moves::Move currentMove = moveList.move_at(i);
+        copy.make_move(currentMove);
 
-        if (!copy.wasLegal())
+        if (!copy.was_legal())
             continue;
 
         const u64 value = perft(copy, depth - 1);
         totalNodes += value;
 
-        std::cout << std::format("{}: {}", currentMove.toString(), value) << std::endl;
+        std::cout << std::format("{}: {}", currentMove.to_string(), value) << std::endl;
     }
 
-    const auto elapsed = Utils::Time::getTimeMs() - startTime;
+    const auto elapsed = utils::time::get_time_ms() - startTime;
 
     std::cout << std::format("\nDepth           : {}", depth) << std::endl;
     std::cout << std::format("Total nodes     : {}", totalNodes) << std::endl;

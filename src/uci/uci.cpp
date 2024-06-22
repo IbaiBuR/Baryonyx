@@ -9,47 +9,47 @@
 #include "../perft/perft.hpp"
 #include "../utils/split.hpp"
 
-namespace UCI {
+namespace uci {
 
-void CommandHandler::handleD(const Board::Position &pos) { printBoard(pos); }
+void CommandHandler::handle_d(const board::Position &pos) { print_board(pos); }
 
-void CommandHandler::handleEval(const Board::Position &pos) {
-    std::cout << std::format("\nStatic evaluation: {}", Eval::evaluate(pos)) << std::endl;
+void CommandHandler::handle_eval(const board::Position &pos) {
+    std::cout << std::format("\nStatic evaluation: {}", eval::evaluate(pos)) << std::endl;
 }
 
-void CommandHandler::handleIsReady() { std::cout << std::format("readyok") << std::endl; }
+void CommandHandler::handle_is_ready() { std::cout << std::format("readyok") << std::endl; }
 
-void CommandHandler::handleGo(const std::vector<std::string> &command, const Board::Position &pos) {
+void CommandHandler::handle_go(const std::vector<std::string> &command, const board::Position &pos) {
     if (command[1] == "depth")
-        m_searcher.setLimits(UINT64_MAX, UINT64_MAX, std::stoi(command[2]));
+        m_searcher.set_limits(UINT64_MAX, UINT64_MAX, std::stoi(command[2]));
     else if (command[1] == "perft") {
-        splitPerft(pos, std::stoi(command[2]));
+        split_perft(pos, std::stoi(command[2]));
         return;
     }
     else if (command[1] == "movetime")
-        m_searcher.setLimits(UINT64_MAX, std::stoull(command[2]), MAX_DEPTH);
+        m_searcher.set_limits(UINT64_MAX, std::stoull(command[2]), MAX_DEPTH);
     else if (command[1] == "nodes")
-        m_searcher.setLimits(std::stoull(command[2]), UINT64_MAX, MAX_DEPTH);
+        m_searcher.set_limits(std::stoull(command[2]), UINT64_MAX, MAX_DEPTH);
     else if (command[1] == "infinite")
-        m_searcher.setLimits(UINT64_MAX, UINT64_MAX, MAX_DEPTH);
+        m_searcher.set_limits(UINT64_MAX, UINT64_MAX, MAX_DEPTH);
     else if (command[1] == "wtime" || command[1] == "btime") {
-        m_searcher.parseTimeControl(command, pos.sideToMove());
+        m_searcher.parse_time_control(command, pos.side_to_move());
     }
     else
         std::cout << std::format("Unhandled go command: {}", command[1]) << std::endl;
 
-    m_searcher.mainSearch(pos);
+    m_searcher.main_search(pos);
 }
 
-void CommandHandler::handlePosition(const std::vector<std::string> &command, Board::Position &pos) {
+void CommandHandler::handle_position(const std::vector<std::string> &command, board::Position &pos) {
     if (command[1] == "startpos") {
-        pos.resetToStartPos();
+        pos.reset_to_start_pos();
     }
     else if (command[1] == "fen") {
         const auto &fen = command | std::views::drop(2) | std::views::take(6)
                         | std::views::transform([](const std::string &s) { return s + " "; });
         const std::string &fenStr = std::accumulate(fen.begin(), fen.end(), std::string{});
-        pos                       = Board::Position(fenStr);
+        pos                       = board::Position(fenStr);
     }
 
     if (auto offset = std::ranges::find(command.begin(), command.end(), "moves");
@@ -58,17 +58,17 @@ void CommandHandler::handlePosition(const std::vector<std::string> &command, Boa
         ++offset;
 
         for (auto it = offset; it != command.end(); ++it) {
-            const Moves::Move parsedMove = Util::fromUCI(pos, *it);
+            const moves::Move parsedMove = Util::from_uci(pos, *it);
 
-            if (parsedMove == Moves::Move::none())
+            if (parsedMove == moves::Move::none())
                 break;
 
-            pos.makeMove(parsedMove);
+            pos.make_move(parsedMove);
         }
     }
 }
 
-void CommandHandler::handleUci() {
+void CommandHandler::handle_uci() {
     std::cout << std::format("id name {} {}", engineName, engineVersion) << std::endl;
     std::cout << std::format("id author {}", engineAuthor) << std::endl;
     std::cout << std::format("option name Hash type spin default 1 min 1 max 1") << std::endl;
@@ -76,34 +76,34 @@ void CommandHandler::handleUci() {
     std::cout << std::format("uciok") << std::endl;
 }
 
-void CommandHandler::handleUciNewGame(Board::Position &pos) { pos.resetToStartPos(); }
+void CommandHandler::handle_uci_new_game(board::Position &pos) { pos.reset_to_start_pos(); }
 
 void CommandHandler::loop() {
     std::string input;
-    auto        pos = Board::Position(Board::Util::startPosFen);
+    auto        pos = board::Position(board::util::startPosFen);
 
     while (std::getline(std::cin, input)) {
-        const auto command = Utils::Split::splitString(input, ' ');
+        const auto command = utils::split::split_string(input, ' ');
 
         if (command.empty())
             continue;
 
         if (command[0] == "d")
-            handleD(pos);
+            handle_d(pos);
         else if (command[0] == "eval")
-            handleEval(pos);
+            handle_eval(pos);
         else if (command[0] == "isready")
-            handleIsReady();
+            handle_is_ready();
         else if (command[0] == "go")
-            handleGo(command, pos);
+            handle_go(command, pos);
         else if (command[0] == "position")
-            handlePosition(command, pos);
+            handle_position(command, pos);
         else if (command[0] == "quit")
             break;
         else if (command[0] == "uci")
-            handleUci();
+            handle_uci();
         else if (command[0] == "ucinewgame")
-            handleUciNewGame(pos);
+            handle_uci_new_game(pos);
         else {
             std::cout << std::format("Unknown command: {}", command[0]) << std::endl;
         }
@@ -112,16 +112,16 @@ void CommandHandler::loop() {
 
 namespace Util {
 
-Moves::Move fromUCI(const Board::Position &pos, const std::string &move) {
-    Moves::MoveList moveList;
-    generateAllMoves(pos, moveList);
+moves::Move from_uci(const board::Position &pos, const std::string &move) {
+    moves::MoveList moveList;
+    generate_all_moves(pos, moveList);
 
     for (u32 i = 0; i < moveList.size(); ++i) {
-        if (const Moves::Move currentMove = moveList.moveAt(i); move == currentMove.toString())
+        if (const moves::Move currentMove = moveList.move_at(i); move == currentMove.to_string())
             return currentMove;
     }
 
-    return Moves::Move::none();
+    return moves::Move::none();
 }
 
 } // namespace Util

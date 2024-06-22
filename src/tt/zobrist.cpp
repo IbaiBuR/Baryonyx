@@ -1,6 +1,6 @@
 #include "zobrist.hpp"
 
-namespace TT::Zobrist {
+namespace tt::zobrist {
 
 /// @brief Generates the Zobrist keys at compile time
 /// @tparam T Type of the array
@@ -9,7 +9,7 @@ namespace TT::Zobrist {
 template <typename T, usize size>
 consteval std::array<T, size> generate_keys() {
     std::array<T, size>     keys{};
-    Utils::Random::Sfc64Rng prng{};
+    utils::random::Sfc64Rng prng{};
 
     std::ranges::for_each(keys.begin(), keys.end(), [&](auto &key) { key = prng.next_u64(); });
 
