@@ -4,7 +4,7 @@
 
 #include "../board/position.hpp"
 
-namespace Moves {
+namespace moves {
 
 constexpr char promoFlagToChar(const Move::MoveFlag m) {
     switch (m) {
@@ -44,13 +44,13 @@ constexpr PieceType promotionToPieceType(const Move::MoveFlag m) {
     }
 };
 
-std::string Move::toString() const {
+std::string Move::to_string() const {
     std::string result;
 
-    const auto from = Board::Util::sqToCoords[std::to_underlying(this->from())];
-    const auto to   = Board::Util::sqToCoords[std::to_underlying(this->to())];
+    const auto from = board::util::sqToCoords[std::to_underlying(this->from())];
+    const auto to   = board::util::sqToCoords[std::to_underlying(this->to())];
 
-    if (this->isPromotion()) {
+    if (this->is_promotion()) {
         result = std::format("{}{}{}", from, to, promoFlagToChar(flag()));
     }
     else {
@@ -60,7 +60,7 @@ std::string Move::toString() const {
     return result;
 }
 
-Piece Move::getPromotedPiece(const Color stm) const {
+Piece Move::get_promoted_piece(const Color stm) const {
     return static_cast<Piece>(std::to_underlying(promotionToPieceType(flag()))
                               + std::to_underlying(stm) * 6);
 }

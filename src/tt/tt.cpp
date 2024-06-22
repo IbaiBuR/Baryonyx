@@ -1,3 +1,3 @@
 #include "tt.hpp"
 
-namespace TT {}
+namespace tt {}

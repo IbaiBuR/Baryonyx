@@ -4,7 +4,7 @@
 
 #include "../chess.hpp"
 
-namespace Eval {
+namespace eval {
 
 /// @brief Packed Evaluation: https://minuskelvin.net/chesswiki/content/packed-eval.html
 class PackedScore {

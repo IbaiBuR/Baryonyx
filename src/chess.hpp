@@ -113,15 +113,15 @@ constexpr Square operator-(const Square sq, const Direction dir) {
 
 constexpr Square flip(const Square sq) { return static_cast<Square>(static_cast<int>(sq) ^ 56); }
 
-constexpr Square squareOf(const u8 file, const u8 rank) {
+constexpr Square square_of(const u8 file, const u8 rank) {
     return static_cast<Square>((rank << 3) + file);
 }
 
-constexpr File fileOf(const Square sq) { return static_cast<File>(static_cast<u8>(sq) & 7); }
-constexpr Rank rankOf(const Square sq) { return static_cast<Rank>(static_cast<u8>(sq) >> 3); }
+constexpr File file_of(const Square sq) { return static_cast<File>(static_cast<u8>(sq) & 7); }
+constexpr Rank rank_of(const Square sq) { return static_cast<Rank>(static_cast<u8>(sq) >> 3); }
 
 template <Color c>
-constexpr Square relativeSquare(const Square sq) {
+constexpr Square relative_square(const Square sq) {
     if constexpr (c == Color::WHITE)
         return flip(sq);
     else

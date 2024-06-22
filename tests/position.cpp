@@ -3,26 +3,26 @@
 
 #include <stdexcept>
 
-using namespace Board;
+using namespace board;
 
 TEST_SUITE("Position Tests") {
     TEST_CASE("fen parsing") {
         SUBCASE("start position") {
-            Position pos(Util::startPosFen);
+            Position pos(util::startPosFen);
 
-            CHECK(pos.pieceTypeBB(PieceType::PAWN) == Bitboards::Bitboard(0xFF00000000FF00ULL));
-            CHECK(pos.pieceTypeBB(PieceType::KNIGHT) == Bitboards::Bitboard(0x4200000000000042ULL));
-            CHECK(pos.pieceTypeBB(PieceType::KING) == Bitboards::Bitboard(0x1000000000000010ULL));
-            CHECK(pos.pieceTypeBB(PieceType::BISHOP) == Bitboards::Bitboard(0x2400000000000024ULL));
-            CHECK(pos.pieceTypeBB(PieceType::ROOK) == Bitboards::Bitboard(0x8100000000000081ULL));
-            CHECK(pos.pieceTypeBB(PieceType::QUEEN) == Bitboards::Bitboard(0x800000000000008ULL));
+            CHECK(pos.piece_type_bb(PieceType::PAWN) == bitboards::Bitboard(0xFF00000000FF00ULL));
+            CHECK(pos.piece_type_bb(PieceType::KNIGHT) == bitboards::Bitboard(0x4200000000000042ULL));
+            CHECK(pos.piece_type_bb(PieceType::KING) == bitboards::Bitboard(0x1000000000000010ULL));
+            CHECK(pos.piece_type_bb(PieceType::BISHOP) == bitboards::Bitboard(0x2400000000000024ULL));
+            CHECK(pos.piece_type_bb(PieceType::ROOK) == bitboards::Bitboard(0x8100000000000081ULL));
+            CHECK(pos.piece_type_bb(PieceType::QUEEN) == bitboards::Bitboard(0x800000000000008ULL));
 
-            CHECK(pos.sideToMove() == Color::WHITE);
-            CHECK(pos.castlingRights() == CastlingRights(CastlingRights::Flags::ALL));
-            CHECK(pos.epSquare() == Square::NONE);
-            CHECK(pos.fiftyMoveRule() == 0);
-            CHECK(pos.fullMoves() == 1);
-            CHECK(pos.checkers() == Bitboards::Util::EMPTY_BB);
+            CHECK(pos.side_to_move() == Color::WHITE);
+            CHECK(pos.castling_rights() == CastlingRights(CastlingRights::Flags::ALL));
+            CHECK(pos.ep_square() == Square::NONE);
+            CHECK(pos.fifty_move_rule() == 0);
+            CHECK(pos.full_moves() == 1);
+            CHECK(pos.checkers() == bitboards::util::EMPTY_BB);
         }
 
         SUBCASE("illegal position: too many kings") {
@@ -49,20 +49,20 @@ TEST_SUITE("Position Tests") {
 
     TEST_CASE("board to fen") {
         SUBCASE("start position") {
-            CHECK(Position(Util::startPosFen).toFen()
+            CHECK(Position(util::startPosFen).to_fen()
                   == "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
         }
 
         SUBCASE("r1bqk1nr/p1p3bp/2n3p1/1p1pPp2/4P3/P1P2NP1/1P3P1P/RNBQKB1R w KQkq f6 0 8") {
             CHECK(
                 Position("r1bqk1nr/p1p3bp/2n3p1/1p1pPp2/4P3/P1P2NP1/1P3P1P/RNBQKB1R w KQkq f6 0 8")
-                    .toFen()
+                    .to_fen()
                 == "r1bqk1nr/p1p3bp/2n3p1/1p1pPp2/4P3/P1P2NP1/1P3P1P/RNBQKB1R w KQkq f6 0 8");
         }
 
         SUBCASE("r2q1knr/1bp3bp/p1n3p1/1p1pPp2/1P2P3/P1P2NP1/3N1PBP/R1BQK1R1 b Q - 0 11") {
             CHECK(Position("r2q1knr/1bp3bp/p1n3p1/1p1pPp2/1P2P3/P1P2NP1/3N1PBP/R1BQK1R1 b Q - 0 11")
-                      .toFen()
+                      .to_fen()
                   == "r2q1knr/1bp3bp/p1n3p1/1p1pPp2/1P2P3/P1P2NP1/3N1PBP/R1BQK1R1 b Q - 0 11");
         }
     }

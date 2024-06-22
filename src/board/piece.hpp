@@ -2,9 +2,9 @@
 
 #include "../chess.hpp"
 
-namespace Board::Pieces {
+namespace board::pieces {
 
-constexpr char pieceToChar(const Piece p) {
+constexpr char piece_to_char(const Piece p) {
     switch (p) {
     case Piece::W_PAWN:
         return 'P';
@@ -35,7 +35,7 @@ constexpr char pieceToChar(const Piece p) {
     }
 }
 
-constexpr Piece charToPiece(const char c) {
+constexpr Piece char_to_piece(const char c) {
     switch (c) {
     case 'P':
         return Piece::W_PAWN;
@@ -66,7 +66,7 @@ constexpr Piece charToPiece(const char c) {
     }
 }
 
-constexpr PieceType pieceToPieceType(const Piece p) {
+constexpr PieceType piece_to_piece_type(const Piece p) {
     switch (p) {
     case Piece::W_PAWN:
     case Piece::B_PAWN:
@@ -91,7 +91,7 @@ constexpr PieceType pieceToPieceType(const Piece p) {
     }
 }
 
-constexpr Color pieceColor(const Piece p) {
+constexpr Color piece_color(const Piece p) {
     switch (p) {
     case Piece::W_PAWN:
     case Piece::W_KNIGHT:

@@ -6,7 +6,7 @@
 #include "../board/position.hpp"
 #include "../search/search.hpp"
 
-namespace UCI {
+namespace uci {
 
 constexpr auto engineAuthor  = "Ibai Burgos";
 constexpr auto engineName    = "Baryonyx";
@@ -17,20 +17,20 @@ class CommandHandler {
         void loop();
 
     private:
-        Search::Searcher m_searcher;
+        search::Searcher m_searcher;
 
-        static void handleD(const Board::Position &pos);
-        static void handleEval(const Board::Position &pos);
-        static void handleIsReady();
-        void        handleGo(const std::vector<std::string> &command, const Board::Position &pos);
-        static void handlePosition(const std::vector<std::string> &command, Board::Position &pos);
-        static void handleUci();
-        static void handleUciNewGame(Board::Position &pos);
+        static void handle_d(const board::Position &pos);
+        static void handle_eval(const board::Position &pos);
+        static void handle_is_ready();
+        void        handle_go(const std::vector<std::string> &command, const board::Position &pos);
+        static void handle_position(const std::vector<std::string> &command, board::Position &pos);
+        static void handle_uci();
+        static void handle_uci_new_game(board::Position &pos);
 };
 
 namespace Util {
 
-Moves::Move fromUCI(const Board::Position &pos, const std::string &move);
+moves::Move from_uci(const board::Position &pos, const std::string &move);
 
 }
 

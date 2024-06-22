@@ -15,10 +15,10 @@ class TimeManager {
             this->m_increment = increment;
         }
 
-        void setStartTime(u64 startTime);
+        void set_start_time(u64 startTime);
 
         [[nodiscard]] u64 elapsed() const;
-        [[nodiscard]] u64 optimumTime() const;
+        [[nodiscard]] u64 optimum_time() const;
 
     private:
         u64 m_startTime;

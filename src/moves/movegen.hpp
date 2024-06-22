@@ -3,10 +3,10 @@
 #include "movelist.hpp"
 #include "../board/position.hpp"
 
-namespace Moves {
+namespace moves {
 
-void generateAllQuiets(const Board::Position &pos, MoveList &moveList);
-void generateAllCaptures(const Board::Position &pos, MoveList &moveList);
-void generateAllMoves(const Board::Position &pos, MoveList &moveList);
+void generate_all_quiets(const board::Position &pos, MoveList &moveList);
+void generate_all_captures(const board::Position &pos, MoveList &moveList);
+void generate_all_moves(const board::Position &pos, MoveList &moveList);
 
 } // namespace Moves
