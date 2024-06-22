@@ -22,4 +22,4 @@ void print_bb(const Bitboard bitboard) {
     std::cout << std::format("   Bitboard: 0x{:016X}\n", bitboard.as_u64()) << std::endl;
 }
 
-} // namespace Board::Bitboards
+} // namespace board::bitboards

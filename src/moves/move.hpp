@@ -78,11 +78,11 @@ class Move {
 
         [[nodiscard]] Piece get_promoted_piece(Color stm) const;
 
-        constexpr bool operator==(const Move &other) const { return m_data == other.m_data; }
-        constexpr bool operator!=(const Move &other) const { return m_data != other.m_data; }
+        constexpr bool operator==(const Move& other) const { return m_data == other.m_data; }
+        constexpr bool operator!=(const Move& other) const { return m_data != other.m_data; }
 
     private:
         u16 m_data;
 };
 
-} // namespace Moves
+} // namespace moves

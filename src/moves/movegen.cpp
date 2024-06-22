@@ -7,7 +7,7 @@ namespace moves {
 namespace bb = board::bitboards;
 
 template <Color c>
-constexpr bb::Bitboard single_pawn_push(const bb::Bitboard &pawns, const bb::Bitboard &empty) {
+constexpr bb::Bitboard single_pawn_push(const bb::Bitboard& pawns, const bb::Bitboard& empty) {
     if constexpr (c == Color::WHITE)
         return bb::shift<Direction::NORTH>(pawns) & empty;
     else
@@ -15,7 +15,7 @@ constexpr bb::Bitboard single_pawn_push(const bb::Bitboard &pawns, const bb::Bit
 }
 
 template <Color c>
-constexpr bb::Bitboard double_pawn_push(const bb::Bitboard &pawns, const bb::Bitboard &empty) {
+constexpr bb::Bitboard double_pawn_push(const bb::Bitboard& pawns, const bb::Bitboard& empty) {
     if constexpr (c == Color::WHITE)
         return bb::shift<Direction::NORTH>(single_pawn_push<c>(pawns, empty)) & empty
              & bb::util::RANK_4_BB;
@@ -25,12 +25,12 @@ constexpr bb::Bitboard double_pawn_push(const bb::Bitboard &pawns, const bb::Bit
 }
 
 template <Color c>
-void generate_pawn_pushes(const board::Position &pos, MoveList &moveList) {
+void generate_pawn_pushes(const board::Position& pos, MoveList& moveList) {
     constexpr Color     us       = c;
     constexpr Color     them     = ~us;
     constexpr Direction offset   = us == Color::WHITE ? Direction::NORTH : Direction::SOUTH;
-    const bb::Bitboard &ourPawns = pos.piece_type_bb(PieceType::PAWN) & pos.occupancies(us);
-    const bb::Bitboard &empty    = ~(pos.occupancies(us) | pos.occupancies(them));
+    const bb::Bitboard& ourPawns = pos.piece_type_bb(PieceType::PAWN) & pos.occupancies(us);
+    const bb::Bitboard& empty    = ~(pos.occupancies(us) | pos.occupancies(them));
 
     bb::Bitboard singlePush = single_pawn_push<us>(ourPawns, empty);
     bb::Bitboard doublePush = double_pawn_push<us>(ourPawns, empty);
@@ -58,7 +58,7 @@ void generate_pawn_pushes(const board::Position &pos, MoveList &moveList) {
 }
 
 template <Color c>
-void generate_pawn_captures(const board::Position &pos, MoveList &moveList) {
+void generate_pawn_captures(const board::Position& pos, MoveList& moveList) {
     constexpr Color us       = c;
     constexpr Color them     = ~us;
     bb::Bitboard    ourPawns = pos.piece_type_bb(PieceType::PAWN) & pos.occupancies(us);
@@ -95,10 +95,12 @@ void generate_pawn_captures(const board::Position &pos, MoveList &moveList) {
 }
 
 template <Color c>
-void generate_quiets_by_piece_type(const board::Position &pos, MoveList &moveList, const PieceType pt) {
+void generate_quiets_by_piece_type(const board::Position& pos,
+                                   MoveList&              moveList,
+                                   const PieceType        pt) {
     constexpr Color     us        = c;
     constexpr Color     them      = ~us;
-    const bb::Bitboard &occupied  = pos.occupancies(us) | pos.occupancies(them);
+    const bb::Bitboard& occupied  = pos.occupancies(us) | pos.occupancies(them);
     bb::Bitboard        ourPieces = pos.piece_type_bb(pt) & pos.occupancies(us);
 
     while (!ourPieces.empty()) {
@@ -114,12 +116,12 @@ void generate_quiets_by_piece_type(const board::Position &pos, MoveList &moveLis
 }
 
 template <Color c>
-void generate_captures_by_piece_type(const board::Position &pos,
-                                 MoveList              &moveList,
-                                 const PieceType        pt) {
+void generate_captures_by_piece_type(const board::Position& pos,
+                                     MoveList&              moveList,
+                                     const PieceType        pt) {
     constexpr Color     us        = c;
     constexpr Color     them      = ~us;
-    const bb::Bitboard &occupied  = pos.occupancies(us) | pos.occupancies(them);
+    const bb::Bitboard& occupied  = pos.occupancies(us) | pos.occupancies(them);
     bb::Bitboard        ourPieces = pos.piece_type_bb(pt) & pos.occupancies(us);
 
     while (!ourPieces.empty()) {
@@ -135,7 +137,7 @@ void generate_captures_by_piece_type(const board::Position &pos,
 }
 
 template <Color c>
-void generate_castling_moves(const board::Position &pos, MoveList &moveList) {
+void generate_castling_moves(const board::Position& pos, MoveList& moveList) {
     if constexpr (c == Color::WHITE) {
         if (pos.can_castle_king_side<Color::WHITE>())
             moveList.push(Move(Square::E1, Square::G1, Move::MoveFlag::CASTLE));
@@ -150,7 +152,7 @@ void generate_castling_moves(const board::Position &pos, MoveList &moveList) {
     }
 }
 
-void generate_all_quiets(const board::Position &pos, MoveList &moveList) {
+void generate_all_quiets(const board::Position& pos, MoveList& moveList) {
     if (pos.side_to_move() == Color::WHITE) {
         for (const PieceType pt : {PieceType::KNIGHT, PieceType::BISHOP, PieceType::ROOK,
                                    PieceType::QUEEN, PieceType::KING})
@@ -163,7 +165,7 @@ void generate_all_quiets(const board::Position &pos, MoveList &moveList) {
     }
 }
 
-void generate_all_captures(const board::Position &pos, MoveList &moveList) {
+void generate_all_captures(const board::Position& pos, MoveList& moveList) {
     if (pos.side_to_move() == Color::WHITE) {
         generate_pawn_captures<Color::WHITE>(pos, moveList);
         for (const PieceType pt : {PieceType::KNIGHT, PieceType::BISHOP, PieceType::ROOK,
@@ -178,7 +180,7 @@ void generate_all_captures(const board::Position &pos, MoveList &moveList) {
     }
 }
 
-void generate_all_moves(const board::Position &pos, MoveList &moveList) {
+void generate_all_moves(const board::Position& pos, MoveList& moveList) {
     const int numCheckers = pos.checkers().bit_count();
 
     if (numCheckers == 0) {
@@ -218,4 +220,4 @@ void generate_all_moves(const board::Position &pos, MoveList &moveList) {
     }
 }
 
-} // namespace Moves
+} // namespace moves

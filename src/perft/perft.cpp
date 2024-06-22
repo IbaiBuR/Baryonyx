@@ -7,7 +7,7 @@
 #include "../moves/movelist.hpp"
 #include "../utils/time.hpp"
 
-u64 perft(const board::Position &pos, const int depth) {
+u64 perft(const board::Position& pos, const int depth) {
     if (depth == 0)
         return 1ULL;
 
@@ -28,7 +28,7 @@ u64 perft(const board::Position &pos, const int depth) {
     return nodes;
 }
 
-void split_perft(const board::Position &pos, const int depth) {
+void split_perft(const board::Position& pos, const int depth) {
     std::cout << std::format("\nRunning performance test...\n") << std::endl;
 
     moves::MoveList moveList;

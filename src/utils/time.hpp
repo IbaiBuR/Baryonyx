@@ -12,4 +12,4 @@ inline u64 get_time_ms() {
         .count();
 }
 
-} // namespace Utils::Time
+} // namespace utils::time

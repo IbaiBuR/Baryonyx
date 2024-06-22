@@ -10,7 +10,7 @@
 
 namespace board {
 
-Position::Position(const std::string &fen) :
+Position::Position(const std::string& fen) :
     m_pieces(),
     m_key(0ULL) {
     m_pieces.fill(Piece::NONE);
@@ -28,7 +28,7 @@ Position::Position(const std::string &fen) :
 
     int rankIndex = 7;
 
-    for (const auto &rank : ranks) {
+    for (const auto& rank : ranks) {
 
         u8 fileIndex = 0;
 
@@ -54,9 +54,10 @@ Position::Position(const std::string &fen) :
     m_castling = CastlingRights(tokens[2]);
     m_key ^= tt::zobrist::get_castling_key(m_castling);
 
-    const std::string &enpassant = tokens[3];
+    const std::string& enpassant = tokens[3];
 
-    m_epSq = enpassant == "-" ? Square::NONE : square_of(enpassant[0] - 'a', enpassant[1] - 1 - '0');
+    m_epSq =
+        enpassant == "-" ? Square::NONE : square_of(enpassant[0] - 'a', enpassant[1] - 1 - '0');
     m_key ^= tt::zobrist::get_en_passant_key(m_epSq);
 
     m_halfMoveClock  = std::stoi(tokens[4]);
@@ -70,7 +71,7 @@ Position::Position(const std::string &fen) :
 
 template <Color c>
 bool Position::can_castle_king_side() const {
-    const bitboards::Bitboard &occupied = occupancies(Color::WHITE) | occupancies(Color::BLACK);
+    const bitboards::Bitboard& occupied = occupancies(Color::WHITE) | occupancies(Color::BLACK);
 
     if constexpr (c == Color::WHITE)
         return castling_rights().king_side_available<Color::WHITE>()
@@ -89,7 +90,7 @@ template bool Position::can_castle_king_side<Color::BLACK>() const;
 
 template <Color c>
 bool Position::can_castle_queen_side() const {
-    const bitboards::Bitboard &occupied = occupancies(Color::WHITE) | occupancies(Color::BLACK);
+    const bitboards::Bitboard& occupied = occupancies(Color::WHITE) | occupancies(Color::BLACK);
 
     if constexpr (c == Color::WHITE)
         return castling_rights().queen_side_available<Color::WHITE>()
@@ -118,15 +119,15 @@ template int Position::piece_count<Color::WHITE>(PieceType pt) const;
 template int Position::piece_count<Color::BLACK>(PieceType pt) const;
 
 bitboards::Bitboard Position::attacks_to_king(const Square kingSquare, const Color c) const {
-    const auto &oppOccupancies   = occupancies(~c);
-    const auto &oppPawns         = piece_type_bb(PieceType::PAWN) & oppOccupancies;
-    const auto &oppKnights       = piece_type_bb(PieceType::KNIGHT) & oppOccupancies;
-    const auto &oppQueens        = piece_type_bb(PieceType::QUEEN) & oppOccupancies;
-    const auto &oppBishopsQueens = (piece_type_bb(PieceType::BISHOP) & oppOccupancies) | oppQueens;
-    const auto &oppRooksQueens   = (piece_type_bb(PieceType::ROOK) & oppOccupancies) | oppQueens;
-    const auto &oppKing          = piece_type_bb(PieceType::KING) & oppOccupancies;
+    const auto& oppOccupancies   = occupancies(~c);
+    const auto& oppPawns         = piece_type_bb(PieceType::PAWN) & oppOccupancies;
+    const auto& oppKnights       = piece_type_bb(PieceType::KNIGHT) & oppOccupancies;
+    const auto& oppQueens        = piece_type_bb(PieceType::QUEEN) & oppOccupancies;
+    const auto& oppBishopsQueens = (piece_type_bb(PieceType::BISHOP) & oppOccupancies) | oppQueens;
+    const auto& oppRooksQueens   = (piece_type_bb(PieceType::ROOK) & oppOccupancies) | oppQueens;
+    const auto& oppKing          = piece_type_bb(PieceType::KING) & oppOccupancies;
 
-    const auto &blockers = occupancies(Color::WHITE) | occupancies(Color::BLACK);
+    const auto& blockers = occupancies(Color::WHITE) | occupancies(Color::BLACK);
 
     return (bitboards::attacks::get_pawn_attacks(kingSquare, c) & oppPawns)
          | (bitboards::attacks::get_knight_attacks(kingSquare) & oppKnights)
@@ -151,7 +152,8 @@ void Position::set_piece(const Piece p, const Square sq) {
 void Position::remove_piece(const Piece p, const Square sq) {
     m_pieces[std::to_underlying(sq)] = Piece::NONE;
 
-    bitboards::Bitboard::clear_bit(m_pieceBB[std::to_underlying(pieces::piece_to_piece_type(p))], sq);
+    bitboards::Bitboard::clear_bit(m_pieceBB[std::to_underlying(pieces::piece_to_piece_type(p))],
+                                   sq);
     bitboards::Bitboard::clear_bit(m_occupiedBB[std::to_underlying(pieces::piece_color(p))], sq);
 
     m_key ^= tt::zobrist::get_piece_key(p, sq);
@@ -266,15 +268,15 @@ void Position::reset_to_start_pos() {
 }
 
 bool Position::is_square_attacked_by(const Square sq, const Color c) const {
-    const auto &ourPieces  = occupancies(c);
-    const auto &ourPawns   = piece_type_bb(PieceType::PAWN) & ourPieces;
-    const auto &ourKnights = piece_type_bb(PieceType::KNIGHT) & ourPieces;
-    const auto &ourBishops = piece_type_bb(PieceType::BISHOP) & ourPieces;
-    const auto &ourRooks   = piece_type_bb(PieceType::ROOK) & ourPieces;
-    const auto &ourKing    = piece_type_bb(PieceType::KING) & ourPieces;
-    const auto &ourQueens  = piece_type_bb(PieceType::QUEEN) & ourPieces;
+    const auto& ourPieces  = occupancies(c);
+    const auto& ourPawns   = piece_type_bb(PieceType::PAWN) & ourPieces;
+    const auto& ourKnights = piece_type_bb(PieceType::KNIGHT) & ourPieces;
+    const auto& ourBishops = piece_type_bb(PieceType::BISHOP) & ourPieces;
+    const auto& ourRooks   = piece_type_bb(PieceType::ROOK) & ourPieces;
+    const auto& ourKing    = piece_type_bb(PieceType::KING) & ourPieces;
+    const auto& ourQueens  = piece_type_bb(PieceType::QUEEN) & ourPieces;
 
-    const auto &blockers = occupancies(Color::WHITE) | occupancies(Color::BLACK);
+    const auto& blockers = occupancies(Color::WHITE) | occupancies(Color::BLACK);
 
     if (bitboards::attacks::get_pawn_attacks(sq, ~c) & ourPawns)
         return true;
@@ -303,21 +305,21 @@ bool Position::is_valid() const {
         return false;
     }
 
-    const auto &whiteOccupancies = occupancies(Color::WHITE);
+    const auto& whiteOccupancies = occupancies(Color::WHITE);
 
     if (whiteOccupancies.bit_count() > 16) {
         std::cerr << std::format("White must have 16 or less pieces.") << std::endl;
         return false;
     }
 
-    const auto &blackOccupancies = occupancies(Color::BLACK);
+    const auto& blackOccupancies = occupancies(Color::BLACK);
 
     if (blackOccupancies.bit_count() > 16) {
         std::cerr << std::format("Black must have 16 or less pieces.") << std::endl;
         return false;
     }
 
-    const auto &pawns = piece_type_bb(PieceType::PAWN);
+    const auto& pawns = piece_type_bb(PieceType::PAWN);
 
     if ((pawns & whiteOccupancies).bit_count() > 8) {
         std::cerr << std::format("White must have 8 or less pawns.") << std::endl;
@@ -375,7 +377,7 @@ std::string Position::to_fen() const {
     return fen;
 }
 
-void print_board(const Position &pos) {
+void print_board(const Position& pos) {
     std::cout << std::format("\n+---+---+---+---+---+---+---+---+") << std::endl;
 
     for (int rank = 7; rank >= 0; --rank) {
@@ -402,11 +404,12 @@ void print_board(const Position &pos) {
         "En passant      : {}",
         enpassant != Square::NONE ? util::sqToCoords[std::to_underlying(enpassant)] : "-")
               << std::endl;
-    std::cout << std::format("Castling rights : {}", pos.castling_rights().to_string()) << std::endl;
+    std::cout << std::format("Castling rights : {}", pos.castling_rights().to_string())
+              << std::endl;
     std::cout << std::format("Halfmove clock  : {}", pos.fifty_move_rule()) << std::endl;
     std::cout << std::format("Fullmove number : {}", pos.full_moves()) << std::endl;
     std::cout << std::format("FEN             : {}", pos.to_fen()) << std::endl;
     std::cout << std::format("Hash            : 0x{:016X}\n", pos.key()) << std::endl;
 }
 
-} // namespace Board
+} // namespace board

@@ -95,11 +95,11 @@ enum class Direction : i8 {
 
 constexpr Color operator~(const Color c) { return static_cast<Color>(static_cast<int>(c) ^ 1); }
 
-constexpr Square &operator++(Square &sq) {
+constexpr Square& operator++(Square& sq) {
     return sq = static_cast<Square>(static_cast<int>(sq) + 1);
 }
 
-constexpr Square &operator--(Square &sq) {
+constexpr Square& operator--(Square& sq) {
     return sq = static_cast<Square>(static_cast<int>(sq) - 1);
 }
 

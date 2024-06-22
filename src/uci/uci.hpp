@@ -19,19 +19,19 @@ class CommandHandler {
     private:
         search::Searcher m_searcher;
 
-        static void handle_d(const board::Position &pos);
-        static void handle_eval(const board::Position &pos);
+        static void handle_d(const board::Position& pos);
+        static void handle_eval(const board::Position& pos);
         static void handle_is_ready();
-        void        handle_go(const std::vector<std::string> &command, const board::Position &pos);
-        static void handle_position(const std::vector<std::string> &command, board::Position &pos);
+        void        handle_go(const std::vector<std::string>& command, const board::Position& pos);
+        static void handle_position(const std::vector<std::string>& command, board::Position& pos);
         static void handle_uci();
-        static void handle_uci_new_game(board::Position &pos);
+        static void handle_uci_new_game(board::Position& pos);
 };
 
 namespace Util {
 
-moves::Move from_uci(const board::Position &pos, const std::string &move);
+moves::Move from_uci(const board::Position& pos, const std::string& move);
 
 }
 
-} // namespace UCI
+} // namespace uci

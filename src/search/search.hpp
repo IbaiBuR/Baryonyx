@@ -15,7 +15,7 @@ struct PVLine {
         [[nodiscard]] auto begin() const { return moves.begin(); }
         [[nodiscard]] auto end() const { return moves.begin() + length; }
 
-        void update(const moves::Move move, const PVLine &childPV) {
+        void update(const moves::Move move, const PVLine& childPV) {
             moves[0] = move;
             std::ranges::copy(childPV.begin(), childPV.end(), moves.begin() + 1);
             length = childPV.length + 1;
@@ -60,21 +60,21 @@ class Searcher {
 
         void reset_info();
         void set_limits(u64 nodesLimit, u64 timeLimit, u32 depthLimit);
-        void parse_time_control(const std::vector<std::string> &command, Color stm);
-        void main_search(const board::Position &pos);
+        void parse_time_control(const std::vector<std::string>& command, Color stm);
+        void main_search(const board::Position& pos);
 
     private:
         SearchInfo   m_info{};
         SearchLimits m_limits{};
         TimeManager  m_timer{};
 
-        Score qsearch(const board::Position &pos, Score alpha, Score beta, int ply);
+        Score qsearch(const board::Position& pos, Score alpha, Score beta, int ply);
         Score negamax(
-            const board::Position &pos, Score alpha, Score beta, int depth, int ply, PVLine &pv);
+            const board::Position& pos, Score alpha, Score beta, int depth, int ply, PVLine& pv);
 
         [[nodiscard]] bool should_stop() const;
 
-        void report_info(u64 elapsed, int depth, Score score, const PVLine &pv) const;
+        void report_info(u64 elapsed, int depth, Score score, const PVLine& pv) const;
 };
 
-} // namespace Search
+} // namespace search

@@ -11,15 +11,16 @@
 
 namespace uci {
 
-void CommandHandler::handle_d(const board::Position &pos) { print_board(pos); }
+void CommandHandler::handle_d(const board::Position& pos) { print_board(pos); }
 
-void CommandHandler::handle_eval(const board::Position &pos) {
+void CommandHandler::handle_eval(const board::Position& pos) {
     std::cout << std::format("\nStatic evaluation: {}", eval::evaluate(pos)) << std::endl;
 }
 
 void CommandHandler::handle_is_ready() { std::cout << std::format("readyok") << std::endl; }
 
-void CommandHandler::handle_go(const std::vector<std::string> &command, const board::Position &pos) {
+void CommandHandler::handle_go(const std::vector<std::string>& command,
+                               const board::Position&          pos) {
     if (command[1] == "depth")
         m_searcher.set_limits(UINT64_MAX, UINT64_MAX, std::stoi(command[2]));
     else if (command[1] == "perft") {
@@ -41,14 +42,15 @@ void CommandHandler::handle_go(const std::vector<std::string> &command, const bo
     m_searcher.main_search(pos);
 }
 
-void CommandHandler::handle_position(const std::vector<std::string> &command, board::Position &pos) {
+void CommandHandler::handle_position(const std::vector<std::string>& command,
+                                     board::Position&                pos) {
     if (command[1] == "startpos") {
         pos.reset_to_start_pos();
     }
     else if (command[1] == "fen") {
-        const auto &fen = command | std::views::drop(2) | std::views::take(6)
-                        | std::views::transform([](const std::string &s) { return s + " "; });
-        const std::string &fenStr = std::accumulate(fen.begin(), fen.end(), std::string{});
+        const auto& fen = command | std::views::drop(2) | std::views::take(6)
+                        | std::views::transform([](const std::string& s) { return s + " "; });
+        const std::string& fenStr = std::accumulate(fen.begin(), fen.end(), std::string{});
         pos                       = board::Position(fenStr);
     }
 
@@ -76,7 +78,7 @@ void CommandHandler::handle_uci() {
     std::cout << std::format("uciok") << std::endl;
 }
 
-void CommandHandler::handle_uci_new_game(board::Position &pos) { pos.reset_to_start_pos(); }
+void CommandHandler::handle_uci_new_game(board::Position& pos) { pos.reset_to_start_pos(); }
 
 void CommandHandler::loop() {
     std::string input;
@@ -112,7 +114,7 @@ void CommandHandler::loop() {
 
 namespace Util {
 
-moves::Move from_uci(const board::Position &pos, const std::string &move) {
+moves::Move from_uci(const board::Position& pos, const std::string& move) {
     moves::MoveList moveList;
     generate_all_moves(pos, moveList);
 
@@ -126,4 +128,4 @@ moves::Move from_uci(const board::Position &pos, const std::string &move) {
 
 } // namespace Util
 
-} // namespace UCI
+} // namespace uci

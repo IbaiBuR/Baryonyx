@@ -40,4 +40,4 @@ void init() {
     init_sliders<PieceType::ROOK>();
 }
 
-} // namespace Board::Bitboards::Attacks
+} // namespace board::bitboards::attacks

@@ -297,7 +297,9 @@ inline Bitboard get_pawn_attacks(const Square sq, const Color c) {
     return pawnAttacks[std::to_underlying(c)][std::to_underlying(sq)];
 }
 
-inline Bitboard get_knight_attacks(const Square sq) { return knightAttacks[std::to_underlying(sq)]; }
+inline Bitboard get_knight_attacks(const Square sq) {
+    return knightAttacks[std::to_underlying(sq)];
+}
 
 inline Bitboard get_bishop_attacks(const Square sq, Bitboard blockers) {
     return bishopAttacks[std::to_underlying(sq)]
@@ -321,7 +323,7 @@ inline Bitboard get_queen_attacks(const Square sq, const Bitboard blockers) {
 /// @param occupied Bitboard of occupied squares on the board (Blockers)
 /// @returns A bitboard with the sliding attacks in the given direction
 template <Direction d>
-constexpr Bitboard sliding_attacks(const Square sq, const Bitboard &occupied) {
+constexpr Bitboard sliding_attacks(const Square sq, const Bitboard& occupied) {
     Bitboard attacks;
 
     for (Bitboard b = shift<d>(Bitboard::from_square(sq)); !b.empty(); b = shift<d>(b)) {
@@ -342,7 +344,7 @@ constexpr Bitboard sliding_attacks(const Square sq, const Bitboard &occupied) {
 /// @note An assert is used to ensure the function is only used with sliders. The queen is not
 /// included since we can obtain it by combining the attacks of the bishop and the rook
 template <PieceType pt>
-constexpr Bitboard gen_sliding(const Square sq, const Bitboard &occupied) {
+constexpr Bitboard gen_sliding(const Square sq, const Bitboard& occupied) {
     assert(pt == PieceType::BISHOP || pt == PieceType::ROOK);
 
     if constexpr (pt == PieceType::BISHOP) {
@@ -384,4 +386,4 @@ get_attacks_by_piece_type(const PieceType pt, const Square sq, const Bitboard oc
     }
 }
 
-} // namespace Board::Bitboards::Attacks
+} // namespace board::bitboards::attacks
