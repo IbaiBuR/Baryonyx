@@ -16,7 +16,7 @@ class MoveList {
     public:
         void push(const Move move) {
             assert(m_count + 1 < constants::max_moves);
-            m_moves[++m_count].move = move;
+            m_moves[m_count++].move = move;
         }
 
         void clear() { m_count = 0; }

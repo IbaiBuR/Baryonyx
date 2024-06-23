@@ -11,11 +11,11 @@ TEST_SUITE("Perft tests") {
 
     TEST_CASE("perft suite") {
         for (const auto &test : perftSuite) {
-            const auto      perftTest = utils::split::splitString(test, ';');
+            const auto      perftTest = utils::split::split_string(test, ';');
             board::Position testPos(perftTest[0]);
 
             for (usize i = 1; i < perftTest.size(); ++i) {
-                const auto testData      = utils::split::splitString(perftTest[i], ' ');
+                const auto testData      = utils::split::split_string(perftTest[i], ' ');
                 const int  testDepth     = std::stoi(testData[0].substr(1));
                 const u64  expectedNodes = std::stoi(testData[1]);
 
