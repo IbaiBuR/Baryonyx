@@ -10,15 +10,12 @@ namespace board::bitboards::attacks {
 inline constexpr int max_bishop_blockers_config = 1 << 9;
 inline constexpr int max_rook_blockers_config   = 1 << 12;
 
-extern std::array<std::array<Bitboard, max_bishop_blockers_config>,
-                  std::to_underlying(Square::SQUARE_NB)>
+extern std::array<std::array<Bitboard, max_bishop_blockers_config>, constants::num_squares>
     bishop_attacks;
-
-extern std::array<std::array<Bitboard, max_rook_blockers_config>,
-                  std::to_underlying(Square::SQUARE_NB)>
+extern std::array<std::array<Bitboard, max_rook_blockers_config>, constants::num_squares>
     rook_attacks;
 
-inline constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> white_pawn_attacks = {
+inline constexpr std::array<Bitboard, constants::num_squares> white_pawn_attacks = {
     {Bitboard(0x200ULL),
      Bitboard(0x500ULL),
      Bitboard(0xA00ULL),
@@ -85,7 +82,7 @@ inline constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> whi
      Bitboard(0x0ULL)}
 };
 
-inline constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> black_pawn_attacks = {
+inline constexpr std::array<Bitboard, constants::num_squares> black_pawn_attacks = {
     {Bitboard(0x0ULL),
      Bitboard(0x0ULL),
      Bitboard(0x0ULL),
@@ -156,7 +153,7 @@ inline constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> bla
 inline constexpr std::array pawn_attacks = {white_pawn_attacks, black_pawn_attacks};
 
 /// @brief Pre-calculated lookup table for knight attacks
-inline constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> knight_attacks = {
+inline constexpr std::array<Bitboard, constants::num_squares> knight_attacks = {
     {Bitboard(0x20400ULL),
      Bitboard(0x50800ULL),
      Bitboard(0xA1100ULL),
@@ -224,7 +221,7 @@ inline constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> kni
 };
 
 /// @brief Pre-calculated lookup table for king attacks
-inline constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> king_attacks = {
+inline constexpr std::array<Bitboard, constants::num_squares> king_attacks = {
     {Bitboard(0x302ULL),
      Bitboard(0x705ULL),
      Bitboard(0xE0AULL),

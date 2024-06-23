@@ -13,7 +13,7 @@ namespace utils::split {
 inline std::vector<std::string> split_string(const std::string& str, const char delim) {
     std::vector<std::string> tokens;
 
-    for (const auto token : std::views::split(str, delim))
+    for (const auto& token : std::views::split(str, delim))
         tokens.emplace_back(std::string_view(token));
 
     return tokens;

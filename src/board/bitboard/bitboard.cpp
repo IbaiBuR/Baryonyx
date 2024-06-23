@@ -8,10 +8,10 @@ namespace board::bitboards {
 void print_bb(const Bitboard bitboard) {
     std::cout << std::endl;
 
-    for (int rank = 7; rank >= 0; --rank) {
+    for (int rank = constants::num_ranks - 1; rank >= 0; --rank) {
         std::cout << std::format("{} ", rank + 1);
 
-        for (u8 file = 0; file < 8; file++) {
+        for (u8 file = 0; file < constants::num_files; ++file) {
             std::cout << std::format(
                 "{} ", Bitboard::is_bit_set(bitboard, square_of(file, rank)) ? '1' : '0');
         }

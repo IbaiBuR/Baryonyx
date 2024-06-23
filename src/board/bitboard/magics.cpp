@@ -87,7 +87,7 @@ constexpr MagicEntry find_magic(const Square sq) {
         if (std::popcount((mask.as_u64() * magicCandidate) & 0xFF00000000000000) < 6)
             continue;
 
-        const int shift = static_cast<int>(Square::SQUARE_NB) - relevantBits;
+        const int shift = static_cast<int>(constants::num_squares) - relevantBits;
 
         if (try_magic(magicCandidate, shift, numOccupancies, blockers, attacks))
             return MagicEntry(mask, magicCandidate, shift);
@@ -99,16 +99,16 @@ constexpr MagicEntry find_magic(const Square sq) {
 template <PieceType pt>
 void print_magics_by_piece_type() {
     std::cout << std::format(
-        "constexpr std::array<MagicEntry, std::to_underlying(Square::SQUARE_NB)> {} = {}\n {}",
+        "constexpr std::array<MagicEntry, constants::num_squares> {} = {}\n {}",
         pt == PieceType::BISHOP ? "bishopMagics" : "rookMagics", "{", "{")
               << std::endl;
 
-    for (u8 sq = 0; sq < 64; ++sq) {
+    for (u8 sq = 0; sq < constants::num_squares; ++sq) {
         auto [mask, magic, shift] = find_magic<pt>(static_cast<Square>(sq));
         std::cout << std::format(" MagicEntry(Bitboard(0x{:016X}ULL), 0x{:016X}ULL, {})",
                                  mask.as_u64(), magic, shift);
 
-        if (sq < 63)
+        if (sq < constants::num_squares - 1)
             std::cout << std::format(",");
 
         std::cout << std::endl;

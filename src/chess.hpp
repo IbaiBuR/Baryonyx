@@ -4,6 +4,10 @@
 
 namespace constants {
 
+inline constexpr usize num_files   = 8;
+inline constexpr usize num_ranks   = 8;
+inline constexpr usize num_squares = num_files * num_ranks;
+
 inline constexpr int max_depth = 100;
 inline constexpr int max_ply   = 200;
 inline constexpr int max_moves = 256;
@@ -19,7 +23,6 @@ enum class File : u8 {
     FILE_F,
     FILE_G,
     FILE_H,
-    FILE_NB
 };
 
 enum class Rank : u8 {
@@ -31,7 +34,6 @@ enum class Rank : u8 {
     RANK_6,
     RANK_7,
     RANK_8,
-    RANK_NB
 };
 
 // clang-format off
@@ -44,7 +46,7 @@ enum class Square : u8 {
     A6, B6, C6, D6, E6, F6, G6, H6,
     A7, B7, C7, D7, E7, F7, G7, H7,
     A8, B8, C8, D8, E8, F8, G8, H8,
-    SQUARE_NB, NONE
+    NONE
 };
 // clang-format on
 
