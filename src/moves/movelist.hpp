@@ -38,6 +38,6 @@ class MoveList {
         u32                                          m_count{};
 };
 
-void print_move_list(const MoveList& moveList);
+void print_move_list(const MoveList& move_list);
 
 } // namespace moves

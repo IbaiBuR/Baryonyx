@@ -9,25 +9,26 @@ std::array<std::array<Bitboard, max_rook_blockers_config>, constants::num_square
 /// @tparam pt Piece type (Slider)
 template <PieceType pt>
 void init_sliders() {
-    constexpr bool isBishop = pt == PieceType::BISHOP;
+    constexpr bool is_bishop = pt == PieceType::BISHOP;
 
     for (u8 sq = 0; sq < constants::num_squares; ++sq) {
-        auto [mask, magic, shift] = isBishop ? magics::bishop_magics[sq] : magics::rook_magics[sq];
-        const int nBits           = mask.bit_count();
-        const int numOccupancies  = 1 << nBits;
+        auto [mask, magic, shift] = is_bishop ? magics::bishop_magics[sq] : magics::rook_magics[sq];
+        const int n_bits          = mask.bit_count();
+        const int num_occupancies = 1 << n_bits;
 
-        for (int i = 0; i < numOccupancies; i++) {
-            const Bitboard occupied = magics::set_blockers(i, nBits, mask);
+        for (int i = 0; i < num_occupancies; ++i) {
+            const Bitboard occupied = magics::set_blockers(i, n_bits, mask);
 #ifndef USE_PEXT
-            const auto magicIndex = (occupied.as_u64() * magic) >> shift;
+            const auto magic_index = (occupied.as_u64() * magic) >> shift;
 #else
-            const auto magicIndex = _pext_u64(occupied.as_u64(), mask.as_u64());
+            const auto magic_index = _pext_u64(occupied.as_u64(), mask.as_u64());
 #endif
 
-            if constexpr (isBishop)
-                bishop_attacks[sq][magicIndex] = gen_sliding<pt>(static_cast<Square>(sq), occupied);
+            if constexpr (is_bishop)
+                bishop_attacks[sq][magic_index] =
+                    gen_sliding<pt>(static_cast<Square>(sq), occupied);
             else
-                rook_attacks[sq][magicIndex] = gen_sliding<pt>(static_cast<Square>(sq), occupied);
+                rook_attacks[sq][magic_index] = gen_sliding<pt>(static_cast<Square>(sq), occupied);
         }
     }
 }

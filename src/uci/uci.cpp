@@ -50,8 +50,8 @@ void CommandHandler::handle_position(const std::vector<std::string>& command,
     else if (command[1] == "fen") {
         const auto& fen = command | std::views::drop(2) | std::views::take(6)
                         | std::views::transform([](const std::string& s) { return s + " "; });
-        const std::string& fenStr = std::accumulate(fen.begin(), fen.end(), std::string{});
-        pos                       = board::Position(fenStr);
+        const std::string& fen_str = std::accumulate(fen.begin(), fen.end(), std::string{});
+        pos                        = board::Position(fen_str);
     }
 
     if (auto offset = std::ranges::find(command.begin(), command.end(), "moves");
@@ -60,12 +60,12 @@ void CommandHandler::handle_position(const std::vector<std::string>& command,
         ++offset;
 
         for (auto it = offset; it != command.end(); ++it) {
-            const moves::Move parsedMove = util::from_uci(pos, *it);
+            const auto parsed_move = util::from_uci(pos, *it);
 
-            if (parsedMove == moves::Move::none())
+            if (parsed_move == moves::Move::none())
                 break;
 
-            pos.make_move(parsedMove);
+            pos.make_move(parsed_move);
         }
     }
 }
@@ -115,12 +115,12 @@ void CommandHandler::loop() {
 namespace util {
 
 moves::Move from_uci(const board::Position& pos, const std::string& move) {
-    moves::MoveList moveList;
-    generate_all_moves(pos, moveList);
+    moves::MoveList move_list;
+    generate_all_moves(pos, move_list);
 
-    for (u32 i = 0; i < moveList.size(); ++i) {
-        if (const moves::Move currentMove = moveList.move_at(i); move == currentMove.to_string())
-            return currentMove;
+    for (u32 i = 0; i < move_list.size(); ++i) {
+        if (const auto current_move = move_list.move_at(i); move == current_move.to_string())
+            return current_move;
     }
 
     return moves::Move::none();

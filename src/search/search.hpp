@@ -25,7 +25,7 @@ struct PVLine {
         }
 
         void clear() {
-            moves.fill(moves::Move::none());
+            moves.fill(moves::Move::null());
             length = 0;
         }
 
@@ -46,23 +46,23 @@ struct PVLine {
 };
 
 struct SearchLimits {
-        u64 nodesLimit;
-        u64 timeLimit;
-        u8  depthLimit;
+        u64 nodes_limit;
+        u64 time_limit;
+        u8  depth_limit;
 };
 
 struct SearchInfo {
-        u64    searchedNodes{};
+        u64    searched_nodes;
         PVLine pv;
-        bool   stopped{};
+        bool   stopped;
 };
 
 class Searcher {
     public:
-        [[nodiscard]] u64 searched_nodes() const { return m_info.searchedNodes; }
+        [[nodiscard]] u64 searched_nodes() const { return m_info.searched_nodes; }
 
         void reset_info();
-        void set_limits(u64 nodesLimit, u64 timeLimit, u32 depthLimit);
+        void set_limits(u64 nodes_limit, u64 time_limit, u32 depth_limit);
         void parse_time_control(const std::vector<std::string>& command, Color stm);
         void main_search(const board::Position& pos);
 

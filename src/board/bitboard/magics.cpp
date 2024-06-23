@@ -8,10 +8,10 @@
 
 namespace board::bitboards::magics {
 
-Bitboard set_blockers(const int index, const int nBits, Bitboard mask) {
+Bitboard set_blockers(const int index, const int n_bits, Bitboard mask) {
     Bitboard blockers;
 
-    for (int i = 0; i < nBits; ++i) {
+    for (int i = 0; i < n_bits; ++i) {
         const auto sq = static_cast<Square>(mask.pop_lsb());
 
         if (index & (1 << i))
@@ -24,24 +24,24 @@ Bitboard set_blockers(const int index, const int nBits, Bitboard mask) {
 /// @brief Tests if the magic number produces index collisions
 /// @param magic Magic number
 /// @param shift MagicEntry shift
-/// @param numOccupancies Number of possible combinations of occupied bits in the mask
+/// @param num_occupancies Number of possible combinations of occupied bits in the mask
 /// @param blockers Blockers
 /// @param attacks Pre-calculated attacks
 /// @returns True if no collisions found while trying to fill in the attack table
 bool try_magic(const u64                    magic,
                const int                    shift,
-               const int                    numOccupancies,
+               const int                    num_occupancies,
                const std::vector<Bitboard>& blockers,
                const std::vector<Bitboard>& attacks) {
-    std::vector<Bitboard> attackTable(numOccupancies);
+    std::vector<Bitboard> attack_table(num_occupancies);
     bool                  collision = false;
 
-    for (int i = 0; !collision && i < numOccupancies; ++i) {
-        const u64 magicIndex = (blockers[i].as_u64() * magic) >> shift;
+    for (int i = 0; !collision && i < num_occupancies; ++i) {
+        const u64 magic_index = (blockers[i].as_u64() * magic) >> shift;
 
-        if (attackTable[magicIndex] == util::empty_bb)
-            attackTable[magicIndex] = attacks[i];
-        else if (attackTable[magicIndex] != attacks[i])
+        if (attack_table[magic_index] == util::empty_bb)
+            attack_table[magic_index] = attacks[i];
+        else if (attack_table[magic_index] != attacks[i])
             collision = true;
     }
 
@@ -56,20 +56,20 @@ template <PieceType pt>
 constexpr MagicEntry find_magic(const Square sq) {
     assert(pt == PieceType::BISHOP || pt == PieceType::ROOK);
 
-    constexpr bool isBishop = pt == PieceType::BISHOP;
-    constexpr int  maxBlockersConfig =
-        isBishop ? attacks::max_bishop_blockers_config : attacks::max_rook_blockers_config;
+    constexpr bool is_bishop = pt == PieceType::BISHOP;
+    constexpr int  max_blockers_config =
+        is_bishop ? attacks::max_bishop_blockers_config : attacks::max_rook_blockers_config;
 
     const Bitboard mask =
-        isBishop ? bishop_masks[std::to_underlying(sq)] : rook_masks[std::to_underlying(sq)];
-    const int relevantBits   = mask.bit_count();
-    const int numOccupancies = 1 << relevantBits;
+        is_bishop ? bishop_masks[std::to_underlying(sq)] : rook_masks[std::to_underlying(sq)];
+    const int relevant_bits   = mask.bit_count();
+    const int num_occupancies = 1 << relevant_bits;
 
-    std::vector<Bitboard> blockers(maxBlockersConfig);
-    std::vector<Bitboard> attacks(maxBlockersConfig);
+    std::vector<Bitboard> blockers(max_blockers_config);
+    std::vector<Bitboard> attacks(max_blockers_config);
 
-    for (int i = 0; i < numOccupancies; ++i) {
-        blockers[i] = set_blockers(i, relevantBits, mask);
+    for (int i = 0; i < num_occupancies; ++i) {
+        blockers[i] = set_blockers(i, relevant_bits, mask);
         attacks[i]  = attacks::gen_sliding<pt>(sq, blockers[i]);
     }
 
@@ -81,16 +81,16 @@ constexpr MagicEntry find_magic(const Square sq) {
 
     // Find the magic numbers by trial and error
     for (int i = 0; i < 10000000; ++i) {
-        const u64 magicCandidate = random_magic();
+        const u64 magic_candidate = random_magic();
 
         // Skip bad magics
-        if (std::popcount((mask.as_u64() * magicCandidate) & 0xFF00000000000000) < 6)
+        if (std::popcount((mask.as_u64() * magic_candidate) & 0xFF00000000000000) < 6)
             continue;
 
-        const int shift = static_cast<int>(constants::num_squares) - relevantBits;
+        const int shift = static_cast<int>(constants::num_squares) - relevant_bits;
 
-        if (try_magic(magicCandidate, shift, numOccupancies, blockers, attacks))
-            return MagicEntry(mask, magicCandidate, shift);
+        if (try_magic(magic_candidate, shift, num_occupancies, blockers, attacks))
+            return MagicEntry(mask, magic_candidate, shift);
     }
 
     return {};
@@ -100,7 +100,7 @@ template <PieceType pt>
 void print_magics_by_piece_type() {
     std::cout << std::format(
         "constexpr std::array<MagicEntry, constants::num_squares> {} = {}\n {}",
-        pt == PieceType::BISHOP ? "bishopMagics" : "rookMagics", "{", "{")
+        pt == PieceType::BISHOP ? "bishop_magics" : "rook_magics", "{", "{")
               << std::endl;
 
     for (u8 sq = 0; sq < constants::num_squares; ++sq) {

@@ -5,7 +5,7 @@
 
 namespace board::bitboards {
 
-void print_bb(const Bitboard bitboard) {
+void print_bb(const Bitboard& bitboard) {
     std::cout << std::endl;
 
     for (int rank = constants::num_ranks - 1; rank >= 0; --rank) {
