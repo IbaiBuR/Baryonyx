@@ -243,9 +243,9 @@ void print_magics();
 
 /// @brief Utility used to generate all the blocker combinations of a mask
 /// @param index Index for blocker configuration
-/// @param nBits Number of bits set in the mask
+/// @param n_bits Number of bits set in the mask
 /// @param mask Attack mask
 /// @returns The generated blocker configuration for the index
-Bitboard set_blockers(int index, int nBits, Bitboard mask);
+Bitboard set_blockers(int index, int n_bits, Bitboard mask);
 
 } // namespace board::bitboards::magics

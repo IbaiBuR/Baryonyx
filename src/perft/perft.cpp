@@ -12,12 +12,12 @@ u64 perft(const board::Position& pos, const int depth) {
         return 1ULL;
 
     u64             nodes = 0ULL;
-    moves::MoveList moveList;
-    generate_all_moves(pos, moveList);
+    moves::MoveList move_list;
+    generate_all_moves(pos, move_list);
 
-    for (u32 i = 0; i < moveList.size(); ++i) {
+    for (u32 i = 0; i < move_list.size(); ++i) {
         board::Position copy = pos;
-        copy.make_move(moveList.move_at(i));
+        copy.make_move(move_list.move_at(i));
 
         if (!copy.was_legal())
             continue;
@@ -31,32 +31,32 @@ u64 perft(const board::Position& pos, const int depth) {
 void split_perft(const board::Position& pos, const int depth) {
     std::cout << std::format("\nRunning performance test...\n") << std::endl;
 
-    moves::MoveList moveList;
-    generate_all_moves(pos, moveList);
+    moves::MoveList move_list;
+    generate_all_moves(pos, move_list);
 
-    u64        totalNodes = 0ULL;
-    const auto startTime  = utils::time::get_time_ms();
+    u64       total_nodes = 0ULL;
+    const u64 start_time  = utils::time::get_time_ms();
 
-    for (u32 i = 0; i < moveList.size(); ++i) {
-        board::Position   copy        = pos;
-        const moves::Move currentMove = moveList.move_at(i);
-        copy.make_move(currentMove);
+    for (u32 i = 0; i < move_list.size(); ++i) {
+        board::Position copy        = pos;
+        const auto      current_move = move_list.move_at(i);
+        copy.make_move(current_move);
 
         if (!copy.was_legal())
             continue;
 
         const u64 value = perft(copy, depth - 1);
-        totalNodes += value;
+        total_nodes += value;
 
-        std::cout << std::format("{}: {}", currentMove.to_string(), value) << std::endl;
+        std::cout << std::format("{}: {}", current_move.to_string(), value) << std::endl;
     }
 
-    const auto elapsed = utils::time::get_time_ms() - startTime;
+    const auto elapsed = utils::time::get_time_ms() - start_time;
 
     std::cout << std::format("\nDepth           : {}", depth) << std::endl;
-    std::cout << std::format("Total nodes     : {}", totalNodes) << std::endl;
+    std::cout << std::format("Total nodes     : {}", total_nodes) << std::endl;
     std::cout << std::format("Total time      : {} ms", elapsed) << std::endl;
     std::cout << std::format("Nodes per second: {}\n",
-                             totalNodes / std::max<u64>(1, elapsed) * 1000)
+                             total_nodes / std::max<u64>(1, elapsed) * 1000)
               << std::endl;
 }

@@ -7,26 +7,26 @@
 
 void search::bench::run(Searcher& searcher, const u32 depth) {
     // clang-format off
-    const std::array benchFens = {
+    const std::array bench_fens = {
         #include "./resources/bench.csv"
     };
     // clang-format on
 
-    const u64 startTime = utils::time::get_time_ms();
-    u64       totalNodes{};
+    const u64 start_time = utils::time::get_time_ms();
+    u64       total_nodes{};
     searcher.set_limits(UINT64_MAX, UINT64_MAX, depth);
 
-    for (const auto& fen : benchFens) {
+    for (const auto& fen : bench_fens) {
         board::Position pos(fen);
 
         searcher.main_search(pos);
 
-        totalNodes += searcher.searched_nodes();
+        total_nodes += searcher.searched_nodes();
     }
 
-    const u64  elapsed = utils::time::get_time_ms() - startTime;
+    const u64  elapsed = utils::time::get_time_ms() - start_time;
     const auto seconds = elapsed / 1000;
 
     std::cout << std::format("\ninfo string {} seconds", seconds) << std::endl;
-    std::cout << std::format("{} nodes {} nps", totalNodes, totalNodes / seconds) << std::endl;
+    std::cout << std::format("{} nodes {} nps", total_nodes, total_nodes / seconds) << std::endl;
 }

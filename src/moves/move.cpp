@@ -6,7 +6,7 @@
 
 namespace moves {
 
-constexpr char promoFlagToChar(const Move::MoveFlag m) {
+constexpr char promo_flag_to_char(const Move::MoveFlag m) {
     switch (m) {
     case Move::MoveFlag::KNIGHT_PROMO:
     case Move::MoveFlag::KNIGHT_CAPTURE_PROMO:
@@ -21,11 +21,11 @@ constexpr char promoFlagToChar(const Move::MoveFlag m) {
     case Move::MoveFlag::QUEEN_CAPTURE_PROMO:
         return 'q';
     default:
-        throw std::invalid_argument("Invalid MoveFlag provided.\n");
+        throw std::invalid_argument("Invalid move flag provided.\n");
     }
 }
 
-constexpr PieceType promotionToPieceType(const Move::MoveFlag m) {
+constexpr PieceType promotion_to_piece_type(const Move::MoveFlag m) {
     switch (m) {
     case Move::MoveFlag::KNIGHT_PROMO:
     case Move::MoveFlag::KNIGHT_CAPTURE_PROMO:
@@ -40,7 +40,7 @@ constexpr PieceType promotionToPieceType(const Move::MoveFlag m) {
     case Move::MoveFlag::QUEEN_CAPTURE_PROMO:
         return PieceType::QUEEN;
     default:
-        throw std::invalid_argument("Invalid MoveFlag provided.\n");
+        throw std::invalid_argument("Invalid move flag provided.\n");
     }
 };
 
@@ -51,7 +51,7 @@ std::string Move::to_string() const {
     const auto to   = board::util::sq_to_coords[std::to_underlying(this->to())];
 
     if (this->is_promotion()) {
-        result = std::format("{}{}{}", from, to, promoFlagToChar(flag()));
+        result = std::format("{}{}{}", from, to, promo_flag_to_char(flag()));
     }
     else {
         result = std::format("{}{}", from, to);
@@ -61,7 +61,7 @@ std::string Move::to_string() const {
 }
 
 Piece Move::get_promoted_piece(const Color stm) const {
-    return static_cast<Piece>(std::to_underlying(promotionToPieceType(flag()))
+    return static_cast<Piece>(std::to_underlying(promotion_to_piece_type(flag()))
                               + std::to_underlying(stm) * 6);
 }
 

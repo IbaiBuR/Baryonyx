@@ -48,7 +48,7 @@ TEST_SUITE("Bitboards Tests") {
     TEST_CASE("pop_lsb") {
         auto b = Bitboard(0x8100000000000081ULL);
         CHECK(b.pop_lsb() == 0);
-        CHECK(b.as_u64() == 0x8100000000000080);
+        CHECK(b.as_u64() == 0x8100000000000080ULL);
 
         b = Bitboard(0x42ULL);
         CHECK(b.pop_lsb() == 1);

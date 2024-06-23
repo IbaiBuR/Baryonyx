@@ -310,7 +310,7 @@ inline Bitboard get_rook_attacks(const Square sq, Bitboard blockers) {
 
 inline Bitboard get_king_attacks(const Square sq) { return king_attacks[std::to_underlying(sq)]; }
 
-inline Bitboard get_queen_attacks(const Square sq, const Bitboard blockers) {
+inline Bitboard get_queen_attacks(const Square sq, const Bitboard& blockers) {
     return get_bishop_attacks(sq, blockers) | get_rook_attacks(sq, blockers);
 }
 
@@ -366,7 +366,7 @@ constexpr Bitboard gen_sliding(const Square sq, const Bitboard& occupied) {
 /// @note Pawns are not taken into account since this function is primarily used during movegen
 /// and pawns are treated separately there
 constexpr Bitboard
-get_attacks_by_piece_type(const PieceType pt, const Square sq, const Bitboard occupied) {
+get_attacks_by_piece_type(const PieceType pt, const Square sq, const Bitboard& occupied) {
     switch (pt) {
     case PieceType::KNIGHT:
         return knight_attacks[std::to_underlying(sq)];

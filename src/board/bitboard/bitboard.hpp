@@ -138,7 +138,7 @@ inline constexpr auto rank_8_bb = Bitboard(0xFF00000000000000ULL);
 
 } // namespace util
 
-void print_bb(Bitboard bitboard);
+void print_bb(const Bitboard& bitboard);
 
 /// @brief Shifts a bitboard to the specified direction
 /// @tparam d Direction to shift the bitboard to
