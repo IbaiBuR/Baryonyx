@@ -8,6 +8,10 @@ inline constexpr usize num_files   = 8;
 inline constexpr usize num_ranks   = 8;
 inline constexpr usize num_squares = num_files * num_ranks;
 
+inline constexpr usize num_piece_types = 6;
+inline constexpr usize num_colors      = 2;
+inline constexpr usize num_pieces      = num_piece_types * num_colors;
+
 inline constexpr int max_depth = 100;
 inline constexpr int max_ply   = 200;
 inline constexpr int max_moves = 256;
@@ -53,7 +57,6 @@ enum class Square : u8 {
 enum class Color : u8 {
     WHITE,
     BLACK,
-    COLOR_NB,
     NONE
 };
 
@@ -64,7 +67,6 @@ enum class PieceType : u8 {
     ROOK,
     QUEEN,
     KING,
-    PIECETYPE_NB,
     NONE
 };
 
@@ -81,7 +83,6 @@ enum class Piece : u8 {
     B_ROOK,
     B_QUEEN,
     B_KING,
-    PIECE_NB,
     NONE
 };
 
