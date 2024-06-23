@@ -2,11 +2,11 @@
 
 namespace board::bitboards::attacks {
 
-std::array<std::array<Bitboard, maxBishopBlockersConfig>, std::to_underlying(Square::SQUARE_NB)>
-    bishopAttacks;
+std::array<std::array<Bitboard, max_bishop_blockers_config>, std::to_underlying(Square::SQUARE_NB)>
+    bishop_attacks;
 
-std::array<std::array<Bitboard, maxRookBlockersConfig>, std::to_underlying(Square::SQUARE_NB)>
-    rookAttacks;
+std::array<std::array<Bitboard, max_rook_blockers_config>, std::to_underlying(Square::SQUARE_NB)>
+    rook_attacks;
 
 /// @brief Initializes the sliding attacks lookup tables
 /// @tparam pt Piece type (Slider)
@@ -15,7 +15,7 @@ void init_sliders() {
     constexpr bool isBishop = pt == PieceType::BISHOP;
 
     for (u8 sq = 0; sq < std::to_underlying(Square::SQUARE_NB); ++sq) {
-        auto [mask, magic, shift] = isBishop ? magics::bishopMagics[sq] : magics::rookMagics[sq];
+        auto [mask, magic, shift] = isBishop ? magics::bishop_magics[sq] : magics::rook_magics[sq];
         const int nBits           = mask.bit_count();
         const int numOccupancies  = 1 << nBits;
 
@@ -28,9 +28,9 @@ void init_sliders() {
 #endif
 
             if constexpr (isBishop)
-                bishopAttacks[sq][magicIndex] = gen_sliding<pt>(static_cast<Square>(sq), occupied);
+                bishop_attacks[sq][magicIndex] = gen_sliding<pt>(static_cast<Square>(sq), occupied);
             else
-                rookAttacks[sq][magicIndex] = gen_sliding<pt>(static_cast<Square>(sq), occupied);
+                rook_attacks[sq][magicIndex] = gen_sliding<pt>(static_cast<Square>(sq), occupied);
         }
     }
 }

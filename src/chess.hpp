@@ -2,12 +2,13 @@
 
 #include "types.hpp"
 
-constexpr Score SCORE_INFINITE = 32000;
-constexpr Score SCORE_MATE     = 31500;
+namespace constants {
 
-constexpr int MAX_DEPTH = 100;
-constexpr int MAX_PLY   = 200;
-constexpr int MAX_MOVES = 256;
+inline constexpr int max_depth = 100;
+inline constexpr int max_ply   = 200;
+inline constexpr int max_moves = 256;
+
+} // namespace constants
 
 enum class File : u8 {
     FILE_A,

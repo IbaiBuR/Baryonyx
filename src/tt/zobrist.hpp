@@ -11,17 +11,17 @@
 /// @note See https://github.com/Ciekce/Stormphrax/blob/main/src/keys.h for reference
 namespace tt::zobrist {
 
-constexpr usize pieceKeys     = 12 * 64;
-constexpr usize castlingKeys  = 16;
-constexpr usize enPassantKeys = 8;
-constexpr usize sideToMoveKey = 1;
-constexpr usize totalKeys     = pieceKeys + castlingKeys + enPassantKeys + sideToMoveKey;
+constexpr usize piece_keys     = 12 * 64;
+constexpr usize castling_keys  = 16;
+constexpr usize en_passant_keys = 8;
+constexpr usize side_to_move_key = 1;
+constexpr usize total_keys     = piece_keys + castling_keys + en_passant_keys + side_to_move_key;
 
-constexpr usize castlingKeysOffset  = pieceKeys;
-constexpr usize enPassantKeysOffset = castlingKeysOffset + castlingKeys;
-constexpr usize sideToMoveKeyOffset = enPassantKeysOffset + enPassantKeys;
+constexpr usize castling_keys_offset  = piece_keys;
+constexpr usize en_passant_keys_offset = castling_keys_offset + castling_keys;
+constexpr usize side_to_move_key_offset = en_passant_keys_offset + en_passant_keys;
 
-extern const std::array<ZobristKey, totalKeys> allKeys;
+extern const std::array<ZobristKey, total_keys> allKeys;
 
 inline ZobristKey get_piece_key(const Piece p, const Square sq) {
     return p == Piece::NONE || sq == Square::NONE
@@ -30,11 +30,11 @@ inline ZobristKey get_piece_key(const Piece p, const Square sq) {
 }
 
 inline ZobristKey get_castling_key(const board::CastlingRights& castlingRights) {
-    return allKeys[castlingKeysOffset + castlingRights.as_u8()];
+    return allKeys[castling_keys_offset + castlingRights.as_u8()];
 }
 
 inline ZobristKey get_en_passant_key(const File f) {
-    return allKeys[enPassantKeysOffset + std::to_underlying(f)];
+    return allKeys[en_passant_keys_offset + std::to_underlying(f)];
 }
 
 inline ZobristKey get_en_passant_key(const Square epSq) {
@@ -42,7 +42,7 @@ inline ZobristKey get_en_passant_key(const Square epSq) {
 }
 
 inline ZobristKey get_side_key(const Color c) {
-    return c == Color::WHITE ? 0ULL : allKeys[sideToMoveKeyOffset];
+    return c == Color::WHITE ? 0ULL : allKeys[side_to_move_key_offset];
 }
 
 } // namespace tt::zobrist

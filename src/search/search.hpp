@@ -8,9 +8,12 @@
 
 namespace search {
 
+constexpr Score score_infinite = 32000;
+constexpr Score score_mate     = 31500;
+
 struct PVLine {
-        std::array<moves::Move, MAX_MOVES> moves{};
-        u32                                length{};
+        std::array<moves::Move, constants::max_moves> moves{};
+        u32                                           length{};
 
         [[nodiscard]] auto begin() const { return moves.begin(); }
         [[nodiscard]] auto end() const { return moves.begin() + length; }

@@ -15,8 +15,8 @@ struct ScoredMove {
 class MoveList {
     public:
         void push(const Move move) {
-            assert(m_count + 1 < MAX_MOVES);
-            m_moves[m_count++].move = move;
+            assert(m_count + 1 < constants::max_moves);
+            m_moves[++m_count].move = move;
         }
 
         void clear() { m_count = 0; }
@@ -24,20 +24,20 @@ class MoveList {
         [[nodiscard]] u32 size() const { return m_count; }
 
         [[nodiscard]] Move move_at(const u32 index) const {
-            assert(index < MAX_MOVES);
+            assert(index < constants::max_moves);
             return m_moves[index].move;
         }
 
         [[nodiscard]] Score score_at(const u32 index) const {
-            assert(index < MAX_MOVES);
+            assert(index < constants::max_moves);
             return m_moves[index].score;
         }
 
     private:
-        std::array<ScoredMove, MAX_MOVES> m_moves{};
-        u32                               m_count{};
+        std::array<ScoredMove, constants::max_moves> m_moves{};
+        u32                                          m_count{};
 };
 
-void printMoveList(const MoveList& moveList);
+void print_move_list(const MoveList& moveList);
 
 } // namespace moves

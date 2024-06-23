@@ -11,12 +11,6 @@ namespace utils::random {
 
 using seed_type = std::array<u64, 3>;
 
-/// @brief Default fixed seed to be used by the PRNG in order to be deterministic
-/// @note This seed was generated using the generate_seed function below
-constexpr seed_type defaultSeed = {
-    {0x4A4380B6E784A3BFULL, 0xF0A5F659292015A9ULL, 0x0158BFEDFD98A85DULL}
-};
-
 /// @brief A small chaotic RNG combined with a counter, designed by Chris Doty-Humphrey
 /// @note See http://pracrand.sourceforge.net/ for reference and
 /// https://github.com/pitdicker/small-rngs/blob/master/src/sfc.rs for the rust implementation
@@ -26,7 +20,7 @@ class Sfc64Rng {
         using result_type = u64;
 
         constexpr Sfc64Rng() :
-            Sfc64Rng(defaultSeed) {}
+            Sfc64Rng(default_seed) {}
 
         constexpr explicit Sfc64Rng(const seed_type& seed) :
             m_a(seed[0]),
@@ -60,6 +54,12 @@ class Sfc64Rng {
         constexpr result_type operator()() { return next_u64(); }
 
     private:
+        /// @brief Default fixed seed to be used by the PRNG in order to be deterministic
+        /// @note This seed was generated using the generate_seed function below
+        static constexpr seed_type default_seed = {
+            {0x4A4380B6E784A3BFULL, 0xF0A5F659292015A9ULL, 0x0158BFEDFD98A85DULL}
+        };
+
         u64 m_a{};
         u64 m_b{};
         u64 m_c{};

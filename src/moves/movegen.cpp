@@ -18,10 +18,10 @@ template <Color c>
 constexpr bb::Bitboard double_pawn_push(const bb::Bitboard& pawns, const bb::Bitboard& empty) {
     if constexpr (c == Color::WHITE)
         return bb::shift<Direction::NORTH>(single_pawn_push<c>(pawns, empty)) & empty
-             & bb::util::RANK_4_BB;
+             & bb::util::rank_4_bb;
     else
         return bb::shift<Direction::SOUTH>(single_pawn_push<c>(pawns, empty)) & empty
-             & bb::util::RANK_5_BB;
+             & bb::util::rank_5_bb;
 }
 
 template <Color c>

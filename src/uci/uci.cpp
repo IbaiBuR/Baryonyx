@@ -28,11 +28,11 @@ void CommandHandler::handle_go(const std::vector<std::string>& command,
         return;
     }
     else if (command[1] == "movetime")
-        m_searcher.set_limits(UINT64_MAX, std::stoull(command[2]), MAX_DEPTH);
+        m_searcher.set_limits(UINT64_MAX, std::stoull(command[2]), constants::max_depth);
     else if (command[1] == "nodes")
-        m_searcher.set_limits(std::stoull(command[2]), UINT64_MAX, MAX_DEPTH);
+        m_searcher.set_limits(std::stoull(command[2]), UINT64_MAX, constants::max_depth);
     else if (command[1] == "infinite")
-        m_searcher.set_limits(UINT64_MAX, UINT64_MAX, MAX_DEPTH);
+        m_searcher.set_limits(UINT64_MAX, UINT64_MAX, constants::max_depth);
     else if (command[1] == "wtime" || command[1] == "btime") {
         m_searcher.parse_time_control(command, pos.side_to_move());
     }
@@ -60,7 +60,7 @@ void CommandHandler::handle_position(const std::vector<std::string>& command,
         ++offset;
 
         for (auto it = offset; it != command.end(); ++it) {
-            const moves::Move parsedMove = Util::from_uci(pos, *it);
+            const moves::Move parsedMove = util::from_uci(pos, *it);
 
             if (parsedMove == moves::Move::none())
                 break;
@@ -71,8 +71,8 @@ void CommandHandler::handle_position(const std::vector<std::string>& command,
 }
 
 void CommandHandler::handle_uci() {
-    std::cout << std::format("id name {} {}", engineName, engineVersion) << std::endl;
-    std::cout << std::format("id author {}", engineAuthor) << std::endl;
+    std::cout << std::format("id name {} {}", name, version) << std::endl;
+    std::cout << std::format("id author {}", author) << std::endl;
     std::cout << std::format("option name Hash type spin default 1 min 1 max 1") << std::endl;
     std::cout << std::format("option name Threads type spin default 1 min 1 max 1") << std::endl;
     std::cout << std::format("uciok") << std::endl;
@@ -82,7 +82,7 @@ void CommandHandler::handle_uci_new_game(board::Position& pos) { pos.reset_to_st
 
 void CommandHandler::loop() {
     std::string input;
-    auto        pos = board::Position(board::util::startPosFen);
+    auto        pos = board::Position(board::util::start_pos_fen);
 
     while (std::getline(std::cin, input)) {
         const auto command = utils::split::split_string(input, ' ');
@@ -112,7 +112,7 @@ void CommandHandler::loop() {
     }
 }
 
-namespace Util {
+namespace util {
 
 moves::Move from_uci(const board::Position& pos, const std::string& move) {
     moves::MoveList moveList;
@@ -126,6 +126,6 @@ moves::Move from_uci(const board::Position& pos, const std::string& move) {
     return moves::Move::none();
 }
 
-} // namespace Util
+} // namespace util
 
 } // namespace uci

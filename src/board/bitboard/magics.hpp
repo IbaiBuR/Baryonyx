@@ -17,7 +17,7 @@ struct MagicEntry {
 };
 
 /// @brief Pre-calculated bishop attack masks
-constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> bishopMasks = {
+inline constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> bishop_masks = {
     {Bitboard(0x0040201008040200ULL), Bitboard(0x0000402010080400ULL),
      Bitboard(0x0000004020100A00ULL), Bitboard(0x0000000040221400ULL),
      Bitboard(0x0000000002442800ULL), Bitboard(0x0000000204085000ULL),
@@ -53,7 +53,7 @@ constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> bishopMask
 };
 
 /// @brief Pre-calculated rook attack masks
-constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> rookMasks = {
+inline constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> rook_masks = {
     {Bitboard(0x000101010101017EULL), Bitboard(0x000202020202027CULL),
      Bitboard(0x000404040404047AULL), Bitboard(0x0008080808080876ULL),
      Bitboard(0x001010101010106EULL), Bitboard(0x002020202020205EULL),
@@ -88,7 +88,7 @@ constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> rookMasks 
      Bitboard(0x3E40404040404000ULL), Bitboard(0x7E80808080808000ULL)}
 };
 
-constexpr std::array<MagicEntry, std::to_underlying(Square::SQUARE_NB)> bishopMagics = {
+inline constexpr std::array<MagicEntry, std::to_underlying(Square::SQUARE_NB)> bishop_magics = {
     {MagicEntry(Bitboard(0x0040201008040200ULL), 0x020A262403220200ULL, 58),
      MagicEntry(Bitboard(0x0000402010080400ULL), 0x8020040100411809ULL, 59),
      MagicEntry(Bitboard(0x0000004020100A00ULL), 0xC122021042008110ULL, 59),
@@ -155,7 +155,7 @@ constexpr std::array<MagicEntry, std::to_underlying(Square::SQUARE_NB)> bishopMa
      MagicEntry(Bitboard(0x0040201008040200ULL), 0x082104100A002120ULL, 58)}
 };
 
-constexpr std::array<MagicEntry, std::to_underlying(Square::SQUARE_NB)> rookMagics = {
+inline constexpr std::array<MagicEntry, std::to_underlying(Square::SQUARE_NB)> rook_magics = {
     {MagicEntry(Bitboard(0x000101010101017EULL), 0x2080004000142088ULL, 52),
      MagicEntry(Bitboard(0x000202020202027CULL), 0x4840001000200048ULL, 53),
      MagicEntry(Bitboard(0x000404040404047AULL), 0x0880200208801000ULL, 53),

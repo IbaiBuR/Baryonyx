@@ -23,7 +23,7 @@ TEST_SUITE("Eval Tests") {
 
     TEST_CASE("static eval") {
         SUBCASE("start position") {
-            CHECK(evaluate(board::Position(board::util::startPosFen)) == 0);
+            CHECK(evaluate(board::Position(board::util::start_pos_fen)) == 0);
         }
 
         SUBCASE("3k4/8/8/8/8/8/8/3K3R w - - 0 1") {

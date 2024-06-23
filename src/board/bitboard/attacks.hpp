@@ -7,18 +7,18 @@
 
 namespace board::bitboards::attacks {
 
-constexpr int maxBishopBlockersConfig = 1 << 9;
-constexpr int maxRookBlockersConfig   = 1 << 12;
+inline constexpr int max_bishop_blockers_config = 1 << 9;
+inline constexpr int max_rook_blockers_config   = 1 << 12;
 
-extern std::array<std::array<Bitboard, maxBishopBlockersConfig>,
+extern std::array<std::array<Bitboard, max_bishop_blockers_config>,
                   std::to_underlying(Square::SQUARE_NB)>
-    bishopAttacks;
+    bishop_attacks;
 
-extern std::array<std::array<Bitboard, maxRookBlockersConfig>,
+extern std::array<std::array<Bitboard, max_rook_blockers_config>,
                   std::to_underlying(Square::SQUARE_NB)>
-    rookAttacks;
+    rook_attacks;
 
-constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> whitePawnAttacks = {
+inline constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> white_pawn_attacks = {
     {Bitboard(0x200ULL),
      Bitboard(0x500ULL),
      Bitboard(0xA00ULL),
@@ -85,7 +85,7 @@ constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> whitePawnA
      Bitboard(0x0ULL)}
 };
 
-constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> blackPawnAttacks = {
+inline constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> black_pawn_attacks = {
     {Bitboard(0x0ULL),
      Bitboard(0x0ULL),
      Bitboard(0x0ULL),
@@ -153,10 +153,10 @@ constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> blackPawnA
 };
 
 /// @brief Pre-calculated lookup table for pawn attacks
-constexpr std::array pawnAttacks = {whitePawnAttacks, blackPawnAttacks};
+inline constexpr std::array pawn_attacks = {white_pawn_attacks, black_pawn_attacks};
 
 /// @brief Pre-calculated lookup table for knight attacks
-constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> knightAttacks = {
+inline constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> knight_attacks = {
     {Bitboard(0x20400ULL),
      Bitboard(0x50800ULL),
      Bitboard(0xA1100ULL),
@@ -224,7 +224,7 @@ constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> knightAtta
 };
 
 /// @brief Pre-calculated lookup table for king attacks
-constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> kingAttacks = {
+inline constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> king_attacks = {
     {Bitboard(0x302ULL),
      Bitboard(0x705ULL),
      Bitboard(0xE0AULL),
@@ -294,24 +294,24 @@ constexpr std::array<Bitboard, std::to_underlying(Square::SQUARE_NB)> kingAttack
 void init();
 
 inline Bitboard get_pawn_attacks(const Square sq, const Color c) {
-    return pawnAttacks[std::to_underlying(c)][std::to_underlying(sq)];
+    return pawn_attacks[std::to_underlying(c)][std::to_underlying(sq)];
 }
 
 inline Bitboard get_knight_attacks(const Square sq) {
-    return knightAttacks[std::to_underlying(sq)];
+    return knight_attacks[std::to_underlying(sq)];
 }
 
 inline Bitboard get_bishop_attacks(const Square sq, Bitboard blockers) {
-    return bishopAttacks[std::to_underlying(sq)]
-                        [magic_index(magics::bishopMagics[std::to_underlying(sq)], blockers)];
+    return bishop_attacks[std::to_underlying(sq)]
+                         [magic_index(magics::bishop_magics[std::to_underlying(sq)], blockers)];
 }
 
 inline Bitboard get_rook_attacks(const Square sq, Bitboard blockers) {
-    return rookAttacks[std::to_underlying(sq)]
-                      [magic_index(magics::rookMagics[std::to_underlying(sq)], blockers)];
+    return rook_attacks[std::to_underlying(sq)]
+                       [magic_index(magics::rook_magics[std::to_underlying(sq)], blockers)];
 }
 
-inline Bitboard get_king_attacks(const Square sq) { return kingAttacks[std::to_underlying(sq)]; }
+inline Bitboard get_king_attacks(const Square sq) { return king_attacks[std::to_underlying(sq)]; }
 
 inline Bitboard get_queen_attacks(const Square sq, const Bitboard blockers) {
     return get_bishop_attacks(sq, blockers) | get_rook_attacks(sq, blockers);
@@ -372,9 +372,9 @@ constexpr Bitboard
 get_attacks_by_piece_type(const PieceType pt, const Square sq, const Bitboard occupied) {
     switch (pt) {
     case PieceType::KNIGHT:
-        return knightAttacks[std::to_underlying(sq)];
+        return knight_attacks[std::to_underlying(sq)];
     case PieceType::KING:
-        return kingAttacks[std::to_underlying(sq)];
+        return king_attacks[std::to_underlying(sq)];
     case PieceType::BISHOP:
         return get_bishop_attacks(sq, occupied);
     case PieceType::ROOK:

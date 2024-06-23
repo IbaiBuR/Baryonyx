@@ -8,15 +8,15 @@
 
 namespace uci {
 
-constexpr auto engineAuthor  = "Ibai Burgos";
-constexpr auto engineName    = "Baryonyx";
-constexpr auto engineVersion = "0.1.6";
-
 class CommandHandler {
     public:
         void loop();
 
     private:
+        static constexpr auto author  = "Ibai Burgos";
+        static constexpr auto name    = "Baryonyx";
+        static constexpr auto version = "0.1.6";
+
         search::Searcher m_searcher;
 
         static void handle_d(const board::Position& pos);
@@ -28,7 +28,7 @@ class CommandHandler {
         static void handle_uci_new_game(board::Position& pos);
 };
 
-namespace Util {
+namespace util {
 
 moves::Move from_uci(const board::Position& pos, const std::string& move);
 

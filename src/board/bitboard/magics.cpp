@@ -39,7 +39,7 @@ bool try_magic(const u64                    magic,
     for (int i = 0; !collision && i < numOccupancies; ++i) {
         const u64 magicIndex = (blockers[i].as_u64() * magic) >> shift;
 
-        if (attackTable[magicIndex] == util::EMPTY_BB)
+        if (attackTable[magicIndex] == util::empty_bb)
             attackTable[magicIndex] = attacks[i];
         else if (attackTable[magicIndex] != attacks[i])
             collision = true;
@@ -58,10 +58,10 @@ constexpr MagicEntry find_magic(const Square sq) {
 
     constexpr bool isBishop = pt == PieceType::BISHOP;
     constexpr int  maxBlockersConfig =
-        isBishop ? attacks::maxBishopBlockersConfig : attacks::maxRookBlockersConfig;
+        isBishop ? attacks::max_bishop_blockers_config : attacks::max_rook_blockers_config;
 
     const Bitboard mask =
-        isBishop ? bishopMasks[std::to_underlying(sq)] : rookMasks[std::to_underlying(sq)];
+        isBishop ? bishop_masks[std::to_underlying(sq)] : rook_masks[std::to_underlying(sq)];
     const int relevantBits   = mask.bit_count();
     const int numOccupancies = 1 << relevantBits;
 
