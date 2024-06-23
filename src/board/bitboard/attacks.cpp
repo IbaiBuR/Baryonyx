@@ -24,7 +24,7 @@ void init_sliders() {
 #ifndef USE_PEXT
             const auto magicIndex = (occupied.as_u64() * magic) >> shift;
 #else
-            const auto magicIndex = _pext_u64(occupied.asU64(), mask.asU64());
+            const auto magicIndex = _pext_u64(occupied.as_u64(), mask.as_u64());
 #endif
 
             if constexpr (isBishop)

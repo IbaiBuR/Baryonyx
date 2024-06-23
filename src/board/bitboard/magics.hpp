@@ -235,7 +235,7 @@ inline auto magic_index(const MagicEntry& entry, Bitboard& occupied) {
     occupied *= entry.magic;
     return occupied.as_u64() >> entry.shift;
 #else
-    return _pext_u64(occupied.asU64(), entry.mask.asU64());
+    return _pext_u64(occupied.as_u64(), entry.mask.as_u64());
 #endif
 }
 

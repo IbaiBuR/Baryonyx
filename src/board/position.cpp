@@ -205,8 +205,8 @@ void Position::make_move(const moves::Move move) {
         }
     }
 
-    m_castling &= util::castlingRightsUpdate[std::to_underlying(from)];
-    m_castling &= util::castlingRightsUpdate[std::to_underlying(to)];
+    m_castling &= castling_rights_update[std::to_underlying(from)];
+    m_castling &= castling_rights_update[std::to_underlying(to)];
 
     m_fullMoveNumber += m_stm == Color::BLACK;
 
@@ -369,10 +369,10 @@ std::string Position::to_fen() const {
         fen += rank == 0 ? ' ' : '/';
     }
 
-    fen += std::format("{} {} {} {} {}", m_stm == Color::WHITE ? "w" : "b",
-                       castling_rights().to_string(),
-                       m_epSq != Square::NONE ? util::sq_to_coords[std::to_underlying(m_epSq)] : "-",
-                       m_halfMoveClock, m_fullMoveNumber);
+    fen += std::format(
+        "{} {} {} {} {}", m_stm == Color::WHITE ? "w" : "b", castling_rights().to_string(),
+        m_epSq != Square::NONE ? util::sq_to_coords[std::to_underlying(m_epSq)] : "-",
+        m_halfMoveClock, m_fullMoveNumber);
 
     return fen;
 }
