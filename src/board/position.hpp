@@ -194,16 +194,16 @@ class Position {
         };
         // clang-format on
 
-        std::array<Piece, constants::num_squares>                                    m_pieces;
-        std::array<bitboards::Bitboard, std::to_underlying(PieceType::PIECETYPE_NB)> m_pieceBB;
-        std::array<bitboards::Bitboard, std::to_underlying(Color::COLOR_NB)>         m_occupiedBB;
-        bitboards::Bitboard                                                          m_checkersBB;
-        ZobristKey                                                                   m_key;
-        u16            m_fullMoveNumber;
-        Color          m_stm;
-        Square         m_epSq;
-        CastlingRights m_castling;
-        u8             m_halfMoveClock;
+        std::array<Piece, constants::num_squares>                   m_pieces;
+        std::array<bitboards::Bitboard, constants::num_piece_types> m_pieceBB;
+        std::array<bitboards::Bitboard, constants::num_colors>      m_occupiedBB;
+        bitboards::Bitboard                                         m_checkersBB;
+        ZobristKey                                                  m_key;
+        u16                                                         m_fullMoveNumber;
+        Color                                                       m_stm;
+        Square                                                      m_epSq;
+        CastlingRights                                              m_castling;
+        u8                                                          m_halfMoveClock;
 };
 
 namespace util {

@@ -16,6 +16,6 @@ consteval std::array<T, size> generate_keys() {
     return keys;
 }
 
-constexpr std::array<ZobristKey, total_keys> allKeys = generate_keys<ZobristKey, total_keys>();
+constexpr std::array<ZobristKey, total_keys> all_keys = generate_keys<ZobristKey, total_keys>();
 
 } // namespace tt::zobrist
