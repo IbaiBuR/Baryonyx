@@ -290,10 +290,10 @@ bool Position::is_square_attacked_by(const Square sq, const Color c) const {
     if (bitboards::attacks::get_rook_attacks(sq, blockers) & ourRooks)
         return true;
 
-    if (bitboards::attacks::get_king_attacks(sq) & ourKing)
+    if (bitboards::attacks::get_queen_attacks(sq, blockers) & ourQueens)
         return true;
 
-    if (bitboards::attacks::get_queen_attacks(sq, blockers) & ourQueens)
+    if (bitboards::attacks::get_king_attacks(sq) & ourKing)
         return true;
 
     return false;
@@ -346,10 +346,10 @@ bool Position::was_legal() const { return !is_square_attacked_by(king_square(~m_
 std::string Position::to_fen() const {
     std::string fen;
 
-    for (int rank = 7; rank >= 0; --rank) {
+    for (int rank = constants::num_ranks - 1; rank >= 0; --rank) {
         u16 emptySquares = 0;
 
-        for (int file = 0; file < 8; ++file) {
+        for (u8 file = 0; file < constants::num_files; ++file) {
             const Square sq           = square_of(file, rank);
             const Piece  currentPiece = piece_on(sq);
 
@@ -380,14 +380,14 @@ std::string Position::to_fen() const {
 void print_board(const Position& pos) {
     std::cout << std::format("\n+---+---+---+---+---+---+---+---+") << std::endl;
 
-    for (int rank = 7; rank >= 0; --rank) {
-        for (int file = 0; file < 8; ++file) {
+    for (int rank = constants::num_ranks - 1; rank >= 0; --rank) {
+        for (u8 file = 0; file < constants::num_files; ++file) {
             const auto  sq           = square_of(file, rank);
             const Piece currentPiece = pos.piece_on(sq);
             std::cout << std::format(
                 "| {}", currentPiece == Piece::NONE ? ' ' : pieces::piece_to_char(currentPiece));
 
-            if (file != 7)
+            if (file != constants::num_files - 1)
                 std::cout << std::format(" ");
         }
         std::cout << std::format(" | {}\n+---+---+---+---+---+---+---+---+", rank + 1) << std::endl;

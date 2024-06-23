@@ -194,7 +194,7 @@ class Position {
         };
         // clang-format on
 
-        std::array<Piece, std::to_underlying(Square::SQUARE_NB)>                     m_pieces;
+        std::array<Piece, constants::num_squares>                                    m_pieces;
         std::array<bitboards::Bitboard, std::to_underlying(PieceType::PIECETYPE_NB)> m_pieceBB;
         std::array<bitboards::Bitboard, std::to_underlying(Color::COLOR_NB)>         m_occupiedBB;
         bitboards::Bitboard                                                          m_checkersBB;
@@ -211,7 +211,7 @@ namespace util {
 inline constexpr auto start_pos_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
 // clang-format off
-inline constexpr std::array<std::string_view, std::to_underlying(Square::SQUARE_NB)> sq_to_coords = {
+inline constexpr std::array<std::string_view, constants::num_squares> sq_to_coords = {
     "a1", "b1", "c1", "d1", "e1", "f1", "g1", "h1",
     "a2", "b2", "c2", "d2", "e2", "f2", "g2", "h2",
     "a3", "b3", "c3", "d3", "e3", "f3", "g3", "h3",
