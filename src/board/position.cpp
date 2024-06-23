@@ -218,7 +218,7 @@ void Position::make_move(const moves::Move move) {
 }
 
 void Position::reset_to_start_pos() {
-    m_checkersBB     = bitboards::util::EMPTY_BB;
+    m_checkersBB     = bitboards::util::empty_bb;
     m_stm            = Color::WHITE;
     m_epSq           = Square::NONE;
     m_castling       = CastlingRights(CastlingRights::Flags::ALL);
@@ -371,7 +371,7 @@ std::string Position::to_fen() const {
 
     fen += std::format("{} {} {} {} {}", m_stm == Color::WHITE ? "w" : "b",
                        castling_rights().to_string(),
-                       m_epSq != Square::NONE ? util::sqToCoords[std::to_underlying(m_epSq)] : "-",
+                       m_epSq != Square::NONE ? util::sq_to_coords[std::to_underlying(m_epSq)] : "-",
                        m_halfMoveClock, m_fullMoveNumber);
 
     return fen;
@@ -402,7 +402,7 @@ void print_board(const Position& pos) {
 
     std::cout << std::format(
         "En passant      : {}",
-        enpassant != Square::NONE ? util::sqToCoords[std::to_underlying(enpassant)] : "-")
+        enpassant != Square::NONE ? util::sq_to_coords[std::to_underlying(enpassant)] : "-")
               << std::endl;
     std::cout << std::format("Castling rights : {}", pos.castling_rights().to_string())
               << std::endl;

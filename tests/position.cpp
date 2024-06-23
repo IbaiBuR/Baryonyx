@@ -8,7 +8,7 @@ using namespace board;
 TEST_SUITE("Position Tests") {
     TEST_CASE("fen parsing") {
         SUBCASE("start position") {
-            Position pos(util::startPosFen);
+            Position pos(util::start_pos_fen);
 
             CHECK(pos.piece_type_bb(PieceType::PAWN) == bitboards::Bitboard(0xFF00000000FF00ULL));
             CHECK(pos.piece_type_bb(PieceType::KNIGHT) == bitboards::Bitboard(0x4200000000000042ULL));
@@ -22,7 +22,7 @@ TEST_SUITE("Position Tests") {
             CHECK(pos.ep_square() == Square::NONE);
             CHECK(pos.fifty_move_rule() == 0);
             CHECK(pos.full_moves() == 1);
-            CHECK(pos.checkers() == bitboards::util::EMPTY_BB);
+            CHECK(pos.checkers() == bitboards::util::empty_bb);
         }
 
         SUBCASE("illegal position: too many kings") {
@@ -49,7 +49,7 @@ TEST_SUITE("Position Tests") {
 
     TEST_CASE("board to fen") {
         SUBCASE("start position") {
-            CHECK(Position(util::startPosFen).to_fen()
+            CHECK(Position(util::start_pos_fen).to_fen()
                   == "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
         }
 

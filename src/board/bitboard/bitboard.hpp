@@ -116,25 +116,25 @@ class Bitboard {
 
 namespace util {
 
-constexpr auto EMPTY_BB = Bitboard(0ULL);
+inline constexpr auto empty_bb = Bitboard(0ULL);
 
-constexpr auto FILE_A_BB = Bitboard(0x101010101010101ULL);
-constexpr auto FILE_B_BB = Bitboard(0x202020202020202ULL);
-constexpr auto FILE_C_BB = Bitboard(0x404040404040404ULL);
-constexpr auto FILE_D_BB = Bitboard(0x808080808080808ULL);
-constexpr auto FILE_E_BB = Bitboard(0x1010101010101010ULL);
-constexpr auto FILE_F_BB = Bitboard(0x2020202020202020ULL);
-constexpr auto FILE_G_BB = Bitboard(0x4040404040404040ULL);
-constexpr auto FILE_H_BB = Bitboard(0x8080808080808080ULL);
+inline constexpr auto file_a_bb = Bitboard(0x101010101010101ULL);
+inline constexpr auto file_b_bb = Bitboard(0x202020202020202ULL);
+inline constexpr auto file_c_bb = Bitboard(0x404040404040404ULL);
+inline constexpr auto file_d_bb = Bitboard(0x808080808080808ULL);
+inline constexpr auto file_e_bb = Bitboard(0x1010101010101010ULL);
+inline constexpr auto file_f_bb = Bitboard(0x2020202020202020ULL);
+inline constexpr auto file_g_bb = Bitboard(0x4040404040404040ULL);
+inline constexpr auto file_h_bb = Bitboard(0x8080808080808080ULL);
 
-constexpr auto RANK_1_BB = Bitboard(0x00000000000000FFULL);
-constexpr auto RANK_2_BB = Bitboard(0x000000000000FF00ULL);
-constexpr auto RANK_3_BB = Bitboard(0x0000000000FF0000ULL);
-constexpr auto RANK_4_BB = Bitboard(0x00000000FF000000ULL);
-constexpr auto RANK_5_BB = Bitboard(0x000000FF00000000ULL);
-constexpr auto RANK_6_BB = Bitboard(0x0000FF0000000000ULL);
-constexpr auto RANK_7_BB = Bitboard(0x00FF000000000000ULL);
-constexpr auto RANK_8_BB = Bitboard(0xFF00000000000000ULL);
+inline constexpr auto rank_1_bb = Bitboard(0x00000000000000FFULL);
+inline constexpr auto rank_2_bb = Bitboard(0x000000000000FF00ULL);
+inline constexpr auto rank_3_bb = Bitboard(0x0000000000FF0000ULL);
+inline constexpr auto rank_4_bb = Bitboard(0x00000000FF000000ULL);
+inline constexpr auto rank_5_bb = Bitboard(0x000000FF00000000ULL);
+inline constexpr auto rank_6_bb = Bitboard(0x0000FF0000000000ULL);
+inline constexpr auto rank_7_bb = Bitboard(0x00FF000000000000ULL);
+inline constexpr auto rank_8_bb = Bitboard(0xFF00000000000000ULL);
 
 } // namespace util
 
@@ -151,17 +151,17 @@ constexpr Bitboard shift(const Bitboard& bb) {
     else if constexpr (d == Direction::SOUTH)
         return Bitboard(bb >> 8);
     else if constexpr (d == Direction::EAST)
-        return Bitboard(bb << 1) & ~util::FILE_A_BB;
+        return Bitboard(bb << 1) & ~util::file_a_bb;
     else if constexpr (d == Direction::WEST)
-        return Bitboard(bb >> 1) & ~util::FILE_H_BB;
+        return Bitboard(bb >> 1) & ~util::file_h_bb;
     else if constexpr (d == Direction::NORTH_EAST)
-        return Bitboard(bb << 9) & ~util::FILE_A_BB;
+        return Bitboard(bb << 9) & ~util::file_a_bb;
     else if constexpr (d == Direction::NORTH_WEST)
-        return Bitboard(bb << 7) & ~util::FILE_H_BB;
+        return Bitboard(bb << 7) & ~util::file_h_bb;
     else if constexpr (d == Direction::SOUTH_EAST)
-        return Bitboard(bb >> 7) & ~util::FILE_A_BB;
+        return Bitboard(bb >> 7) & ~util::file_a_bb;
     else if constexpr (d == Direction::SOUTH_WEST)
-        return Bitboard(bb >> 9) & ~util::FILE_H_BB;
+        return Bitboard(bb >> 9) & ~util::file_h_bb;
     else
         std::unreachable();
 }

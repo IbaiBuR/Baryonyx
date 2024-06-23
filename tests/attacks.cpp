@@ -6,39 +6,39 @@ using namespace board::bitboards;
 TEST_SUITE("Attacks Test") {
     TEST_CASE("pawn attacks") {
         SUBCASE("white") {
-            CHECK(attacks::pawnAttacks[std::to_underlying(Color::WHITE)]
+            CHECK(attacks::pawn_attacks[std::to_underlying(Color::WHITE)]
                                       [std::to_underlying(Square::E4)]
                   == Bitboard(0x2800000000ULL));
-            CHECK(attacks::pawnAttacks[std::to_underlying(Color::WHITE)]
+            CHECK(attacks::pawn_attacks[std::to_underlying(Color::WHITE)]
                                       [std::to_underlying(Square::A8)]
                   == Bitboard(0x0ULL));
         }
 
         SUBCASE("black") {
-            CHECK(attacks::pawnAttacks[std::to_underlying(Color::BLACK)]
+            CHECK(attacks::pawn_attacks[std::to_underlying(Color::BLACK)]
                                       [std::to_underlying(Square::E4)]
                   == Bitboard(0x280000ULL));
-            CHECK(attacks::pawnAttacks[std::to_underlying(Color::BLACK)]
+            CHECK(attacks::pawn_attacks[std::to_underlying(Color::BLACK)]
                                       [std::to_underlying(Square::A1)]
                   == Bitboard(0x0ULL));
         }
     }
 
     TEST_CASE("knight attacks") {
-        CHECK(attacks::knightAttacks[std::to_underlying(Square::A1)] == Bitboard(0x20400ULL));
-        CHECK(attacks::knightAttacks[std::to_underlying(Square::H1)] == Bitboard(0x402000ULL));
-        CHECK(attacks::knightAttacks[std::to_underlying(Square::A8)]
+        CHECK(attacks::knight_attacks[std::to_underlying(Square::A1)] == Bitboard(0x20400ULL));
+        CHECK(attacks::knight_attacks[std::to_underlying(Square::H1)] == Bitboard(0x402000ULL));
+        CHECK(attacks::knight_attacks[std::to_underlying(Square::A8)]
               == Bitboard(0x4020000000000ULL));
-        CHECK(attacks::knightAttacks[std::to_underlying(Square::H8)]
+        CHECK(attacks::knight_attacks[std::to_underlying(Square::H8)]
               == Bitboard(0x20400000000000ULL));
     }
 
     TEST_CASE("king attacks") {
-        CHECK(attacks::kingAttacks[std::to_underlying(Square::A1)] == Bitboard(0x302ULL));
-        CHECK(attacks::kingAttacks[std::to_underlying(Square::H1)] == Bitboard(0xC040ULL));
-        CHECK(attacks::kingAttacks[std::to_underlying(Square::A8)]
+        CHECK(attacks::king_attacks[std::to_underlying(Square::A1)] == Bitboard(0x302ULL));
+        CHECK(attacks::king_attacks[std::to_underlying(Square::H1)] == Bitboard(0xC040ULL));
+        CHECK(attacks::king_attacks[std::to_underlying(Square::A8)]
               == Bitboard(0x203000000000000ULL));
-        CHECK(attacks::kingAttacks[std::to_underlying(Square::H8)]
+        CHECK(attacks::king_attacks[std::to_underlying(Square::H8)]
               == Bitboard(0x40C0000000000000ULL));
     }
 

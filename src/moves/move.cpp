@@ -47,8 +47,8 @@ constexpr PieceType promotionToPieceType(const Move::MoveFlag m) {
 std::string Move::to_string() const {
     std::string result;
 
-    const auto from = board::util::sqToCoords[std::to_underlying(this->from())];
-    const auto to   = board::util::sqToCoords[std::to_underlying(this->to())];
+    const auto from = board::util::sq_to_coords[std::to_underlying(this->from())];
+    const auto to   = board::util::sq_to_coords[std::to_underlying(this->to())];
 
     if (this->is_promotion()) {
         result = std::format("{}{}{}", from, to, promoFlagToChar(flag()));

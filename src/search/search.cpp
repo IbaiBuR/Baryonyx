@@ -29,7 +29,7 @@ void Searcher::parse_time_control(const std::vector<std::string>& command, const
         if (stm == Color::WHITE) {
             if (*it == "wtime") {
                 baseTime = std::stoull(*(it + 1));
-                set_limits(UINT64_MAX, baseTime, MAX_DEPTH);
+                set_limits(UINT64_MAX, baseTime, constants::max_depth);
             }
             if (*it == "winc")
                 increment = std::stoi(*(it + 1));
@@ -37,7 +37,7 @@ void Searcher::parse_time_control(const std::vector<std::string>& command, const
         else {
             if (*it == "btime") {
                 baseTime = std::stoull(*(it + 1));
-                set_limits(UINT64_MAX, baseTime, MAX_DEPTH);
+                set_limits(UINT64_MAX, baseTime, constants::max_depth);
             }
             if (*it == "binc")
                 increment = std::stoi(*(it + 1));
@@ -55,7 +55,7 @@ void Searcher::main_search(const board::Position& pos) {
     // Iterative deepening loop
     for (int currentDepth = 1; currentDepth <= m_limits.depthLimit; ++currentDepth) {
         const Score bestScore =
-            negamax(pos, -SCORE_INFINITE, SCORE_INFINITE, currentDepth, 0, m_info.pv);
+            negamax(pos, -score_infinite, score_infinite, currentDepth, 0, m_info.pv);
 
         if (m_info.stopped) {
             // If search stopped and we don't have a bestMove, we update it in order to avoid
@@ -88,7 +88,7 @@ Score Searcher::qsearch(const board::Position& pos, Score alpha, const Score bet
 
     const Score staticEval = eval::evaluate(pos);
 
-    if (ply >= MAX_PLY)
+    if (ply >= constants::max_ply)
         return staticEval;
 
     if (staticEval >= beta)
@@ -148,12 +148,12 @@ Score Searcher::negamax(const board::Position& pos,
     if (depth <= 0)
         return qsearch(pos, alpha, beta, ply);
 
-    if (ply >= MAX_PLY)
+    if (ply >= constants::max_ply)
         return eval::evaluate(pos);
 
     u16             legalMoves{};
     PVLine          childPV{};
-    Score           bestScore = -SCORE_INFINITE;
+    Score           bestScore = -score_infinite;
     moves::MoveList moveList;
     generate_all_moves(pos, moveList);
 
@@ -189,7 +189,7 @@ Score Searcher::negamax(const board::Position& pos,
     if (!legalMoves) {
         if (pos.checkers().bit_count() > 0)
             // Take the shortest available mate
-            return -SCORE_MATE + ply;
+            return -score_mate + ply;
         else
             // Stalemate
             return 0;

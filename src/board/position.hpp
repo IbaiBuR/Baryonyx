@@ -181,6 +181,19 @@ class Position {
         [[nodiscard]] std::string to_fen() const;
 
     private:
+        // clang-format off
+        static constexpr std::array castling_rights_update = {
+            13, 15, 15, 15, 12, 15, 15, 14,
+            15, 15, 15, 15, 15, 15, 15, 15,
+            15, 15, 15, 15, 15, 15, 15, 15,
+            15, 15, 15, 15, 15, 15, 15, 15,
+            15, 15, 15, 15, 15, 15, 15, 15,
+            15, 15, 15, 15, 15, 15, 15, 15,
+            15, 15, 15, 15, 15, 15, 15, 15,
+             7, 15, 15, 15,  3, 15, 15, 11
+        };
+        // clang-format on
+
         std::array<Piece, std::to_underlying(Square::SQUARE_NB)>                     m_pieces;
         std::array<bitboards::Bitboard, std::to_underlying(PieceType::PIECETYPE_NB)> m_pieceBB;
         std::array<bitboards::Bitboard, std::to_underlying(Color::COLOR_NB)>         m_occupiedBB;
@@ -195,10 +208,10 @@ class Position {
 
 namespace util {
 
-constexpr auto startPosFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+inline constexpr auto start_pos_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
 // clang-format off
-constexpr std::array<std::string_view, std::to_underlying(Square::SQUARE_NB)> sqToCoords = {
+inline constexpr std::array<std::string_view, std::to_underlying(Square::SQUARE_NB)> sq_to_coords = {
     "a1", "b1", "c1", "d1", "e1", "f1", "g1", "h1",
     "a2", "b2", "c2", "d2", "e2", "f2", "g2", "h2",
     "a3", "b3", "c3", "d3", "e3", "f3", "g3", "h3",
@@ -207,17 +220,6 @@ constexpr std::array<std::string_view, std::to_underlying(Square::SQUARE_NB)> sq
     "a6", "b6", "c6", "d6", "e6", "f6", "g6", "h6",
     "a7", "b7", "c7", "d7", "e7", "f7", "g7", "h7",
     "a8", "b8", "c8", "d8", "e8", "f8", "g8", "h8",
-};
-
-constexpr std::array castlingRightsUpdate = {
-    13, 15, 15, 15, 12, 15, 15, 14,
-    15, 15, 15, 15, 15, 15, 15, 15,
-    15, 15, 15, 15, 15, 15, 15, 15,
-    15, 15, 15, 15, 15, 15, 15, 15,
-    15, 15, 15, 15, 15, 15, 15, 15,
-    15, 15, 15, 15, 15, 15, 15, 15,
-    15, 15, 15, 15, 15, 15, 15, 15,
-     7, 15, 15, 15,  3, 15, 15, 11
 };
 // clang-format on
 
