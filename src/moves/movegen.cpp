@@ -24,9 +24,9 @@ constexpr bb::bitboard double_pawn_push(const bb::bitboard& pawns, const bb::bit
              & bb::util::rank_5_bb;
 }
 
-template <color Stm>
+template <color SideToMove>
 void generate_pawn_pushes(const board::position& pos, move_list& move_list) {
-    constexpr color     us     = Stm;
+    constexpr color     us     = SideToMove;
     constexpr color     them   = ~us;
     constexpr direction offset = us == color::white ? direction::north : direction::south;
 
@@ -57,9 +57,9 @@ void generate_pawn_pushes(const board::position& pos, move_list& move_list) {
     }
 }
 
-template <color Stm>
+template <color SideToMove>
 void generate_pawn_captures(const board::position& pos, move_list& move_list) {
-    constexpr color us        = Stm;
+    constexpr color us        = SideToMove;
     constexpr color them      = ~us;
     auto            our_pawns = pos.piece_type_bb(piece_type::pawn) & pos.occupancies(us);
 
@@ -94,11 +94,11 @@ void generate_pawn_captures(const board::position& pos, move_list& move_list) {
     }
 }
 
-template <color Stm>
+template <color SideToMove>
 void generate_quiets_by_piece_type(const board::position& pos,
                                    move_list&             move_list,
                                    const piece_type       pt) {
-    constexpr color us         = Stm;
+    constexpr color us         = SideToMove;
     constexpr color them       = ~us;
     const auto&     occupied   = pos.occupancies(us) | pos.occupancies(them);
     auto            our_pieces = pos.piece_type_bb(pt) & pos.occupancies(us);
@@ -115,11 +115,11 @@ void generate_quiets_by_piece_type(const board::position& pos,
     }
 }
 
-template <color Stm>
+template <color SideToMove>
 void generate_captures_by_piece_type(const board::position& pos,
                                      move_list&             move_list,
                                      const piece_type       pt) {
-    constexpr color us         = Stm;
+    constexpr color us         = SideToMove;
     constexpr color them       = ~us;
     const auto&     occupied   = pos.occupancies(us) | pos.occupancies(them);
     auto            our_pieces = pos.piece_type_bb(pt) & pos.occupancies(us);
@@ -136,9 +136,9 @@ void generate_captures_by_piece_type(const board::position& pos,
     }
 }
 
-template <color Stm>
+template <color SideToMove>
 void generate_castling_moves(const board::position& pos, move_list& move_list) {
-    if constexpr (Stm == color::white) {
+    if constexpr (SideToMove == color::white) {
         if (pos.can_castle_king_side<color::white>())
             move_list.push(move(square::e1, square::g1, move::move_flag::castle));
         if (pos.can_castle_queen_side<color::white>())

@@ -6,10 +6,10 @@ std::array<std::array<bitboard, max_bishop_blockers_config>, constants::num_squa
 std::array<std::array<bitboard, max_rook_blockers_config>, constants::num_squares>   rook_attacks;
 
 /// @brief Initializes the sliding attacks lookup tables
-/// @tparam Pt Piece type (Slider)
-template <piece_type Pt>
+/// @tparam PieceType Piece type (Slider)
+template <piece_type PieceType>
 void init_sliders() {
-    constexpr bool is_bishop = Pt == piece_type::bishop;
+    constexpr bool is_bishop = PieceType == piece_type::bishop;
 
     for (u8 sq = 0; sq < constants::num_squares; ++sq) {
         auto [mask, magic, shift] = is_bishop ? magics::bishop_magics[sq] : magics::rook_magics[sq];
@@ -26,9 +26,9 @@ void init_sliders() {
 
             if constexpr (is_bishop)
                 bishop_attacks[sq][magic_index] =
-                    gen_sliding<Pt>(static_cast<square>(sq), occupied);
+                    gen_sliding<PieceType>(static_cast<square>(sq), occupied);
             else
-                rook_attacks[sq][magic_index] = gen_sliding<Pt>(static_cast<square>(sq), occupied);
+                rook_attacks[sq][magic_index] = gen_sliding<PieceType>(static_cast<square>(sq), occupied);
         }
     }
 }
