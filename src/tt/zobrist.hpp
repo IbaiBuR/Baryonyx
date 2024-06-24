@@ -29,16 +29,16 @@ inline zobrist_key get_piece_key(const piece p, const square sq) {
              : all_keys[std::to_underlying(p) + std::to_underlying(sq) * 12];
 }
 
-inline zobrist_key get_castling_key(const board::castling_rights& castlingRights) {
-    return all_keys[castling_keys_offset + castlingRights.as_u8()];
+inline zobrist_key get_castling_key(const board::castling_rights castling_rights) {
+    return all_keys[castling_keys_offset + castling_rights.as_u8()];
 }
 
 inline zobrist_key get_en_passant_key(const file f) {
     return all_keys[en_passant_keys_offset + std::to_underlying(f)];
 }
 
-inline zobrist_key get_en_passant_key(const square epSq) {
-    return epSq == square::none ? 0ULL : get_en_passant_key(file_of(epSq));
+inline zobrist_key get_en_passant_key(const square ep_sq) {
+    return ep_sq == square::none ? 0ULL : get_en_passant_key(file_of(ep_sq));
 }
 
 inline zobrist_key get_side_key(const color c) {

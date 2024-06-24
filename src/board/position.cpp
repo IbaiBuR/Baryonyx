@@ -184,8 +184,13 @@ void position::make_move(const moves::move move) {
     remove_piece(moving_piece, from);
     set_piece(move.is_promotion() ? move.get_promoted_piece(m_stm) : moving_piece, to);
 
-    if (move.is_double_push())
+    m_key ^= tt::zobrist::get_side_key(m_stm);
+    m_key ^= tt::zobrist::get_en_passant_key(m_ep_sq);
+
+    if (move.is_double_push()) {
         m_ep_sq = to - offset;
+        m_key ^= tt::zobrist::get_en_passant_key(m_ep_sq);
+    }
     else
         m_ep_sq = square::none;
 
@@ -208,15 +213,24 @@ void position::make_move(const moves::move move) {
         }
     }
 
+    const castling_rights previous_castling_rights = m_castling;
+
     m_castling &= castling_rights_update[std::to_underlying(from)];
     m_castling &= castling_rights_update[std::to_underlying(to)];
+
+    if (m_castling != previous_castling_rights) {
+        m_key ^= tt::zobrist::get_castling_key(previous_castling_rights);
+        m_key ^= tt::zobrist::get_castling_key(m_castling);
+    }
 
     m_full_move_number += m_stm == color::black;
 
     if (pieces::piece_to_piece_type(moving_piece) == piece_type::pawn)
         m_half_move_clock = 0;
 
-    m_stm         = ~m_stm;
+    m_stm = ~m_stm;
+    m_key ^= tt::zobrist::get_side_key(m_stm);
+
     m_checkers_bb = attacks_to_king(king_square(m_stm), m_stm);
 }
 
@@ -227,6 +241,7 @@ void position::reset_to_start_pos() {
     m_castling         = castling_rights(castling_rights::castling_flag::all);
     m_half_move_clock  = 0;
     m_full_move_number = 1;
+    m_key              = 0x63FB272195DEE353ULL;
 
     m_piece_bb[std::to_underlying(piece_type::pawn)]   = bitboards::bitboard(0xFF00000000FF00ULL);
     m_piece_bb[std::to_underlying(piece_type::knight)] = bitboards::bitboard(0x4200000000000042ULL);
