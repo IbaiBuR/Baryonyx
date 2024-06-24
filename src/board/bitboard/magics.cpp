@@ -56,14 +56,10 @@ template <piece_type PieceType>
 constexpr magic_entry find_magic(const square sq) {
     assert(PieceType == piece_type::bishop || PieceType == piece_type::rook);
 
-    constexpr bool is_bishop = PieceType == piece_type::bishop;
-    constexpr int  max_blockers_config =
-        is_bishop ? attacks::max_bishop_blockers_config : attacks::max_rook_blockers_config;
-
-    const bitboard mask =
-        is_bishop ? bishop_masks[std::to_underlying(sq)] : rook_masks[std::to_underlying(sq)];
-    const int relevant_bits   = mask.bit_count();
-    const int num_occupancies = 1 << relevant_bits;
+    constexpr int  max_blockers_config = attacks::get_max_blockers_config<PieceType>();
+    const bitboard mask                = get_mask<PieceType>(sq);
+    const int      relevant_bits       = mask.bit_count();
+    const int      num_occupancies     = 1 << relevant_bits;
 
     std::vector<bitboard> blockers(max_blockers_config);
     std::vector<bitboard> attacks(max_blockers_config);

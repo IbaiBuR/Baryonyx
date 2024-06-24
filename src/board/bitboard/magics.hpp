@@ -222,6 +222,23 @@ inline constexpr std::array<magic_entry, constants::num_squares> rook_magics = {
      magic_entry(bitboard(0x7E80808080808000ULL), 0x0000040100804022ULL, 52)}
 };
 
+void print_magics();
+
+/// @brief Utility used to generate all the blocker combinations of a mask
+/// @param index Index for blocker configuration
+/// @param n_bits Number of bits set in the mask
+/// @param mask Attack mask
+/// @returns The generated blocker configuration for the index
+bitboard set_blockers(int index, int n_bits, bitboard mask);
+
+template <piece_type PieceType>
+constexpr bitboard get_mask(const square sq) {
+    if constexpr (PieceType == piece_type::bishop)
+        return bishop_masks[std::to_underlying(sq)];
+    else
+        return rook_masks[std::to_underlying(sq)];
+}
+
 /// @brief Generates an index to map an attack table
 /// @param entry Magic entry
 /// @param occupied Bitboard of occupied squares on the board (Blockers)
@@ -238,14 +255,5 @@ inline auto magic_index(const magic_entry& entry, bitboard& occupied) {
     return _pext_u64(occupied.as_u64(), entry.mask.as_u64());
 #endif
 }
-
-void print_magics();
-
-/// @brief Utility used to generate all the blocker combinations of a mask
-/// @param index Index for blocker configuration
-/// @param n_bits Number of bits set in the mask
-/// @param mask Attack mask
-/// @returns The generated blocker configuration for the index
-bitboard set_blockers(int index, int n_bits, bitboard mask);
 
 } // namespace board::bitboards::magics

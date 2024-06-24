@@ -290,6 +290,14 @@ inline constexpr std::array<bitboard, constants::num_squares> king_attacks = {
 
 void init();
 
+template <piece_type PieceType>
+constexpr int get_max_blockers_config() {
+    if constexpr (PieceType == piece_type::bishop)
+        return max_bishop_blockers_config;
+    else
+        return max_rook_blockers_config;
+}
+
 inline bitboard get_pawn_attacks(const square sq, const color c) {
     return pawn_attacks[std::to_underlying(c)][std::to_underlying(sq)];
 }
