@@ -5,11 +5,10 @@
 
 #include "../chess.hpp"
 #include "../board/position.hpp"
-#include "../utils/random.hpp"
 
 /// @brief Zobrish Hashing implementation heavily inspired from Stormphrax
 /// @note See https://github.com/Ciekce/Stormphrax/blob/main/src/keys.h for reference
-namespace tt::zobrist {
+namespace utils::zobrist {
 
 constexpr usize piece_keys       = constants::num_pieces * constants::num_squares;
 constexpr usize castling_keys    = 1 << 4;
@@ -45,4 +44,4 @@ inline zobrist_key get_side_key(const color c) {
     return c == color::white ? 0ULL : all_keys[side_to_move_key_offset];
 }
 
-} // namespace tt::zobrist
+} // namespace utils::zobrist

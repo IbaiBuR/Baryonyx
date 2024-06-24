@@ -6,7 +6,7 @@
 #include "bitboard/attacks.hpp"
 #include "piece.hpp"
 #include "../utils/split.hpp"
-#include "../tt/zobrist.hpp"
+#include "../utils/zobrist.hpp"
 
 namespace board {
 
@@ -50,16 +50,16 @@ position::position(const std::string& fen) :
     }
 
     m_stm = tokens[1] == "w" ? color::white : color::black;
-    m_key ^= tt::zobrist::get_side_key(m_stm);
+    m_key ^= utils::zobrist::get_side_key(m_stm);
 
     m_castling = castling_rights(tokens[2]);
-    m_key ^= tt::zobrist::get_castling_key(m_castling);
+    m_key ^= utils::zobrist::get_castling_key(m_castling);
 
     const std::string& en_passant = tokens[3];
 
     m_ep_sq =
         en_passant == "-" ? square::none : square_of(en_passant[0] - 'a', en_passant[1] - 1 - '0');
-    m_key ^= tt::zobrist::get_en_passant_key(m_ep_sq);
+    m_key ^= utils::zobrist::get_en_passant_key(m_ep_sq);
 
     m_half_move_clock  = std::stoi(tokens[4]);
     m_full_move_number = std::stoi(tokens[5]);
@@ -149,7 +149,7 @@ void position::set_piece(const piece p, const square sq) {
                                  sq);
     bitboards::bitboard::set_bit(m_occupied_bb[std::to_underlying(pieces::piece_color(p))], sq);
 
-    m_key ^= tt::zobrist::get_piece_key(p, sq);
+    m_key ^= utils::zobrist::get_piece_key(p, sq);
 }
 
 void position::remove_piece(const piece p, const square sq) {
@@ -159,7 +159,7 @@ void position::remove_piece(const piece p, const square sq) {
                                    sq);
     bitboards::bitboard::clear_bit(m_occupied_bb[std::to_underlying(pieces::piece_color(p))], sq);
 
-    m_key ^= tt::zobrist::get_piece_key(p, sq);
+    m_key ^= utils::zobrist::get_piece_key(p, sq);
 }
 
 void position::move_piece(const piece p, const square from, const square to) {
@@ -184,12 +184,12 @@ void position::make_move(const moves::move move) {
     remove_piece(moving_piece, from);
     set_piece(move.is_promotion() ? move.get_promoted_piece(m_stm) : moving_piece, to);
 
-    m_key ^= tt::zobrist::get_side_key(m_stm);
-    m_key ^= tt::zobrist::get_en_passant_key(m_ep_sq);
+    m_key ^= utils::zobrist::get_side_key(m_stm);
+    m_key ^= utils::zobrist::get_en_passant_key(m_ep_sq);
 
     if (move.is_double_push()) {
         m_ep_sq = to - offset;
-        m_key ^= tt::zobrist::get_en_passant_key(m_ep_sq);
+        m_key ^= utils::zobrist::get_en_passant_key(m_ep_sq);
     }
     else
         m_ep_sq = square::none;
@@ -219,8 +219,8 @@ void position::make_move(const moves::move move) {
     m_castling &= castling_rights_update[std::to_underlying(to)];
 
     if (m_castling != previous_castling_rights) {
-        m_key ^= tt::zobrist::get_castling_key(previous_castling_rights);
-        m_key ^= tt::zobrist::get_castling_key(m_castling);
+        m_key ^= utils::zobrist::get_castling_key(previous_castling_rights);
+        m_key ^= utils::zobrist::get_castling_key(m_castling);
     }
 
     m_full_move_number += m_stm == color::black;
@@ -229,7 +229,7 @@ void position::make_move(const moves::move move) {
         m_half_move_clock = 0;
 
     m_stm = ~m_stm;
-    m_key ^= tt::zobrist::get_side_key(m_stm);
+    m_key ^= utils::zobrist::get_side_key(m_stm);
 
     m_checkers_bb = attacks_to_king(king_square(m_stm), m_stm);
 }

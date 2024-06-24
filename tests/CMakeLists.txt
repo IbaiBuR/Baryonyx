@@ -7,15 +7,10 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3 -funroll-loops -flto=auto -DNDEBUG -std=c++23 -
 file(GLOB SRCS "*.cpp"
         "../src/*.hpp"
         "../src/perft/perft.cpp"
-        "../src/moves/*.hpp"
         "../src/moves/*.cpp"
-        "../src/board/bitboard/*.hpp"
         "../src/board/bitboard/*.cpp"
         "../src/board/*.cpp"
-        "../src/board/*.hpp"
-        "../src/eval/*.hpp"
         "../src/eval/*.cpp"
-        "../src/tt/*.hpp"
-        "../src/tt/*.cpp")
+        "../src/utils/*.cpp")
 
 add_executable(BaryonyxTests ${SRCS})

@@ -16,6 +16,6 @@ file(GLOB SRCS
         "src/uci/*.cpp"
         "src/eval/*.cpp"
         "src/search/*.cpp"
-        "src/tt/*.cpp")
+        "src/utils/*.cpp")
 
 add_executable(Baryonyx ${SRCS})
