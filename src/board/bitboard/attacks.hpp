@@ -334,17 +334,17 @@ constexpr bitboard sliding_attacks(const square sq, const bitboard& occupied) {
 }
 
 /// @brief Generates the possible moves for sliding pieces
-/// @tparam Pt Piece type (Slider)
+/// @tparam PieceType Piece type (Slider)
 /// @param sq Square to generate the attacks from
 /// @param occupied Bitboard of occupied squares on the board (Blockers)
 /// @returns A bitboard with the generated sliding attacks
 /// @note An assert is used to ensure the function is only used with sliders. The queen is not
 /// included since we can obtain it by combining the attacks of the bishop and the rook
-template <piece_type Pt>
+template <piece_type PieceType>
 constexpr bitboard gen_sliding(const square sq, const bitboard& occupied) {
-    assert(Pt == piece_type::bishop || Pt == piece_type::rook);
+    assert(PieceType == piece_type::bishop || PieceType == piece_type::rook);
 
-    if constexpr (Pt == piece_type::bishop) {
+    if constexpr (PieceType == piece_type::bishop) {
         return sliding_attacks<direction::north_east>(sq, occupied)
              | sliding_attacks<direction::north_west>(sq, occupied)
              | sliding_attacks<direction::south_east>(sq, occupied)

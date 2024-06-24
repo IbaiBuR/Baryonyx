@@ -23,7 +23,7 @@ bitboard set_blockers(const int index, const int n_bits, bitboard mask) {
 
 /// @brief Tests if the magic number produces index collisions
 /// @param magic Magic number
-/// @param shift MagicEntry shift
+/// @param shift Magic entry shift
 /// @param num_occupancies Number of possible combinations of occupied bits in the mask
 /// @param blockers Blockers
 /// @param attacks Pre-calculated attacks
@@ -49,14 +49,14 @@ bool try_magic(const u64                    magic,
 }
 
 /// @brief Generates a MagicEntry for the given square depending on piece type
-/// @tparam Pt Piece type (Slider)
+/// @tparam PieceType Piece type (Slider)
 /// @param sq Square
 /// @returns The MagicEntry (empty if it fails to find a valid candidate)
-template <piece_type Pt>
+template <piece_type PieceType>
 constexpr magic_entry find_magic(const square sq) {
     assert(Pt == piece_type::bishop || Pt == piece_type::rook);
 
-    constexpr bool is_bishop = Pt == piece_type::bishop;
+    constexpr bool is_bishop = PieceType == piece_type::bishop;
     constexpr int  max_blockers_config =
         is_bishop ? attacks::max_bishop_blockers_config : attacks::max_rook_blockers_config;
 
@@ -70,7 +70,7 @@ constexpr magic_entry find_magic(const square sq) {
 
     for (int i = 0; i < num_occupancies; ++i) {
         blockers[i] = set_blockers(i, relevant_bits, mask);
-        attacks[i]  = attacks::gen_sliding<Pt>(sq, blockers[i]);
+        attacks[i]  = attacks::gen_sliding<PieceType>(sq, blockers[i]);
     }
 
     static utils::random::sfc64_rng prng;
@@ -96,15 +96,15 @@ constexpr magic_entry find_magic(const square sq) {
     return {};
 }
 
-template <piece_type Pt>
+template <piece_type PieceType>
 void print_magics_by_piece_type() {
     std::cout << std::format(
         "constexpr std::array<magic_entry, constants::num_squares> {} = {}\n {}",
-        Pt == piece_type::bishop ? "bishop_magics" : "rook_magics", "{", "{")
+        PieceType == piece_type::bishop ? "bishop_magics" : "rook_magics", "{", "{")
               << std::endl;
 
     for (u8 sq = 0; sq < constants::num_squares; ++sq) {
-        auto [mask, magic, shift] = find_magic<Pt>(static_cast<square>(sq));
+        auto [mask, magic, shift] = find_magic<PieceType>(static_cast<square>(sq));
         std::cout << std::format(" magic_entry(bitboard(0x{:016X}ULL), 0x{:016X}ULL, {})",
                                  mask.as_u64(), magic, shift);
 

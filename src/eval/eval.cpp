@@ -106,9 +106,9 @@ int get_game_phase(const board::position& pos) {
     return std::min(game_phase, max_game_phase);
 }
 
-template <color Stm>
+template <color SideToMove>
 packed_score evaluate_material(const board::position& pos) {
-    constexpr color us   = Stm;
+    constexpr color us   = SideToMove;
     constexpr color them = ~us;
 
     const int pawn_count =
@@ -133,9 +133,9 @@ packed_score evaluate_material(const board::position& pos) {
     return material_score;
 }
 
-template <color Stm>
+template <color SideToMove>
 packed_score evaluate_psqt(const board::position& pos) {
-    constexpr color us   = Stm;
+    constexpr color us   = SideToMove;
     constexpr color them = ~us;
 
     packed_score psqt_score;
@@ -160,11 +160,13 @@ packed_score evaluate_psqt(const board::position& pos) {
     return psqt_score;
 }
 
-template <color Stm>
+template <color SideToMove>
 score evaluate(const board::position& pos) {
-    const packed_score packed_eval = evaluate_material<Stm>(pos) + evaluate_psqt<Stm>(pos);
+    constexpr color    us          = SideToMove;
+    const packed_score packed_eval = evaluate_material<us>(pos) + evaluate_psqt<us>(pos);
     const int          game_phase  = get_game_phase(pos);
-    const score        eval =
+
+    const score eval =
         (packed_eval.midgame() * game_phase + packed_eval.endgame() * (max_game_phase - game_phase))
         / max_game_phase;
 
