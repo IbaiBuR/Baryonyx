@@ -11,16 +11,16 @@
 
 namespace uci {
 
-void CommandHandler::handle_d(const board::Position& pos) { print_board(pos); }
+void command_handler::handle_d(const board::position& pos) { print_board(pos); }
 
-void CommandHandler::handle_eval(const board::Position& pos) {
+void command_handler::handle_eval(const board::position& pos) {
     std::cout << std::format("\nStatic evaluation: {}", eval::evaluate(pos)) << std::endl;
 }
 
-void CommandHandler::handle_is_ready() { std::cout << std::format("readyok") << std::endl; }
+void command_handler::handle_is_ready() { std::cout << std::format("readyok") << std::endl; }
 
-void CommandHandler::handle_go(const std::vector<std::string>& command,
-                               const board::Position&          pos) {
+void command_handler::handle_go(const std::vector<std::string>& command,
+                                const board::position&          pos) {
     if (command[1] == "depth")
         m_searcher.set_limits(UINT64_MAX, UINT64_MAX, std::stoi(command[2]));
     else if (command[1] == "perft") {
@@ -42,8 +42,8 @@ void CommandHandler::handle_go(const std::vector<std::string>& command,
     m_searcher.main_search(pos);
 }
 
-void CommandHandler::handle_position(const std::vector<std::string>& command,
-                                     board::Position&                pos) {
+void command_handler::handle_position(const std::vector<std::string>& command,
+                                      board::position&                pos) {
     if (command[1] == "startpos") {
         pos.reset_to_start_pos();
     }
@@ -51,7 +51,7 @@ void CommandHandler::handle_position(const std::vector<std::string>& command,
         const auto& fen = command | std::views::drop(2) | std::views::take(6)
                         | std::views::transform([](const std::string& s) { return s + " "; });
         const std::string& fen_str = std::accumulate(fen.begin(), fen.end(), std::string{});
-        pos                        = board::Position(fen_str);
+        pos                        = board::position(fen_str);
     }
 
     if (auto offset = std::ranges::find(command.begin(), command.end(), "moves");
@@ -62,7 +62,7 @@ void CommandHandler::handle_position(const std::vector<std::string>& command,
         for (auto it = offset; it != command.end(); ++it) {
             const auto parsed_move = util::from_uci(pos, *it);
 
-            if (parsed_move == moves::Move::none())
+            if (parsed_move == moves::move::none())
                 break;
 
             pos.make_move(parsed_move);
@@ -70,7 +70,7 @@ void CommandHandler::handle_position(const std::vector<std::string>& command,
     }
 }
 
-void CommandHandler::handle_uci() {
+void command_handler::handle_uci() {
     std::cout << std::format("id name {} {}", name, version) << std::endl;
     std::cout << std::format("id author {}", author) << std::endl;
     std::cout << std::format("option name Hash type spin default 1 min 1 max 1") << std::endl;
@@ -78,11 +78,11 @@ void CommandHandler::handle_uci() {
     std::cout << std::format("uciok") << std::endl;
 }
 
-void CommandHandler::handle_uci_new_game(board::Position& pos) { pos.reset_to_start_pos(); }
+void command_handler::handle_uci_new_game(board::position& pos) { pos.reset_to_start_pos(); }
 
-void CommandHandler::loop() {
+void command_handler::loop() {
     std::string input;
-    auto        pos = board::Position(board::util::start_pos_fen);
+    auto        pos = board::position(board::util::start_pos_fen);
 
     while (std::getline(std::cin, input)) {
         const auto command = utils::split::split_string(input, ' ');
@@ -114,8 +114,8 @@ void CommandHandler::loop() {
 
 namespace util {
 
-moves::Move from_uci(const board::Position& pos, const std::string& move) {
-    moves::MoveList move_list;
+moves::move from_uci(const board::position& pos, const std::string& move) {
+    moves::move_list move_list;
     generate_all_moves(pos, move_list);
 
     for (u32 i = 0; i < move_list.size(); ++i) {
@@ -123,7 +123,7 @@ moves::Move from_uci(const board::Position& pos, const std::string& move) {
             return current_move;
     }
 
-    return moves::Move::none();
+    return moves::move::none();
 }
 
 } // namespace util

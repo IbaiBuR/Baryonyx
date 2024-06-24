@@ -2,14 +2,14 @@
 
 namespace board::bitboards::attacks {
 
-std::array<std::array<Bitboard, max_bishop_blockers_config>, constants::num_squares> bishop_attacks;
-std::array<std::array<Bitboard, max_rook_blockers_config>, constants::num_squares>   rook_attacks;
+std::array<std::array<bitboard, max_bishop_blockers_config>, constants::num_squares> bishop_attacks;
+std::array<std::array<bitboard, max_rook_blockers_config>, constants::num_squares>   rook_attacks;
 
 /// @brief Initializes the sliding attacks lookup tables
-/// @tparam pt Piece type (Slider)
-template <PieceType pt>
+/// @tparam Pt Piece type (Slider)
+template <piece_type Pt>
 void init_sliders() {
-    constexpr bool is_bishop = pt == PieceType::BISHOP;
+    constexpr bool is_bishop = Pt == piece_type::bishop;
 
     for (u8 sq = 0; sq < constants::num_squares; ++sq) {
         auto [mask, magic, shift] = is_bishop ? magics::bishop_magics[sq] : magics::rook_magics[sq];
@@ -17,7 +17,7 @@ void init_sliders() {
         const int num_occupancies = 1 << n_bits;
 
         for (int i = 0; i < num_occupancies; ++i) {
-            const Bitboard occupied = magics::set_blockers(i, n_bits, mask);
+            const bitboard occupied = magics::set_blockers(i, n_bits, mask);
 #ifndef USE_PEXT
             const auto magic_index = (occupied.as_u64() * magic) >> shift;
 #else
@@ -26,16 +26,16 @@ void init_sliders() {
 
             if constexpr (is_bishop)
                 bishop_attacks[sq][magic_index] =
-                    gen_sliding<pt>(static_cast<Square>(sq), occupied);
+                    gen_sliding<Pt>(static_cast<square>(sq), occupied);
             else
-                rook_attacks[sq][magic_index] = gen_sliding<pt>(static_cast<Square>(sq), occupied);
+                rook_attacks[sq][magic_index] = gen_sliding<Pt>(static_cast<square>(sq), occupied);
         }
     }
 }
 
 void init() {
-    init_sliders<PieceType::BISHOP>();
-    init_sliders<PieceType::ROOK>();
+    init_sliders<piece_type::bishop>();
+    init_sliders<piece_type::rook>();
 }
 
 } // namespace board::bitboards::attacks

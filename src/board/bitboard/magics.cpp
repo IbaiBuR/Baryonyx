@@ -8,14 +8,14 @@
 
 namespace board::bitboards::magics {
 
-Bitboard set_blockers(const int index, const int n_bits, Bitboard mask) {
-    Bitboard blockers;
+bitboard set_blockers(const int index, const int n_bits, bitboard mask) {
+    bitboard blockers;
 
     for (int i = 0; i < n_bits; ++i) {
-        const auto sq = static_cast<Square>(mask.pop_lsb());
+        const auto sq = static_cast<square>(mask.pop_lsb());
 
         if (index & (1 << i))
-            Bitboard::set_bit(blockers, sq);
+            bitboard::set_bit(blockers, sq);
     }
 
     return blockers;
@@ -31,9 +31,9 @@ Bitboard set_blockers(const int index, const int n_bits, Bitboard mask) {
 bool try_magic(const u64                    magic,
                const int                    shift,
                const int                    num_occupancies,
-               const std::vector<Bitboard>& blockers,
-               const std::vector<Bitboard>& attacks) {
-    std::vector<Bitboard> attack_table(num_occupancies);
+               const std::vector<bitboard>& blockers,
+               const std::vector<bitboard>& attacks) {
+    std::vector<bitboard> attack_table(num_occupancies);
     bool                  collision = false;
 
     for (int i = 0; !collision && i < num_occupancies; ++i) {
@@ -49,31 +49,31 @@ bool try_magic(const u64                    magic,
 }
 
 /// @brief Generates a MagicEntry for the given square depending on piece type
-/// @tparam pt Piece type (Slider)
+/// @tparam Pt Piece type (Slider)
 /// @param sq Square
 /// @returns The MagicEntry (empty if it fails to find a valid candidate)
-template <PieceType pt>
-constexpr MagicEntry find_magic(const Square sq) {
-    assert(pt == PieceType::BISHOP || pt == PieceType::ROOK);
+template <piece_type Pt>
+constexpr magic_entry find_magic(const square sq) {
+    assert(Pt == piece_type::bishop || Pt == piece_type::rook);
 
-    constexpr bool is_bishop = pt == PieceType::BISHOP;
+    constexpr bool is_bishop = Pt == piece_type::bishop;
     constexpr int  max_blockers_config =
         is_bishop ? attacks::max_bishop_blockers_config : attacks::max_rook_blockers_config;
 
-    const Bitboard mask =
+    const bitboard mask =
         is_bishop ? bishop_masks[std::to_underlying(sq)] : rook_masks[std::to_underlying(sq)];
     const int relevant_bits   = mask.bit_count();
     const int num_occupancies = 1 << relevant_bits;
 
-    std::vector<Bitboard> blockers(max_blockers_config);
-    std::vector<Bitboard> attacks(max_blockers_config);
+    std::vector<bitboard> blockers(max_blockers_config);
+    std::vector<bitboard> attacks(max_blockers_config);
 
     for (int i = 0; i < num_occupancies; ++i) {
         blockers[i] = set_blockers(i, relevant_bits, mask);
-        attacks[i]  = attacks::gen_sliding<pt>(sq, blockers[i]);
+        attacks[i]  = attacks::gen_sliding<Pt>(sq, blockers[i]);
     }
 
-    static utils::random::Sfc64Rng prng;
+    static utils::random::sfc64_rng prng;
 
     auto random_magic = [&]() -> u64 {
         return prng.next_u64() & prng.next_u64() & prng.next_u64();
@@ -90,22 +90,22 @@ constexpr MagicEntry find_magic(const Square sq) {
         const int shift = static_cast<int>(constants::num_squares) - relevant_bits;
 
         if (try_magic(magic_candidate, shift, num_occupancies, blockers, attacks))
-            return MagicEntry(mask, magic_candidate, shift);
+            return magic_entry(mask, magic_candidate, shift);
     }
 
     return {};
 }
 
-template <PieceType pt>
+template <piece_type Pt>
 void print_magics_by_piece_type() {
     std::cout << std::format(
-        "constexpr std::array<MagicEntry, constants::num_squares> {} = {}\n {}",
-        pt == PieceType::BISHOP ? "bishop_magics" : "rook_magics", "{", "{")
+        "constexpr std::array<magic_entry, constants::num_squares> {} = {}\n {}",
+        Pt == piece_type::bishop ? "bishop_magics" : "rook_magics", "{", "{")
               << std::endl;
 
     for (u8 sq = 0; sq < constants::num_squares; ++sq) {
-        auto [mask, magic, shift] = find_magic<pt>(static_cast<Square>(sq));
-        std::cout << std::format(" MagicEntry(Bitboard(0x{:016X}ULL), 0x{:016X}ULL, {})",
+        auto [mask, magic, shift] = find_magic<Pt>(static_cast<square>(sq));
+        std::cout << std::format(" magic_entry(bitboard(0x{:016X}ULL), 0x{:016X}ULL, {})",
                                  mask.as_u64(), magic, shift);
 
         if (sq < constants::num_squares - 1)
@@ -117,8 +117,8 @@ void print_magics_by_piece_type() {
 }
 
 void print_magics() {
-    print_magics_by_piece_type<PieceType::BISHOP>();
-    print_magics_by_piece_type<PieceType::ROOK>();
+    print_magics_by_piece_type<piece_type::bishop>();
+    print_magics_by_piece_type<piece_type::rook>();
 }
 
 } // namespace board::bitboards::magics

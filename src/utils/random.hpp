@@ -15,14 +15,14 @@ using seed_type = std::array<u64, 3>;
 /// @note See http://pracrand.sourceforge.net/ for reference and
 /// https://github.com/pitdicker/small-rngs/blob/master/src/sfc.rs for the rust implementation
 /// from which I took the code
-class Sfc64Rng {
+class sfc64_rng {
     public:
         using result_type = u64;
 
-        constexpr Sfc64Rng() :
-            Sfc64Rng(default_seed) {}
+        constexpr sfc64_rng() :
+            sfc64_rng(default_seed) {}
 
-        constexpr explicit Sfc64Rng(const seed_type& seed) :
+        constexpr explicit sfc64_rng(const seed_type& seed) :
             m_a(seed[0]),
             m_b(seed[1]),
             m_c(seed[2]),

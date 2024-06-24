@@ -5,7 +5,7 @@
 
 #include "../utils/time.hpp"
 
-void search::bench::run(Searcher& searcher, const u32 depth) {
+void search::bench::run(searcher& searcher, const u32 depth) {
     // clang-format off
     const std::array bench_fens = {
         #include "./resources/bench.csv"
@@ -17,7 +17,7 @@ void search::bench::run(Searcher& searcher, const u32 depth) {
     searcher.set_limits(UINT64_MAX, UINT64_MAX, depth);
 
     for (const auto& fen : bench_fens) {
-        board::Position pos(fen);
+        board::position pos(fen);
 
         searcher.main_search(pos);
 

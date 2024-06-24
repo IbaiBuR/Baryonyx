@@ -10,10 +10,10 @@
 
 namespace board {
 
-Position::Position(const std::string& fen) :
+position::position(const std::string& fen) :
     m_pieces(),
     m_key(0ULL) {
-    m_pieces.fill(Piece::NONE);
+    m_pieces.fill(piece::none);
     const auto tokens = utils::split::split_string(fen, ' ');
 
     if (tokens.size() < 6)
@@ -39,8 +39,8 @@ Position::Position(const std::string& fen) :
             if (std::isdigit(c))
                 file_index += c - '0';
             else {
-                const Square sq    = square_of(file_index, rank_index);
-                const Piece  piece = pieces::char_to_piece(c);
+                const square sq    = square_of(file_index, rank_index);
+                const piece  piece = pieces::char_to_piece(c);
 
                 set_piece(piece, sq);
                 ++file_index;
@@ -49,16 +49,16 @@ Position::Position(const std::string& fen) :
         --rank_index;
     }
 
-    m_stm = tokens[1] == "w" ? Color::WHITE : Color::BLACK;
+    m_stm = tokens[1] == "w" ? color::white : color::black;
     m_key ^= tt::zobrist::get_side_key(m_stm);
 
-    m_castling = CastlingRights(tokens[2]);
+    m_castling = castling_rights(tokens[2]);
     m_key ^= tt::zobrist::get_castling_key(m_castling);
 
     const std::string& en_passant = tokens[3];
 
     m_ep_sq =
-        en_passant == "-" ? Square::NONE : square_of(en_passant[0] - 'a', en_passant[1] - 1 - '0');
+        en_passant == "-" ? square::none : square_of(en_passant[0] - 'a', en_passant[1] - 1 - '0');
     m_key ^= tt::zobrist::get_en_passant_key(m_ep_sq);
 
     m_half_move_clock  = std::stoi(tokens[4]);
@@ -70,66 +70,66 @@ Position::Position(const std::string& fen) :
         throw std::invalid_argument("Invalid FEN string: illegal position.\n");
 }
 
-template <Color c>
-bool Position::can_castle_king_side() const {
-    const bitboards::Bitboard& occupied = occupancies(Color::WHITE) | occupancies(Color::BLACK);
+template <color C>
+bool position::can_castle_king_side() const {
+    const bitboards::bitboard& occupied = occupancies(color::white) | occupancies(color::black);
 
-    if constexpr (c == Color::WHITE)
-        return castling_rights().king_side_available<Color::WHITE>()
-            && !is_square_attacked_by(Square::F1, Color::BLACK)
-            && !is_square_attacked_by(Square::G1, Color::BLACK)
-            && !(occupied & bitboards::Bitboard(0x60ULL));
+    if constexpr (C == color::white)
+        return castling().king_side_available<color::white>()
+            && !is_square_attacked_by(square::f1, color::black)
+            && !is_square_attacked_by(square::g1, color::black)
+            && !(occupied & bitboards::bitboard(0x60ULL));
     else
-        return castling_rights().king_side_available<Color::BLACK>()
-            && !is_square_attacked_by(Square::F8, Color::WHITE)
-            && !is_square_attacked_by(Square::G8, Color::WHITE)
-            && !(occupied & bitboards::Bitboard(0x6000000000000000ULL));
+        return castling().king_side_available<color::black>()
+            && !is_square_attacked_by(square::f8, color::white)
+            && !is_square_attacked_by(square::g8, color::white)
+            && !(occupied & bitboards::bitboard(0x6000000000000000ULL));
 }
 
-template bool Position::can_castle_king_side<Color::WHITE>() const;
-template bool Position::can_castle_king_side<Color::BLACK>() const;
+template bool position::can_castle_king_side<color::white>() const;
+template bool position::can_castle_king_side<color::black>() const;
 
-template <Color c>
-bool Position::can_castle_queen_side() const {
-    const bitboards::Bitboard& occupied = occupancies(Color::WHITE) | occupancies(Color::BLACK);
+template <color C>
+bool position::can_castle_queen_side() const {
+    const bitboards::bitboard& occupied = occupancies(color::white) | occupancies(color::black);
 
-    if constexpr (c == Color::WHITE)
-        return castling_rights().queen_side_available<Color::WHITE>()
-            && !is_square_attacked_by(Square::D1, Color::BLACK)
-            && !is_square_attacked_by(Square::C1, Color::BLACK)
-            && !(occupied & bitboards::Bitboard(0xEULL));
+    if constexpr (C == color::white)
+        return castling().queen_side_available<color::white>()
+            && !is_square_attacked_by(square::d1, color::black)
+            && !is_square_attacked_by(square::c1, color::black)
+            && !(occupied & bitboards::bitboard(0xEULL));
     else
-        return castling_rights().queen_side_available<Color::BLACK>()
-            && !is_square_attacked_by(Square::D8, Color::WHITE)
-            && !is_square_attacked_by(Square::C8, Color::WHITE)
-            && !(occupied & bitboards::Bitboard(0xE00000000000000ULL));
+        return castling().queen_side_available<color::black>()
+            && !is_square_attacked_by(square::d8, color::white)
+            && !is_square_attacked_by(square::c8, color::white)
+            && !(occupied & bitboards::bitboard(0xE00000000000000ULL));
 }
 
-template bool Position::can_castle_queen_side<Color::WHITE>() const;
-template bool Position::can_castle_queen_side<Color::BLACK>() const;
+template bool position::can_castle_queen_side<color::white>() const;
+template bool position::can_castle_queen_side<color::black>() const;
 
-template <Color c>
-int Position::piece_count(const PieceType pt) const {
-    if constexpr (c == Color::WHITE)
-        return (piece_type_bb(pt) & occupancies(Color::WHITE)).bit_count();
+template <color C>
+int position::piece_count(const piece_type pt) const {
+    if constexpr (C == color::white)
+        return (piece_type_bb(pt) & occupancies(color::white)).bit_count();
     else
-        return (piece_type_bb(pt) & occupancies(Color::BLACK)).bit_count();
+        return (piece_type_bb(pt) & occupancies(color::black)).bit_count();
 }
 
-template int Position::piece_count<Color::WHITE>(PieceType pt) const;
-template int Position::piece_count<Color::BLACK>(PieceType pt) const;
+template int position::piece_count<color::white>(piece_type pt) const;
+template int position::piece_count<color::black>(piece_type pt) const;
 
-bitboards::Bitboard Position::attacks_to_king(const Square kingSquare, const Color c) const {
+bitboards::bitboard position::attacks_to_king(const square kingSquare, const color c) const {
     const auto& opp_occupancies = occupancies(~c);
-    const auto& opp_pawns       = piece_type_bb(PieceType::PAWN) & opp_occupancies;
-    const auto& opp_knights     = piece_type_bb(PieceType::KNIGHT) & opp_occupancies;
-    const auto& opp_queens      = piece_type_bb(PieceType::QUEEN) & opp_occupancies;
+    const auto& opp_pawns       = piece_type_bb(piece_type::pawn) & opp_occupancies;
+    const auto& opp_knights     = piece_type_bb(piece_type::knight) & opp_occupancies;
+    const auto& opp_queens      = piece_type_bb(piece_type::queen) & opp_occupancies;
     const auto& opp_bishops_queens =
-        (piece_type_bb(PieceType::BISHOP) & opp_occupancies) | opp_queens;
-    const auto& opp_rooks_queens = (piece_type_bb(PieceType::ROOK) & opp_occupancies) | opp_queens;
-    const auto& opp_king         = piece_type_bb(PieceType::KING) & opp_occupancies;
+        (piece_type_bb(piece_type::bishop) & opp_occupancies) | opp_queens;
+    const auto& opp_rooks_queens = (piece_type_bb(piece_type::rook) & opp_occupancies) | opp_queens;
+    const auto& opp_king         = piece_type_bb(piece_type::king) & opp_occupancies;
 
-    const auto& blockers = occupancies(Color::WHITE) | occupancies(Color::BLACK);
+    const auto& blockers = occupancies(color::white) | occupancies(color::black);
 
     return (bitboards::attacks::get_pawn_attacks(kingSquare, c) & opp_pawns)
          | (bitboards::attacks::get_knight_attacks(kingSquare) & opp_knights)
@@ -138,44 +138,45 @@ bitboards::Bitboard Position::attacks_to_king(const Square kingSquare, const Col
          | (bitboards::attacks::get_king_attacks(kingSquare) & opp_king);
 }
 
-Square Position::king_square(const Color c) const {
-    return static_cast<Square>((piece_type_bb(PieceType::KING) & occupancies(c)).pop_lsb());
+square position::king_square(const color c) const {
+    return static_cast<square>((piece_type_bb(piece_type::king) & occupancies(c)).pop_lsb());
 }
 
-void Position::set_piece(const Piece p, const Square sq) {
+void position::set_piece(const piece p, const square sq) {
     m_pieces[std::to_underlying(sq)] = p;
 
-    bitboards::Bitboard::set_bit(m_piece_bb[std::to_underlying(pieces::piece_to_piece_type(p))], sq);
-    bitboards::Bitboard::set_bit(m_occupied_bb[std::to_underlying(pieces::piece_color(p))], sq);
+    bitboards::bitboard::set_bit(m_piece_bb[std::to_underlying(pieces::piece_to_piece_type(p))],
+                                 sq);
+    bitboards::bitboard::set_bit(m_occupied_bb[std::to_underlying(pieces::piece_color(p))], sq);
 
     m_key ^= tt::zobrist::get_piece_key(p, sq);
 }
 
-void Position::remove_piece(const Piece p, const Square sq) {
-    m_pieces[std::to_underlying(sq)] = Piece::NONE;
+void position::remove_piece(const piece p, const square sq) {
+    m_pieces[std::to_underlying(sq)] = piece::none;
 
-    bitboards::Bitboard::clear_bit(m_piece_bb[std::to_underlying(pieces::piece_to_piece_type(p))],
+    bitboards::bitboard::clear_bit(m_piece_bb[std::to_underlying(pieces::piece_to_piece_type(p))],
                                    sq);
-    bitboards::Bitboard::clear_bit(m_occupied_bb[std::to_underlying(pieces::piece_color(p))], sq);
+    bitboards::bitboard::clear_bit(m_occupied_bb[std::to_underlying(pieces::piece_color(p))], sq);
 
     m_key ^= tt::zobrist::get_piece_key(p, sq);
 }
 
-void Position::move_piece(const Piece p, const Square from, const Square to) {
+void position::move_piece(const piece p, const square from, const square to) {
     remove_piece(p, from);
     set_piece(p, to);
 }
 
-void Position::make_move(const moves::Move move) {
+void position::make_move(const moves::move move) {
     ++m_half_move_clock;
 
-    const Square    from         = move.from();
-    const Square    to           = move.to();
-    const Piece     moving_piece = piece_on(from);
-    const Direction offset       = m_stm == Color::WHITE ? Direction::NORTH : Direction::SOUTH;
+    const square    from         = move.from();
+    const square    to           = move.to();
+    const piece     moving_piece = piece_on(from);
+    const direction offset       = m_stm == color::white ? direction::north : direction::south;
 
     if (move.is_capture()) {
-        const Square target_square = move.is_en_passant() ? m_ep_sq - offset : to;
+        const square target_square = move.is_en_passant() ? m_ep_sq - offset : to;
         remove_piece(piece_on(target_square), target_square);
         m_half_move_clock = 0;
     }
@@ -186,21 +187,21 @@ void Position::make_move(const moves::Move move) {
     if (move.is_double_push())
         m_ep_sq = to - offset;
     else
-        m_ep_sq = Square::NONE;
+        m_ep_sq = square::none;
 
     if (move.is_castling()) {
         switch (to) {
-        case Square::G1:
-            move_piece(piece_on(Square::H1), Square::H1, Square::F1);
+        case square::g1:
+            move_piece(piece_on(square::h1), square::h1, square::f1);
             break;
-        case Square::C1:
-            move_piece(piece_on(Square::A1), Square::A1, Square::D1);
+        case square::c1:
+            move_piece(piece_on(square::a1), square::a1, square::d1);
             break;
-        case Square::G8:
-            move_piece(piece_on(Square::H8), Square::H8, Square::F8);
+        case square::g8:
+            move_piece(piece_on(square::h8), square::h8, square::f8);
             break;
-        case Square::C8:
-            move_piece(piece_on(Square::A8), Square::A8, Square::D8);
+        case square::c8:
+            move_piece(piece_on(square::a8), square::a8, square::d8);
             break;
         default:
             throw std::runtime_error("Castling to invalid square!\n");
@@ -210,75 +211,75 @@ void Position::make_move(const moves::Move move) {
     m_castling &= castling_rights_update[std::to_underlying(from)];
     m_castling &= castling_rights_update[std::to_underlying(to)];
 
-    m_full_move_number += m_stm == Color::BLACK;
+    m_full_move_number += m_stm == color::black;
 
-    if (pieces::piece_to_piece_type(moving_piece) == PieceType::PAWN)
+    if (pieces::piece_to_piece_type(moving_piece) == piece_type::pawn)
         m_half_move_clock = 0;
 
-    m_stm        = ~m_stm;
+    m_stm         = ~m_stm;
     m_checkers_bb = attacks_to_king(king_square(m_stm), m_stm);
 }
 
-void Position::reset_to_start_pos() {
-    m_checkers_bb     = bitboards::util::empty_bb;
-    m_stm            = Color::WHITE;
-    m_ep_sq           = Square::NONE;
-    m_castling       = CastlingRights(CastlingRights::Flags::ALL);
+void position::reset_to_start_pos() {
+    m_checkers_bb      = bitboards::util::empty_bb;
+    m_stm              = color::white;
+    m_ep_sq            = square::none;
+    m_castling         = castling_rights(castling_rights::castling_flag::all);
     m_half_move_clock  = 0;
     m_full_move_number = 1;
 
-    m_piece_bb[std::to_underlying(PieceType::PAWN)]   = bitboards::Bitboard(0xFF00000000FF00ULL);
-    m_piece_bb[std::to_underlying(PieceType::KNIGHT)] = bitboards::Bitboard(0x4200000000000042ULL);
-    m_piece_bb[std::to_underlying(PieceType::BISHOP)] = bitboards::Bitboard(0x2400000000000024ULL);
-    m_piece_bb[std::to_underlying(PieceType::ROOK)]   = bitboards::Bitboard(0x8100000000000081ULL);
-    m_piece_bb[std::to_underlying(PieceType::QUEEN)]  = bitboards::Bitboard(0x800000000000008ULL);
-    m_piece_bb[std::to_underlying(PieceType::KING)]   = bitboards::Bitboard(0x1000000000000010ULL);
+    m_piece_bb[std::to_underlying(piece_type::pawn)]   = bitboards::bitboard(0xFF00000000FF00ULL);
+    m_piece_bb[std::to_underlying(piece_type::knight)] = bitboards::bitboard(0x4200000000000042ULL);
+    m_piece_bb[std::to_underlying(piece_type::bishop)] = bitboards::bitboard(0x2400000000000024ULL);
+    m_piece_bb[std::to_underlying(piece_type::rook)]   = bitboards::bitboard(0x8100000000000081ULL);
+    m_piece_bb[std::to_underlying(piece_type::queen)]  = bitboards::bitboard(0x800000000000008ULL);
+    m_piece_bb[std::to_underlying(piece_type::king)]   = bitboards::bitboard(0x1000000000000010ULL);
 
-    m_occupied_bb[std::to_underlying(Color::WHITE)] = bitboards::Bitboard(0xFFFFULL);
-    m_occupied_bb[std::to_underlying(Color::BLACK)] = bitboards::Bitboard(0xFFFF000000000000ULL);
+    m_occupied_bb[std::to_underlying(color::white)] = bitboards::bitboard(0xFFFFULL);
+    m_occupied_bb[std::to_underlying(color::black)] = bitboards::bitboard(0xFFFF000000000000ULL);
 
-    m_pieces.fill(Piece::NONE);
+    m_pieces.fill(piece::none);
 
-    for (u8 sq = std::to_underlying(Square::A2); sq <= std::to_underlying(Square::H2); ++sq)
-        m_pieces[sq] = Piece::W_PAWN;
+    for (u8 sq = std::to_underlying(square::a2); sq <= std::to_underlying(square::h2); ++sq)
+        m_pieces[sq] = piece::w_pawn;
 
-    for (u8 sq = std::to_underlying(Square::A7); sq <= std::to_underlying(Square::H7); ++sq)
-        m_pieces[sq] = Piece::B_PAWN;
+    for (u8 sq = std::to_underlying(square::a7); sq <= std::to_underlying(square::h7); ++sq)
+        m_pieces[sq] = piece::b_pawn;
 
-    m_pieces[std::to_underlying(Square::B1)] = m_pieces[std::to_underlying(Square::G1)] =
-        Piece::W_KNIGHT;
+    m_pieces[std::to_underlying(square::b1)] = m_pieces[std::to_underlying(square::g1)] =
+        piece::w_knight;
 
-    m_pieces[std::to_underlying(Square::B8)] = m_pieces[std::to_underlying(Square::G8)] =
-        Piece::B_KNIGHT;
+    m_pieces[std::to_underlying(square::b8)] = m_pieces[std::to_underlying(square::g8)] =
+        piece::b_knight;
 
-    m_pieces[std::to_underlying(Square::C1)] = m_pieces[std::to_underlying(Square::F1)] =
-        Piece::W_BISHOP;
+    m_pieces[std::to_underlying(square::c1)] = m_pieces[std::to_underlying(square::f1)] =
+        piece::w_bishop;
 
-    m_pieces[std::to_underlying(Square::C8)] = m_pieces[std::to_underlying(Square::F8)] =
-        Piece::B_BISHOP;
+    m_pieces[std::to_underlying(square::c8)] = m_pieces[std::to_underlying(square::f8)] =
+        piece::b_bishop;
 
-    m_pieces[std::to_underlying(Square::A1)] = m_pieces[std::to_underlying(Square::H1)] =
-        Piece::W_ROOK;
-    m_pieces[std::to_underlying(Square::A8)] = m_pieces[std::to_underlying(Square::H8)] =
-        Piece::B_ROOK;
+    m_pieces[std::to_underlying(square::a1)] = m_pieces[std::to_underlying(square::h1)] =
+        piece::w_rook;
+    m_pieces[std::to_underlying(square::a8)] = m_pieces[std::to_underlying(square::h8)] =
+        piece::b_rook;
 
-    m_pieces[std::to_underlying(Square::D1)] = Piece::W_QUEEN;
-    m_pieces[std::to_underlying(Square::D8)] = Piece::B_QUEEN;
+    m_pieces[std::to_underlying(square::d1)] = piece::w_queen;
+    m_pieces[std::to_underlying(square::d8)] = piece::b_queen;
 
-    m_pieces[std::to_underlying(Square::E1)] = Piece::W_KING;
-    m_pieces[std::to_underlying(Square::E8)] = Piece::B_KING;
+    m_pieces[std::to_underlying(square::e1)] = piece::w_king;
+    m_pieces[std::to_underlying(square::e8)] = piece::b_king;
 }
 
-bool Position::is_square_attacked_by(const Square sq, const Color c) const {
+bool position::is_square_attacked_by(const square sq, const color c) const {
     const auto& our_pieces  = occupancies(c);
-    const auto& our_pawns   = piece_type_bb(PieceType::PAWN) & our_pieces;
-    const auto& our_knights = piece_type_bb(PieceType::KNIGHT) & our_pieces;
-    const auto& our_bishops = piece_type_bb(PieceType::BISHOP) & our_pieces;
-    const auto& our_rooks   = piece_type_bb(PieceType::ROOK) & our_pieces;
-    const auto& our_queens  = piece_type_bb(PieceType::QUEEN) & our_pieces;
-    const auto& our_king    = piece_type_bb(PieceType::KING) & our_pieces;
+    const auto& our_pawns   = piece_type_bb(piece_type::pawn) & our_pieces;
+    const auto& our_knights = piece_type_bb(piece_type::knight) & our_pieces;
+    const auto& our_bishops = piece_type_bb(piece_type::bishop) & our_pieces;
+    const auto& our_rooks   = piece_type_bb(piece_type::rook) & our_pieces;
+    const auto& our_queens  = piece_type_bb(piece_type::queen) & our_pieces;
+    const auto& our_king    = piece_type_bb(piece_type::king) & our_pieces;
 
-    const auto& blockers = occupancies(Color::WHITE) | occupancies(Color::BLACK);
+    const auto& blockers = occupancies(color::white) | occupancies(color::black);
 
     if (bitboards::attacks::get_pawn_attacks(sq, ~c) & our_pawns)
         return true;
@@ -301,27 +302,27 @@ bool Position::is_square_attacked_by(const Square sq, const Color c) const {
     return false;
 }
 
-bool Position::is_valid() const {
-    if (piece_type_bb(PieceType::KING).bit_count() != 2) {
+bool position::is_valid() const {
+    if (piece_type_bb(piece_type::king).bit_count() != 2) {
         std::cerr << std::format("There must be 2 kings on the board.") << std::endl;
         return false;
     }
 
-    const auto& white_occupancies = occupancies(Color::WHITE);
+    const auto& white_occupancies = occupancies(color::white);
 
     if (white_occupancies.bit_count() > 16) {
         std::cerr << std::format("White must have 16 or less pieces.") << std::endl;
         return false;
     }
 
-    const auto& black_occupancies = occupancies(Color::BLACK);
+    const auto& black_occupancies = occupancies(color::black);
 
     if (black_occupancies.bit_count() > 16) {
         std::cerr << std::format("Black must have 16 or less pieces.") << std::endl;
         return false;
     }
 
-    const auto& pawns = piece_type_bb(PieceType::PAWN);
+    const auto& pawns = piece_type_bb(piece_type::pawn);
 
     if ((pawns & white_occupancies).bit_count() > 8) {
         std::cerr << std::format("White must have 8 or less pawns.") << std::endl;
@@ -343,21 +344,22 @@ bool Position::is_valid() const {
     return true;
 }
 
-bool Position::was_legal() const { return !is_square_attacked_by(king_square(~m_stm), m_stm); }
+bool position::was_legal() const { return !is_square_attacked_by(king_square(~m_stm), m_stm); }
 
-std::string Position::to_fen() const {
+std::string position::to_fen() const {
     std::string fen;
 
     for (int rank = constants::num_ranks - 1; rank >= 0; --rank) {
         u16 empty_squares = 0;
 
         for (u8 file = 0; file < constants::num_files; ++file) {
-            const Square sq            = square_of(file, rank);
-            const Piece  current_piece = piece_on(sq);
+            const square sq            = square_of(file, rank);
+            const piece  current_piece = piece_on(sq);
 
-            if (current_piece != Piece::NONE) {
+            if (current_piece != piece::none) {
                 if (empty_squares > 0)
                     fen += std::to_string(empty_squares);
+
                 fen += pieces::piece_to_char(current_piece);
                 empty_squares = 0;
             }
@@ -371,24 +373,24 @@ std::string Position::to_fen() const {
         fen += rank == 0 ? ' ' : '/';
     }
 
-    fen += std::format(
-        "{} {} {} {} {}", m_stm == Color::WHITE ? "w" : "b", castling_rights().to_string(),
-        m_ep_sq != Square::NONE ? util::sq_to_coords[std::to_underlying(m_ep_sq)] : "-",
-        m_half_move_clock, m_full_move_number);
+    fen +=
+        std::format("{} {} {} {} {}", m_stm == color::white ? "w" : "b", castling().to_string(),
+                    m_ep_sq != square::none ? util::sq_to_coords[std::to_underlying(m_ep_sq)] : "-",
+                    m_half_move_clock, m_full_move_number);
 
     return fen;
 }
 
-void print_board(const Position& pos) {
+void print_board(const position& pos) {
     std::cout << std::format("\n+---+---+---+---+---+---+---+---+") << std::endl;
 
     for (int rank = constants::num_ranks - 1; rank >= 0; --rank) {
         for (u8 file = 0; file < constants::num_files; ++file) {
-            const Square sq            = square_of(file, rank);
-            const Piece  current_piece = pos.piece_on(sq);
+            const square sq            = square_of(file, rank);
+            const piece  current_piece = pos.piece_on(sq);
 
             std::cout << std::format(
-                "| {}", current_piece == Piece::NONE ? ' ' : pieces::piece_to_char(current_piece));
+                "| {}", current_piece == piece::none ? ' ' : pieces::piece_to_char(current_piece));
 
             if (file != constants::num_files - 1)
                 std::cout << std::format(" ");
@@ -398,17 +400,16 @@ void print_board(const Position& pos) {
 
     std::cout << std::format("  A   B   C   D   E   F   G   H\n") << std::endl;
     std::cout << std::format("Side to move    : {}",
-                             pos.side_to_move() == Color::WHITE ? "white" : "black")
+                             pos.side_to_move() == color::white ? "white" : "black")
               << std::endl;
 
-    const Square en_passant = pos.ep_square();
+    const square en_passant = pos.ep_square();
 
     std::cout << std::format(
         "En passant      : {}",
-        en_passant != Square::NONE ? util::sq_to_coords[std::to_underlying(en_passant)] : "-")
+        en_passant != square::none ? util::sq_to_coords[std::to_underlying(en_passant)] : "-")
               << std::endl;
-    std::cout << std::format("Castling rights : {}", pos.castling_rights().to_string())
-              << std::endl;
+    std::cout << std::format("Castling rights : {}", pos.castling().to_string()) << std::endl;
     std::cout << std::format("Halfmove clock  : {}", pos.fifty_move_rule()) << std::endl;
     std::cout << std::format("Fullmove number : {}", pos.full_moves()) << std::endl;
     std::cout << std::format("FEN             : {}", pos.to_fen()) << std::endl;

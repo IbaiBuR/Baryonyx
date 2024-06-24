@@ -10,320 +10,320 @@ namespace board::bitboards::attacks {
 inline constexpr int max_bishop_blockers_config = 1 << 9;
 inline constexpr int max_rook_blockers_config   = 1 << 12;
 
-extern std::array<std::array<Bitboard, max_bishop_blockers_config>, constants::num_squares>
+extern std::array<std::array<bitboard, max_bishop_blockers_config>, constants::num_squares>
     bishop_attacks;
-extern std::array<std::array<Bitboard, max_rook_blockers_config>, constants::num_squares>
+extern std::array<std::array<bitboard, max_rook_blockers_config>, constants::num_squares>
     rook_attacks;
 
-inline constexpr std::array<Bitboard, constants::num_squares> white_pawn_attacks = {
-    {Bitboard(0x200ULL),
-     Bitboard(0x500ULL),
-     Bitboard(0xA00ULL),
-     Bitboard(0x1400ULL),
-     Bitboard(0x2800ULL),
-     Bitboard(0x5000ULL),
-     Bitboard(0xA000ULL),
-     Bitboard(0x4000ULL),
-     Bitboard(0x20000ULL),
-     Bitboard(0x50000ULL),
-     Bitboard(0xA0000ULL),
-     Bitboard(0x140000ULL),
-     Bitboard(0x280000ULL),
-     Bitboard(0x500000ULL),
-     Bitboard(0xA00000ULL),
-     Bitboard(0x400000ULL),
-     Bitboard(0x2000000ULL),
-     Bitboard(0x5000000ULL),
-     Bitboard(0xA000000ULL),
-     Bitboard(0x14000000ULL),
-     Bitboard(0x28000000ULL),
-     Bitboard(0x50000000ULL),
-     Bitboard(0xA0000000ULL),
-     Bitboard(0x40000000ULL),
-     Bitboard(0x200000000ULL),
-     Bitboard(0x500000000ULL),
-     Bitboard(0xA00000000ULL),
-     Bitboard(0x1400000000ULL),
-     Bitboard(0x2800000000ULL),
-     Bitboard(0x5000000000ULL),
-     Bitboard(0xA000000000ULL),
-     Bitboard(0x4000000000ULL),
-     Bitboard(0x20000000000ULL),
-     Bitboard(0x50000000000ULL),
-     Bitboard(0xA0000000000ULL),
-     Bitboard(0x140000000000ULL),
-     Bitboard(0x280000000000ULL),
-     Bitboard(0x500000000000ULL),
-     Bitboard(0xA00000000000ULL),
-     Bitboard(0x400000000000ULL),
-     Bitboard(0x2000000000000ULL),
-     Bitboard(0x5000000000000ULL),
-     Bitboard(0xA000000000000ULL),
-     Bitboard(0x14000000000000ULL),
-     Bitboard(0x28000000000000ULL),
-     Bitboard(0x50000000000000ULL),
-     Bitboard(0xA0000000000000ULL),
-     Bitboard(0x40000000000000ULL),
-     Bitboard(0x200000000000000ULL),
-     Bitboard(0x500000000000000ULL),
-     Bitboard(0xA00000000000000ULL),
-     Bitboard(0x1400000000000000ULL),
-     Bitboard(0x2800000000000000ULL),
-     Bitboard(0x5000000000000000ULL),
-     Bitboard(0xA000000000000000ULL),
-     Bitboard(0x4000000000000000ULL),
-     Bitboard(0x0ULL),
-     Bitboard(0x0ULL),
-     Bitboard(0x0ULL),
-     Bitboard(0x0ULL),
-     Bitboard(0x0ULL),
-     Bitboard(0x0ULL),
-     Bitboard(0x0ULL),
-     Bitboard(0x0ULL)}
+inline constexpr std::array<bitboard, constants::num_squares> white_pawn_attacks = {
+    {bitboard(0x200ULL),
+     bitboard(0x500ULL),
+     bitboard(0xA00ULL),
+     bitboard(0x1400ULL),
+     bitboard(0x2800ULL),
+     bitboard(0x5000ULL),
+     bitboard(0xA000ULL),
+     bitboard(0x4000ULL),
+     bitboard(0x20000ULL),
+     bitboard(0x50000ULL),
+     bitboard(0xA0000ULL),
+     bitboard(0x140000ULL),
+     bitboard(0x280000ULL),
+     bitboard(0x500000ULL),
+     bitboard(0xA00000ULL),
+     bitboard(0x400000ULL),
+     bitboard(0x2000000ULL),
+     bitboard(0x5000000ULL),
+     bitboard(0xA000000ULL),
+     bitboard(0x14000000ULL),
+     bitboard(0x28000000ULL),
+     bitboard(0x50000000ULL),
+     bitboard(0xA0000000ULL),
+     bitboard(0x40000000ULL),
+     bitboard(0x200000000ULL),
+     bitboard(0x500000000ULL),
+     bitboard(0xA00000000ULL),
+     bitboard(0x1400000000ULL),
+     bitboard(0x2800000000ULL),
+     bitboard(0x5000000000ULL),
+     bitboard(0xA000000000ULL),
+     bitboard(0x4000000000ULL),
+     bitboard(0x20000000000ULL),
+     bitboard(0x50000000000ULL),
+     bitboard(0xA0000000000ULL),
+     bitboard(0x140000000000ULL),
+     bitboard(0x280000000000ULL),
+     bitboard(0x500000000000ULL),
+     bitboard(0xA00000000000ULL),
+     bitboard(0x400000000000ULL),
+     bitboard(0x2000000000000ULL),
+     bitboard(0x5000000000000ULL),
+     bitboard(0xA000000000000ULL),
+     bitboard(0x14000000000000ULL),
+     bitboard(0x28000000000000ULL),
+     bitboard(0x50000000000000ULL),
+     bitboard(0xA0000000000000ULL),
+     bitboard(0x40000000000000ULL),
+     bitboard(0x200000000000000ULL),
+     bitboard(0x500000000000000ULL),
+     bitboard(0xA00000000000000ULL),
+     bitboard(0x1400000000000000ULL),
+     bitboard(0x2800000000000000ULL),
+     bitboard(0x5000000000000000ULL),
+     bitboard(0xA000000000000000ULL),
+     bitboard(0x4000000000000000ULL),
+     bitboard(0x0ULL),
+     bitboard(0x0ULL),
+     bitboard(0x0ULL),
+     bitboard(0x0ULL),
+     bitboard(0x0ULL),
+     bitboard(0x0ULL),
+     bitboard(0x0ULL),
+     bitboard(0x0ULL)}
 };
 
-inline constexpr std::array<Bitboard, constants::num_squares> black_pawn_attacks = {
-    {Bitboard(0x0ULL),
-     Bitboard(0x0ULL),
-     Bitboard(0x0ULL),
-     Bitboard(0x0ULL),
-     Bitboard(0x0ULL),
-     Bitboard(0x0ULL),
-     Bitboard(0x0ULL),
-     Bitboard(0x0ULL),
-     Bitboard(0x2ULL),
-     Bitboard(0x5ULL),
-     Bitboard(0xAULL),
-     Bitboard(0x14ULL),
-     Bitboard(0x28ULL),
-     Bitboard(0x50ULL),
-     Bitboard(0xA0ULL),
-     Bitboard(0x40ULL),
-     Bitboard(0x200ULL),
-     Bitboard(0x500ULL),
-     Bitboard(0xA00ULL),
-     Bitboard(0x1400ULL),
-     Bitboard(0x2800ULL),
-     Bitboard(0x5000ULL),
-     Bitboard(0xA000ULL),
-     Bitboard(0x4000ULL),
-     Bitboard(0x20000ULL),
-     Bitboard(0x50000ULL),
-     Bitboard(0xA0000ULL),
-     Bitboard(0x140000ULL),
-     Bitboard(0x280000ULL),
-     Bitboard(0x500000ULL),
-     Bitboard(0xA00000ULL),
-     Bitboard(0x400000ULL),
-     Bitboard(0x2000000ULL),
-     Bitboard(0x5000000ULL),
-     Bitboard(0xA000000ULL),
-     Bitboard(0x14000000ULL),
-     Bitboard(0x28000000ULL),
-     Bitboard(0x50000000ULL),
-     Bitboard(0xA0000000ULL),
-     Bitboard(0x40000000ULL),
-     Bitboard(0x200000000ULL),
-     Bitboard(0x500000000ULL),
-     Bitboard(0xA00000000ULL),
-     Bitboard(0x1400000000ULL),
-     Bitboard(0x2800000000ULL),
-     Bitboard(0x5000000000ULL),
-     Bitboard(0xA000000000ULL),
-     Bitboard(0x4000000000ULL),
-     Bitboard(0x20000000000ULL),
-     Bitboard(0x50000000000ULL),
-     Bitboard(0xA0000000000ULL),
-     Bitboard(0x140000000000ULL),
-     Bitboard(0x280000000000ULL),
-     Bitboard(0x500000000000ULL),
-     Bitboard(0xA00000000000ULL),
-     Bitboard(0x400000000000ULL),
-     Bitboard(0x2000000000000ULL),
-     Bitboard(0x5000000000000ULL),
-     Bitboard(0xA000000000000ULL),
-     Bitboard(0x14000000000000ULL),
-     Bitboard(0x28000000000000ULL),
-     Bitboard(0x50000000000000ULL),
-     Bitboard(0xA0000000000000ULL),
-     Bitboard(0x40000000000000ULL)}
+inline constexpr std::array<bitboard, constants::num_squares> black_pawn_attacks = {
+    {bitboard(0x0ULL),
+     bitboard(0x0ULL),
+     bitboard(0x0ULL),
+     bitboard(0x0ULL),
+     bitboard(0x0ULL),
+     bitboard(0x0ULL),
+     bitboard(0x0ULL),
+     bitboard(0x0ULL),
+     bitboard(0x2ULL),
+     bitboard(0x5ULL),
+     bitboard(0xAULL),
+     bitboard(0x14ULL),
+     bitboard(0x28ULL),
+     bitboard(0x50ULL),
+     bitboard(0xA0ULL),
+     bitboard(0x40ULL),
+     bitboard(0x200ULL),
+     bitboard(0x500ULL),
+     bitboard(0xA00ULL),
+     bitboard(0x1400ULL),
+     bitboard(0x2800ULL),
+     bitboard(0x5000ULL),
+     bitboard(0xA000ULL),
+     bitboard(0x4000ULL),
+     bitboard(0x20000ULL),
+     bitboard(0x50000ULL),
+     bitboard(0xA0000ULL),
+     bitboard(0x140000ULL),
+     bitboard(0x280000ULL),
+     bitboard(0x500000ULL),
+     bitboard(0xA00000ULL),
+     bitboard(0x400000ULL),
+     bitboard(0x2000000ULL),
+     bitboard(0x5000000ULL),
+     bitboard(0xA000000ULL),
+     bitboard(0x14000000ULL),
+     bitboard(0x28000000ULL),
+     bitboard(0x50000000ULL),
+     bitboard(0xA0000000ULL),
+     bitboard(0x40000000ULL),
+     bitboard(0x200000000ULL),
+     bitboard(0x500000000ULL),
+     bitboard(0xA00000000ULL),
+     bitboard(0x1400000000ULL),
+     bitboard(0x2800000000ULL),
+     bitboard(0x5000000000ULL),
+     bitboard(0xA000000000ULL),
+     bitboard(0x4000000000ULL),
+     bitboard(0x20000000000ULL),
+     bitboard(0x50000000000ULL),
+     bitboard(0xA0000000000ULL),
+     bitboard(0x140000000000ULL),
+     bitboard(0x280000000000ULL),
+     bitboard(0x500000000000ULL),
+     bitboard(0xA00000000000ULL),
+     bitboard(0x400000000000ULL),
+     bitboard(0x2000000000000ULL),
+     bitboard(0x5000000000000ULL),
+     bitboard(0xA000000000000ULL),
+     bitboard(0x14000000000000ULL),
+     bitboard(0x28000000000000ULL),
+     bitboard(0x50000000000000ULL),
+     bitboard(0xA0000000000000ULL),
+     bitboard(0x40000000000000ULL)}
 };
 
 /// @brief Pre-calculated lookup table for pawn attacks
 inline constexpr std::array pawn_attacks = {white_pawn_attacks, black_pawn_attacks};
 
 /// @brief Pre-calculated lookup table for knight attacks
-inline constexpr std::array<Bitboard, constants::num_squares> knight_attacks = {
-    {Bitboard(0x20400ULL),
-     Bitboard(0x50800ULL),
-     Bitboard(0xA1100ULL),
-     Bitboard(0x142200ULL),
-     Bitboard(0x284400ULL),
-     Bitboard(0x508800ULL),
-     Bitboard(0xA01000ULL),
-     Bitboard(0x402000ULL),
-     Bitboard(0x2040004ULL),
-     Bitboard(0x5080008ULL),
-     Bitboard(0xA110011ULL),
-     Bitboard(0x14220022ULL),
-     Bitboard(0x28440044ULL),
-     Bitboard(0x50880088ULL),
-     Bitboard(0xA0100010ULL),
-     Bitboard(0x40200020ULL),
-     Bitboard(0x204000402ULL),
-     Bitboard(0x508000805ULL),
-     Bitboard(0xA1100110AULL),
-     Bitboard(0x1422002214ULL),
-     Bitboard(0x2844004428ULL),
-     Bitboard(0x5088008850ULL),
-     Bitboard(0xA0100010A0ULL),
-     Bitboard(0x4020002040ULL),
-     Bitboard(0x20400040200ULL),
-     Bitboard(0x50800080500ULL),
-     Bitboard(0xA1100110A00ULL),
-     Bitboard(0x142200221400ULL),
-     Bitboard(0x284400442800ULL),
-     Bitboard(0x508800885000ULL),
-     Bitboard(0xA0100010A000ULL),
-     Bitboard(0x402000204000ULL),
-     Bitboard(0x2040004020000ULL),
-     Bitboard(0x5080008050000ULL),
-     Bitboard(0xA1100110A0000ULL),
-     Bitboard(0x14220022140000ULL),
-     Bitboard(0x28440044280000ULL),
-     Bitboard(0x50880088500000ULL),
-     Bitboard(0xA0100010A00000ULL),
-     Bitboard(0x40200020400000ULL),
-     Bitboard(0x204000402000000ULL),
-     Bitboard(0x508000805000000ULL),
-     Bitboard(0xA1100110A000000ULL),
-     Bitboard(0x1422002214000000ULL),
-     Bitboard(0x2844004428000000ULL),
-     Bitboard(0x5088008850000000ULL),
-     Bitboard(0xA0100010A0000000ULL),
-     Bitboard(0x4020002040000000ULL),
-     Bitboard(0x400040200000000ULL),
-     Bitboard(0x800080500000000ULL),
-     Bitboard(0x1100110A00000000ULL),
-     Bitboard(0x2200221400000000ULL),
-     Bitboard(0x4400442800000000ULL),
-     Bitboard(0x8800885000000000ULL),
-     Bitboard(0x100010A000000000ULL),
-     Bitboard(0x2000204000000000ULL),
-     Bitboard(0x4020000000000ULL),
-     Bitboard(0x8050000000000ULL),
-     Bitboard(0x110A0000000000ULL),
-     Bitboard(0x22140000000000ULL),
-     Bitboard(0x44280000000000ULL),
-     Bitboard(0x88500000000000ULL),
-     Bitboard(0x10A00000000000ULL),
-     Bitboard(0x20400000000000ULL)}
+inline constexpr std::array<bitboard, constants::num_squares> knight_attacks = {
+    {bitboard(0x20400ULL),
+     bitboard(0x50800ULL),
+     bitboard(0xA1100ULL),
+     bitboard(0x142200ULL),
+     bitboard(0x284400ULL),
+     bitboard(0x508800ULL),
+     bitboard(0xA01000ULL),
+     bitboard(0x402000ULL),
+     bitboard(0x2040004ULL),
+     bitboard(0x5080008ULL),
+     bitboard(0xA110011ULL),
+     bitboard(0x14220022ULL),
+     bitboard(0x28440044ULL),
+     bitboard(0x50880088ULL),
+     bitboard(0xA0100010ULL),
+     bitboard(0x40200020ULL),
+     bitboard(0x204000402ULL),
+     bitboard(0x508000805ULL),
+     bitboard(0xA1100110AULL),
+     bitboard(0x1422002214ULL),
+     bitboard(0x2844004428ULL),
+     bitboard(0x5088008850ULL),
+     bitboard(0xA0100010A0ULL),
+     bitboard(0x4020002040ULL),
+     bitboard(0x20400040200ULL),
+     bitboard(0x50800080500ULL),
+     bitboard(0xA1100110A00ULL),
+     bitboard(0x142200221400ULL),
+     bitboard(0x284400442800ULL),
+     bitboard(0x508800885000ULL),
+     bitboard(0xA0100010A000ULL),
+     bitboard(0x402000204000ULL),
+     bitboard(0x2040004020000ULL),
+     bitboard(0x5080008050000ULL),
+     bitboard(0xA1100110A0000ULL),
+     bitboard(0x14220022140000ULL),
+     bitboard(0x28440044280000ULL),
+     bitboard(0x50880088500000ULL),
+     bitboard(0xA0100010A00000ULL),
+     bitboard(0x40200020400000ULL),
+     bitboard(0x204000402000000ULL),
+     bitboard(0x508000805000000ULL),
+     bitboard(0xA1100110A000000ULL),
+     bitboard(0x1422002214000000ULL),
+     bitboard(0x2844004428000000ULL),
+     bitboard(0x5088008850000000ULL),
+     bitboard(0xA0100010A0000000ULL),
+     bitboard(0x4020002040000000ULL),
+     bitboard(0x400040200000000ULL),
+     bitboard(0x800080500000000ULL),
+     bitboard(0x1100110A00000000ULL),
+     bitboard(0x2200221400000000ULL),
+     bitboard(0x4400442800000000ULL),
+     bitboard(0x8800885000000000ULL),
+     bitboard(0x100010A000000000ULL),
+     bitboard(0x2000204000000000ULL),
+     bitboard(0x4020000000000ULL),
+     bitboard(0x8050000000000ULL),
+     bitboard(0x110A0000000000ULL),
+     bitboard(0x22140000000000ULL),
+     bitboard(0x44280000000000ULL),
+     bitboard(0x88500000000000ULL),
+     bitboard(0x10A00000000000ULL),
+     bitboard(0x20400000000000ULL)}
 };
 
 /// @brief Pre-calculated lookup table for king attacks
-inline constexpr std::array<Bitboard, constants::num_squares> king_attacks = {
-    {Bitboard(0x302ULL),
-     Bitboard(0x705ULL),
-     Bitboard(0xE0AULL),
-     Bitboard(0x1C14ULL),
-     Bitboard(0x3828ULL),
-     Bitboard(0x7050ULL),
-     Bitboard(0xE0A0ULL),
-     Bitboard(0xC040ULL),
-     Bitboard(0x30203ULL),
-     Bitboard(0x70507ULL),
-     Bitboard(0xE0A0EULL),
-     Bitboard(0x1C141CULL),
-     Bitboard(0x382838ULL),
-     Bitboard(0x705070ULL),
-     Bitboard(0xE0A0E0ULL),
-     Bitboard(0xC040C0ULL),
-     Bitboard(0x3020300ULL),
-     Bitboard(0x7050700ULL),
-     Bitboard(0xE0A0E00ULL),
-     Bitboard(0x1C141C00ULL),
-     Bitboard(0x38283800ULL),
-     Bitboard(0x70507000ULL),
-     Bitboard(0xE0A0E000ULL),
-     Bitboard(0xC040C000ULL),
-     Bitboard(0x302030000ULL),
-     Bitboard(0x705070000ULL),
-     Bitboard(0xE0A0E0000ULL),
-     Bitboard(0x1C141C0000ULL),
-     Bitboard(0x3828380000ULL),
-     Bitboard(0x7050700000ULL),
-     Bitboard(0xE0A0E00000ULL),
-     Bitboard(0xC040C00000ULL),
-     Bitboard(0x30203000000ULL),
-     Bitboard(0x70507000000ULL),
-     Bitboard(0xE0A0E000000ULL),
-     Bitboard(0x1C141C000000ULL),
-     Bitboard(0x382838000000ULL),
-     Bitboard(0x705070000000ULL),
-     Bitboard(0xE0A0E0000000ULL),
-     Bitboard(0xC040C0000000ULL),
-     Bitboard(0x3020300000000ULL),
-     Bitboard(0x7050700000000ULL),
-     Bitboard(0xE0A0E00000000ULL),
-     Bitboard(0x1C141C00000000ULL),
-     Bitboard(0x38283800000000ULL),
-     Bitboard(0x70507000000000ULL),
-     Bitboard(0xE0A0E000000000ULL),
-     Bitboard(0xC040C000000000ULL),
-     Bitboard(0x302030000000000ULL),
-     Bitboard(0x705070000000000ULL),
-     Bitboard(0xE0A0E0000000000ULL),
-     Bitboard(0x1C141C0000000000ULL),
-     Bitboard(0x3828380000000000ULL),
-     Bitboard(0x7050700000000000ULL),
-     Bitboard(0xE0A0E00000000000ULL),
-     Bitboard(0xC040C00000000000ULL),
-     Bitboard(0x203000000000000ULL),
-     Bitboard(0x507000000000000ULL),
-     Bitboard(0xA0E000000000000ULL),
-     Bitboard(0x141C000000000000ULL),
-     Bitboard(0x2838000000000000ULL),
-     Bitboard(0x5070000000000000ULL),
-     Bitboard(0xA0E0000000000000ULL),
-     Bitboard(0x40C0000000000000ULL)}
+inline constexpr std::array<bitboard, constants::num_squares> king_attacks = {
+    {bitboard(0x302ULL),
+     bitboard(0x705ULL),
+     bitboard(0xE0AULL),
+     bitboard(0x1C14ULL),
+     bitboard(0x3828ULL),
+     bitboard(0x7050ULL),
+     bitboard(0xE0A0ULL),
+     bitboard(0xC040ULL),
+     bitboard(0x30203ULL),
+     bitboard(0x70507ULL),
+     bitboard(0xE0A0EULL),
+     bitboard(0x1C141CULL),
+     bitboard(0x382838ULL),
+     bitboard(0x705070ULL),
+     bitboard(0xE0A0E0ULL),
+     bitboard(0xC040C0ULL),
+     bitboard(0x3020300ULL),
+     bitboard(0x7050700ULL),
+     bitboard(0xE0A0E00ULL),
+     bitboard(0x1C141C00ULL),
+     bitboard(0x38283800ULL),
+     bitboard(0x70507000ULL),
+     bitboard(0xE0A0E000ULL),
+     bitboard(0xC040C000ULL),
+     bitboard(0x302030000ULL),
+     bitboard(0x705070000ULL),
+     bitboard(0xE0A0E0000ULL),
+     bitboard(0x1C141C0000ULL),
+     bitboard(0x3828380000ULL),
+     bitboard(0x7050700000ULL),
+     bitboard(0xE0A0E00000ULL),
+     bitboard(0xC040C00000ULL),
+     bitboard(0x30203000000ULL),
+     bitboard(0x70507000000ULL),
+     bitboard(0xE0A0E000000ULL),
+     bitboard(0x1C141C000000ULL),
+     bitboard(0x382838000000ULL),
+     bitboard(0x705070000000ULL),
+     bitboard(0xE0A0E0000000ULL),
+     bitboard(0xC040C0000000ULL),
+     bitboard(0x3020300000000ULL),
+     bitboard(0x7050700000000ULL),
+     bitboard(0xE0A0E00000000ULL),
+     bitboard(0x1C141C00000000ULL),
+     bitboard(0x38283800000000ULL),
+     bitboard(0x70507000000000ULL),
+     bitboard(0xE0A0E000000000ULL),
+     bitboard(0xC040C000000000ULL),
+     bitboard(0x302030000000000ULL),
+     bitboard(0x705070000000000ULL),
+     bitboard(0xE0A0E0000000000ULL),
+     bitboard(0x1C141C0000000000ULL),
+     bitboard(0x3828380000000000ULL),
+     bitboard(0x7050700000000000ULL),
+     bitboard(0xE0A0E00000000000ULL),
+     bitboard(0xC040C00000000000ULL),
+     bitboard(0x203000000000000ULL),
+     bitboard(0x507000000000000ULL),
+     bitboard(0xA0E000000000000ULL),
+     bitboard(0x141C000000000000ULL),
+     bitboard(0x2838000000000000ULL),
+     bitboard(0x5070000000000000ULL),
+     bitboard(0xA0E0000000000000ULL),
+     bitboard(0x40C0000000000000ULL)}
 };
 
 void init();
 
-inline Bitboard get_pawn_attacks(const Square sq, const Color c) {
+inline bitboard get_pawn_attacks(const square sq, const color c) {
     return pawn_attacks[std::to_underlying(c)][std::to_underlying(sq)];
 }
 
-inline Bitboard get_knight_attacks(const Square sq) {
+inline bitboard get_knight_attacks(const square sq) {
     return knight_attacks[std::to_underlying(sq)];
 }
 
-inline Bitboard get_bishop_attacks(const Square sq, Bitboard blockers) {
+inline bitboard get_bishop_attacks(const square sq, bitboard blockers) {
     return bishop_attacks[std::to_underlying(sq)]
                          [magic_index(magics::bishop_magics[std::to_underlying(sq)], blockers)];
 }
 
-inline Bitboard get_rook_attacks(const Square sq, Bitboard blockers) {
+inline bitboard get_rook_attacks(const square sq, bitboard blockers) {
     return rook_attacks[std::to_underlying(sq)]
                        [magic_index(magics::rook_magics[std::to_underlying(sq)], blockers)];
 }
 
-inline Bitboard get_king_attacks(const Square sq) { return king_attacks[std::to_underlying(sq)]; }
+inline bitboard get_king_attacks(const square sq) { return king_attacks[std::to_underlying(sq)]; }
 
-inline Bitboard get_queen_attacks(const Square sq, const Bitboard& blockers) {
+inline bitboard get_queen_attacks(const square sq, const bitboard& blockers) {
     return get_bishop_attacks(sq, blockers) | get_rook_attacks(sq, blockers);
 }
 
 /// @brief Creates the sliding attacks for the specified direction
-/// @tparam d Direction to create the attacks
+/// @tparam D Direction to create the attacks
 /// @param sq Square to generate the attacks from
 /// @param occupied Bitboard of occupied squares on the board (Blockers)
 /// @returns A bitboard with the sliding attacks in the given direction
-template <Direction d>
-constexpr Bitboard sliding_attacks(const Square sq, const Bitboard& occupied) {
-    Bitboard attacks;
+template <direction D>
+constexpr bitboard sliding_attacks(const square sq, const bitboard& occupied) {
+    bitboard attacks;
 
-    for (Bitboard b = shift<d>(Bitboard::from_square(sq)); !b.empty(); b = shift<d>(b)) {
+    for (bitboard b = shift<D>(bitboard::from_square(sq)); !b.empty(); b = shift<D>(b)) {
         attacks |= b;
 
         if (b & occupied)
@@ -334,27 +334,27 @@ constexpr Bitboard sliding_attacks(const Square sq, const Bitboard& occupied) {
 }
 
 /// @brief Generates the possible moves for sliding pieces
-/// @tparam pt Piece type (Slider)
+/// @tparam Pt Piece type (Slider)
 /// @param sq Square to generate the attacks from
 /// @param occupied Bitboard of occupied squares on the board (Blockers)
 /// @returns A bitboard with the generated sliding attacks
 /// @note An assert is used to ensure the function is only used with sliders. The queen is not
 /// included since we can obtain it by combining the attacks of the bishop and the rook
-template <PieceType pt>
-constexpr Bitboard gen_sliding(const Square sq, const Bitboard& occupied) {
-    assert(pt == PieceType::BISHOP || pt == PieceType::ROOK);
+template <piece_type Pt>
+constexpr bitboard gen_sliding(const square sq, const bitboard& occupied) {
+    assert(Pt == piece_type::bishop || Pt == piece_type::rook);
 
-    if constexpr (pt == PieceType::BISHOP) {
-        return sliding_attacks<Direction::NORTH_EAST>(sq, occupied)
-             | sliding_attacks<Direction::NORTH_WEST>(sq, occupied)
-             | sliding_attacks<Direction::SOUTH_EAST>(sq, occupied)
-             | sliding_attacks<Direction::SOUTH_WEST>(sq, occupied);
+    if constexpr (Pt == piece_type::bishop) {
+        return sliding_attacks<direction::north_east>(sq, occupied)
+             | sliding_attacks<direction::north_west>(sq, occupied)
+             | sliding_attacks<direction::south_east>(sq, occupied)
+             | sliding_attacks<direction::south_west>(sq, occupied);
     }
     else {
-        return sliding_attacks<Direction::NORTH>(sq, occupied)
-             | sliding_attacks<Direction::SOUTH>(sq, occupied)
-             | sliding_attacks<Direction::EAST>(sq, occupied)
-             | sliding_attacks<Direction::WEST>(sq, occupied);
+        return sliding_attacks<direction::north>(sq, occupied)
+             | sliding_attacks<direction::south>(sq, occupied)
+             | sliding_attacks<direction::east>(sq, occupied)
+             | sliding_attacks<direction::west>(sq, occupied);
     }
 }
 
@@ -365,18 +365,18 @@ constexpr Bitboard gen_sliding(const Square sq, const Bitboard& occupied) {
 /// @returns A bitboard representing the squares that the piece can attack from the given square
 /// @note Pawns are not taken into account since this function is primarily used during movegen
 /// and pawns are treated separately there
-constexpr Bitboard
-get_attacks_by_piece_type(const PieceType pt, const Square sq, const Bitboard& occupied) {
+constexpr bitboard
+get_attacks_by_piece_type(const piece_type pt, const square sq, const bitboard& occupied) {
     switch (pt) {
-    case PieceType::KNIGHT:
+    case piece_type::knight:
         return knight_attacks[std::to_underlying(sq)];
-    case PieceType::KING:
+    case piece_type::king:
         return king_attacks[std::to_underlying(sq)];
-    case PieceType::BISHOP:
+    case piece_type::bishop:
         return get_bishop_attacks(sq, occupied);
-    case PieceType::ROOK:
+    case piece_type::rook:
         return get_rook_attacks(sq, occupied);
-    case PieceType::QUEEN:
+    case piece_type::queen:
         return get_bishop_attacks(sq, occupied) | get_rook_attacks(sq, occupied);
     default:
         std::unreachable();

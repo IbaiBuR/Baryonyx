@@ -12,7 +12,7 @@ TEST_SUITE("Perft tests") {
     TEST_CASE("perft suite") {
         for (const auto& test : perft_suite) {
             const auto      perft_test = utils::split::split_string(test, ';');
-            board::Position test_pos(perft_test[0]);
+            board::position test_pos(perft_test[0]);
 
             for (usize i = 1; i < perft_test.size(); ++i) {
                 const auto test_data      = utils::split::split_string(perft_test[i], ' ');

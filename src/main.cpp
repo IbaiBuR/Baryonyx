@@ -8,16 +8,16 @@ int main(const int argc, const char *argv[]) {
     board::bitboards::attacks::init();
 
     if (argc > 1 && !strcmp(argv[1], "bench")) {
-        constexpr int benchDepth = 5;
+        constexpr int bench_depth = 5;
 
-        search::Searcher searcher;
-        search::bench::run(searcher, benchDepth);
+        search::searcher searcher;
+        search::bench::run(searcher, bench_depth);
 
         return 0;
     }
 
-    uci::CommandHandler commandHandler;
-    commandHandler.loop();
+    uci::command_handler uci_handler;
+    uci_handler.loop();
 
     return 0;
 }

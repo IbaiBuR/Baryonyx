@@ -2,14 +2,14 @@
 
 #include "types.hpp"
 
-class TimeManager {
+class time_manager {
     public:
-        TimeManager() :
+        time_manager() :
             m_start_time(0),
             m_base_time(UINT64_MAX),
             m_increment(UINT16_MAX) {}
 
-        TimeManager(const u64 start_time, const u64 base_time, const u16 increment) {
+        time_manager(const u64 start_time, const u64 base_time, const u16 increment) {
             this->m_start_time = start_time;
             this->m_base_time  = base_time;
             this->m_increment  = increment;

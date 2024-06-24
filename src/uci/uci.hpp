@@ -8,7 +8,7 @@
 
 namespace uci {
 
-class CommandHandler {
+class command_handler {
     public:
         void loop();
 
@@ -17,20 +17,20 @@ class CommandHandler {
         static constexpr auto name    = "Baryonyx";
         static constexpr auto version = "0.1.6";
 
-        search::Searcher m_searcher;
+        search::searcher m_searcher;
 
-        static void handle_d(const board::Position& pos);
-        static void handle_eval(const board::Position& pos);
+        static void handle_d(const board::position& pos);
+        static void handle_eval(const board::position& pos);
         static void handle_is_ready();
-        void        handle_go(const std::vector<std::string>& command, const board::Position& pos);
-        static void handle_position(const std::vector<std::string>& command, board::Position& pos);
+        void        handle_go(const std::vector<std::string>& command, const board::position& pos);
+        static void handle_position(const std::vector<std::string>& command, board::position& pos);
         static void handle_uci();
-        static void handle_uci_new_game(board::Position& pos);
+        static void handle_uci_new_game(board::position& pos);
 };
 
 namespace util {
 
-moves::Move from_uci(const board::Position& pos, const std::string& move);
+moves::move from_uci(const board::position& pos, const std::string& move);
 
 }
 
