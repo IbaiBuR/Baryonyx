@@ -9,7 +9,7 @@ namespace eval {
 constexpr std::array game_phase_increments = {0, 1, 1, 2, 4, 0};
 constexpr int        max_game_phase        = 24;
 
-constexpr PackedScore S(i16 mg, i16 eg) { return {mg, eg}; }
+constexpr packed_score S(i16 mg, i16 eg) { return {mg, eg}; }
 
 constexpr std::array piece_values = {S(82, 94),   S(337, 281),  S(365, 297),
                                      S(477, 512), S(1025, 936), S(0, 0)};
@@ -93,66 +93,66 @@ constexpr std::array all_psqt = {pawn_table, knight_table, bishop_table,
 
 } // namespace psqt
 
-int get_game_phase(const board::Position& pos) {
-    const int game_phase = game_phase_increments[std::to_underlying(PieceType::KNIGHT)]
-                            * pos.piece_type_bb(PieceType::KNIGHT).bit_count()
-                        + game_phase_increments[std::to_underlying(PieceType::BISHOP)]
-                              * pos.piece_type_bb(PieceType::BISHOP).bit_count()
-                        + game_phase_increments[std::to_underlying(PieceType::ROOK)]
-                              * pos.piece_type_bb(PieceType::ROOK).bit_count()
-                        + game_phase_increments[std::to_underlying(PieceType::QUEEN)]
-                              * pos.piece_type_bb(PieceType::QUEEN).bit_count();
+int get_game_phase(const board::position& pos) {
+    const int game_phase = game_phase_increments[std::to_underlying(piece_type::knight)]
+                             * pos.piece_type_bb(piece_type::knight).bit_count()
+                         + game_phase_increments[std::to_underlying(piece_type::bishop)]
+                               * pos.piece_type_bb(piece_type::bishop).bit_count()
+                         + game_phase_increments[std::to_underlying(piece_type::rook)]
+                               * pos.piece_type_bb(piece_type::rook).bit_count()
+                         + game_phase_increments[std::to_underlying(piece_type::queen)]
+                               * pos.piece_type_bb(piece_type::queen).bit_count();
 
     return std::min(game_phase, max_game_phase);
 }
 
-template <Color stm>
-PackedScore evaluate_material(const board::Position& pos) {
-    constexpr Color us   = stm;
-    constexpr Color them = ~us;
+template <color Stm>
+packed_score evaluate_material(const board::position& pos) {
+    constexpr color us   = Stm;
+    constexpr color them = ~us;
 
     const int pawn_count =
-        pos.piece_count<us>(PieceType::PAWN) - pos.piece_count<them>(PieceType::PAWN);
+        pos.piece_count<us>(piece_type::pawn) - pos.piece_count<them>(piece_type::pawn);
     const int knight_count =
-        pos.piece_count<us>(PieceType::KNIGHT) - pos.piece_count<them>(PieceType::KNIGHT);
+        pos.piece_count<us>(piece_type::knight) - pos.piece_count<them>(piece_type::knight);
     const int bishop_count =
-        pos.piece_count<us>(PieceType::BISHOP) - pos.piece_count<them>(PieceType::BISHOP);
+        pos.piece_count<us>(piece_type::bishop) - pos.piece_count<them>(piece_type::bishop);
     const int rook_count =
-        pos.piece_count<us>(PieceType::ROOK) - pos.piece_count<them>(PieceType::ROOK);
+        pos.piece_count<us>(piece_type::rook) - pos.piece_count<them>(piece_type::rook);
     const int queen_count =
-        pos.piece_count<us>(PieceType::QUEEN) - pos.piece_count<them>(PieceType::QUEEN);
+        pos.piece_count<us>(piece_type::queen) - pos.piece_count<them>(piece_type::queen);
 
-    PackedScore material_score;
+    packed_score material_score;
 
-    material_score += piece_values[std::to_underlying(PieceType::PAWN)] * pawn_count;
-    material_score += piece_values[std::to_underlying(PieceType::KNIGHT)] * knight_count;
-    material_score += piece_values[std::to_underlying(PieceType::BISHOP)] * bishop_count;
-    material_score += piece_values[std::to_underlying(PieceType::ROOK)] * rook_count;
-    material_score += piece_values[std::to_underlying(PieceType::QUEEN)] * queen_count;
+    material_score += piece_values[std::to_underlying(piece_type::pawn)] * pawn_count;
+    material_score += piece_values[std::to_underlying(piece_type::knight)] * knight_count;
+    material_score += piece_values[std::to_underlying(piece_type::bishop)] * bishop_count;
+    material_score += piece_values[std::to_underlying(piece_type::rook)] * rook_count;
+    material_score += piece_values[std::to_underlying(piece_type::queen)] * queen_count;
 
     return material_score;
 }
 
-template <Color stm>
-PackedScore evaluate_psqt(const board::Position& pos) {
-    constexpr Color us   = stm;
-    constexpr Color them = ~us;
+template <color Stm>
+packed_score evaluate_psqt(const board::position& pos) {
+    constexpr color us   = Stm;
+    constexpr color them = ~us;
 
-    PackedScore psqt_score;
+    packed_score psqt_score;
 
     auto our_pieces   = pos.occupancies(us);
     auto their_pieces = pos.occupancies(them);
 
     while (!our_pieces.empty()) {
-        const auto      sq = static_cast<Square>(our_pieces.pop_lsb());
-        const PieceType pt = board::pieces::piece_to_piece_type(pos.piece_on(sq));
+        const auto       sq = static_cast<square>(our_pieces.pop_lsb());
+        const piece_type pt = board::pieces::piece_to_piece_type(pos.piece_on(sq));
         psqt_score +=
             psqt::all_psqt[std::to_underlying(pt)][std::to_underlying(relative_square<us>(sq))];
     }
 
     while (!their_pieces.empty()) {
-        const auto      sq = static_cast<Square>(their_pieces.pop_lsb());
-        const PieceType pt = board::pieces::piece_to_piece_type(pos.piece_on(sq));
+        const auto       sq = static_cast<square>(their_pieces.pop_lsb());
+        const piece_type pt = board::pieces::piece_to_piece_type(pos.piece_on(sq));
         psqt_score -=
             psqt::all_psqt[std::to_underlying(pt)][std::to_underlying(relative_square<them>(sq))];
     }
@@ -160,20 +160,20 @@ PackedScore evaluate_psqt(const board::Position& pos) {
     return psqt_score;
 }
 
-template <Color stm>
-Score evaluate(const board::Position& pos) {
-    const PackedScore score     = evaluate_material<stm>(pos) + evaluate_psqt<stm>(pos);
-    const int         game_phase = get_game_phase(pos);
-    const Score       eval =
-        (score.midgame() * game_phase + score.endgame() * (max_game_phase - game_phase))
+template <color Stm>
+score evaluate(const board::position& pos) {
+    const packed_score packed_eval = evaluate_material<Stm>(pos) + evaluate_psqt<Stm>(pos);
+    const int          game_phase  = get_game_phase(pos);
+    const score        eval =
+        (packed_eval.midgame() * game_phase + packed_eval.endgame() * (max_game_phase - game_phase))
         / max_game_phase;
 
     return eval;
 }
 
-Score evaluate(const board::Position& pos) {
-    return pos.side_to_move() == Color::WHITE ? evaluate<Color::WHITE>(pos)
-                                              : evaluate<Color::BLACK>(pos);
+score evaluate(const board::position& pos) {
+    return pos.side_to_move() == color::white ? evaluate<color::white>(pos)
+                                              : evaluate<color::black>(pos);
 }
 
 } // namespace eval

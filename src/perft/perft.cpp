@@ -7,16 +7,16 @@
 #include "../moves/movelist.hpp"
 #include "../utils/time.hpp"
 
-u64 perft(const board::Position& pos, const int depth) {
+u64 perft(const board::position& pos, const int depth) {
     if (depth == 0)
         return 1ULL;
 
-    u64             nodes = 0ULL;
-    moves::MoveList move_list;
+    u64              nodes = 0ULL;
+    moves::move_list move_list;
     generate_all_moves(pos, move_list);
 
     for (u32 i = 0; i < move_list.size(); ++i) {
-        board::Position copy = pos;
+        board::position copy = pos;
         copy.make_move(move_list.move_at(i));
 
         if (!copy.was_legal())
@@ -28,17 +28,17 @@ u64 perft(const board::Position& pos, const int depth) {
     return nodes;
 }
 
-void split_perft(const board::Position& pos, const int depth) {
+void split_perft(const board::position& pos, const int depth) {
     std::cout << std::format("\nRunning performance test...\n") << std::endl;
 
-    moves::MoveList move_list;
+    moves::move_list move_list;
     generate_all_moves(pos, move_list);
 
     u64       total_nodes = 0ULL;
     const u64 start_time  = utils::time::get_time_ms();
 
     for (u32 i = 0; i < move_list.size(); ++i) {
-        board::Position copy        = pos;
+        board::position copy         = pos;
         const auto      current_move = move_list.move_at(i);
         copy.make_move(current_move);
 

@@ -21,28 +21,28 @@ constexpr usize castling_keys_offset    = piece_keys;
 constexpr usize en_passant_keys_offset  = castling_keys_offset + castling_keys;
 constexpr usize side_to_move_key_offset = en_passant_keys_offset + en_passant_keys;
 
-extern const std::array<ZobristKey, total_keys> all_keys;
+extern const std::array<zobrist_key, total_keys> all_keys;
 
-inline ZobristKey get_piece_key(const Piece p, const Square sq) {
-    return p == Piece::NONE || sq == Square::NONE
+inline zobrist_key get_piece_key(const piece p, const square sq) {
+    return p == piece::none || sq == square::none
              ? 0ULL
              : all_keys[std::to_underlying(p) + std::to_underlying(sq) * 12];
 }
 
-inline ZobristKey get_castling_key(const board::CastlingRights& castlingRights) {
+inline zobrist_key get_castling_key(const board::castling_rights& castlingRights) {
     return all_keys[castling_keys_offset + castlingRights.as_u8()];
 }
 
-inline ZobristKey get_en_passant_key(const File f) {
+inline zobrist_key get_en_passant_key(const file f) {
     return all_keys[en_passant_keys_offset + std::to_underlying(f)];
 }
 
-inline ZobristKey get_en_passant_key(const Square epSq) {
-    return epSq == Square::NONE ? 0ULL : get_en_passant_key(file_of(epSq));
+inline zobrist_key get_en_passant_key(const square epSq) {
+    return epSq == square::none ? 0ULL : get_en_passant_key(file_of(epSq));
 }
 
-inline ZobristKey get_side_key(const Color c) {
-    return c == Color::WHITE ? 0ULL : all_keys[side_to_move_key_offset];
+inline zobrist_key get_side_key(const color c) {
+    return c == color::white ? 0ULL : all_keys[side_to_move_key_offset];
 }
 
 } // namespace tt::zobrist

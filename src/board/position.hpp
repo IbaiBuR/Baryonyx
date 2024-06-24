@@ -8,38 +8,38 @@
 
 namespace board {
 
-class CastlingRights {
+class castling_rights {
     public:
-        enum class Flags : u8 {
-            NONE,
-            WK  = 1,
-            WQ  = 2,
-            BK  = 4,
-            BQ  = 8,
-            ALL = 15
+        enum class castling_flag : u8 {
+            none,
+            wk  = 1,
+            wq  = 2,
+            bk  = 4,
+            bq  = 8,
+            all = 15
         };
 
-        constexpr CastlingRights() :
-            m_flags(Flags::NONE) {}
+        constexpr castling_rights() :
+            m_flags(castling_flag::none) {}
 
-        constexpr explicit CastlingRights(const Flags flag) :
+        constexpr explicit castling_rights(const castling_flag flag) :
             m_flags(flag) {}
 
-        constexpr explicit CastlingRights(const std::string& flags) :
-            m_flags(Flags::NONE) {
+        constexpr explicit castling_rights(const std::string& flags) :
+            m_flags(castling_flag::none) {
             for (const char c : flags) {
                 switch (c) {
                 case 'K':
-                    *this |= CastlingRights(Flags::WK);
+                    *this |= castling_rights(castling_flag::wk);
                     break;
                 case 'Q':
-                    *this |= CastlingRights(Flags::WQ);
+                    *this |= castling_rights(castling_flag::wq);
                     break;
                 case 'k':
-                    *this |= CastlingRights(Flags::BK);
+                    *this |= castling_rights(castling_flag::bk);
                     break;
                 case 'q':
-                    *this |= CastlingRights(Flags::BQ);
+                    *this |= castling_rights(castling_flag::bq);
                     break;
                 default:
                     break;
@@ -47,62 +47,63 @@ class CastlingRights {
             }
         }
 
-        constexpr bool operator==(const CastlingRights& other) const {
+        constexpr bool operator==(const castling_rights& other) const {
             return std::to_underlying(m_flags) == std::to_underlying(other.m_flags);
         }
 
-        constexpr bool operator!=(const CastlingRights& other) const {
+        constexpr bool operator!=(const castling_rights& other) const {
             return std::to_underlying(m_flags) != std::to_underlying(other.m_flags);
         }
 
-        constexpr CastlingRights operator|(const CastlingRights& other) const {
-            return CastlingRights(static_cast<Flags>(std::to_underlying(m_flags)
-                                                     | std::to_underlying(other.m_flags)));
+        constexpr castling_rights operator|(const castling_rights& other) const {
+            return castling_rights(static_cast<castling_flag>(std::to_underlying(m_flags)
+                                                              | std::to_underlying(other.m_flags)));
         }
 
-        constexpr CastlingRights& operator|=(const CastlingRights& other) {
-            m_flags =
-                static_cast<Flags>(std::to_underlying(m_flags) | std::to_underlying(other.m_flags));
+        constexpr castling_rights& operator|=(const castling_rights& other) {
+            m_flags = static_cast<castling_flag>(std::to_underlying(m_flags)
+                                                 | std::to_underlying(other.m_flags));
             return *this;
         }
 
-        constexpr CastlingRights operator&(const int update) const {
-            return CastlingRights(static_cast<Flags>(std::to_underlying(m_flags) & update));
+        constexpr castling_rights operator&(const int update) const {
+            return castling_rights(
+                static_cast<castling_flag>(std::to_underlying(m_flags) & update));
         }
 
-        constexpr CastlingRights& operator&=(const int update) {
-            m_flags = static_cast<Flags>(std::to_underlying(m_flags) & update);
+        constexpr castling_rights& operator&=(const int update) {
+            m_flags = static_cast<castling_flag>(std::to_underlying(m_flags) & update);
             return *this;
         }
 
         [[nodiscard]] constexpr u8 as_u8() const { return static_cast<u8>(m_flags); }
 
-        template <Color c>
+        template <color C>
         [[nodiscard]] bool king_side_available() const {
-            if constexpr (c == Color::WHITE)
-                return std::to_underlying(m_flags) & std::to_underlying(Flags::WK);
+            if constexpr (C == color::white)
+                return std::to_underlying(m_flags) & std::to_underlying(castling_flag::wk);
             else
-                return std::to_underlying(m_flags) & std::to_underlying(Flags::BK);
+                return std::to_underlying(m_flags) & std::to_underlying(castling_flag::bk);
         }
 
-        template <Color c>
+        template <color C>
         [[nodiscard]] bool queen_side_available() const {
-            if constexpr (c == Color::WHITE)
-                return std::to_underlying(m_flags) & std::to_underlying(Flags::WQ);
+            if constexpr (C == color::white)
+                return std::to_underlying(m_flags) & std::to_underlying(castling_flag::wq);
             else
-                return std::to_underlying(m_flags) & std::to_underlying(Flags::BQ);
+                return std::to_underlying(m_flags) & std::to_underlying(castling_flag::bq);
         }
 
         [[nodiscard]] std::string to_string() const {
             std::string result;
 
-            if (king_side_available<Color::WHITE>())
+            if (king_side_available<color::white>())
                 result += 'K';
-            if (queen_side_available<Color::WHITE>())
+            if (queen_side_available<color::white>())
                 result += 'Q';
-            if (king_side_available<Color::BLACK>())
+            if (king_side_available<color::black>())
                 result += 'k';
-            if (queen_side_available<Color::BLACK>())
+            if (queen_side_available<color::black>())
                 result += 'q';
 
             if (result.empty())
@@ -112,67 +113,67 @@ class CastlingRights {
         }
 
     private:
-        Flags m_flags;
+        castling_flag m_flags;
 };
 
-class Position {
+class position {
     public:
-        Position() :
+        position() :
             m_pieces(),
             m_key(0ULL),
             m_full_move_number(1),
-            m_stm(Color::WHITE),
-            m_ep_sq(Square::NONE),
+            m_stm(color::white),
+            m_ep_sq(square::none),
             m_half_move_clock(0) {
-            m_pieces.fill(Piece::NONE);
+            m_pieces.fill(piece::none);
         }
 
-        explicit Position(const std::string& fen);
+        explicit position(const std::string& fen);
 
-        [[nodiscard]] bitboards::Bitboard checkers() const { return m_checkers_bb; }
-        [[nodiscard]] Color               side_to_move() const { return m_stm; }
-        [[nodiscard]] Square              ep_square() const { return m_ep_sq; }
-        [[nodiscard]] CastlingRights      castling_rights() const { return m_castling; }
+        [[nodiscard]] bitboards::bitboard checkers() const { return m_checkers_bb; }
+        [[nodiscard]] color               side_to_move() const { return m_stm; }
+        [[nodiscard]] square              ep_square() const { return m_ep_sq; }
+        [[nodiscard]] castling_rights     castling() const { return m_castling; }
         [[nodiscard]] u8                  fifty_move_rule() const { return m_half_move_clock; }
         [[nodiscard]] u16                 full_moves() const { return m_full_move_number; }
-        [[nodiscard]] ZobristKey          key() const { return m_key; }
+        [[nodiscard]] zobrist_key         key() const { return m_key; }
 
-        [[nodiscard]] Piece piece_on(const Square sq) const {
+        [[nodiscard]] piece piece_on(const square sq) const {
             return m_pieces[std::to_underlying(sq)];
         }
 
-        [[nodiscard]] bitboards::Bitboard occupancies(const Color c) const {
+        [[nodiscard]] bitboards::bitboard occupancies(const color c) const {
             return m_occupied_bb[std::to_underlying(c)];
         }
 
-        [[nodiscard]] bitboards::Bitboard piece_type_bb(const PieceType pt) const {
+        [[nodiscard]] bitboards::bitboard piece_type_bb(const piece_type pt) const {
             return m_piece_bb[std::to_underlying(pt)];
         }
 
-        template <Color c>
+        template <color C>
         [[nodiscard]] bool can_castle_king_side() const;
 
-        template <Color c>
+        template <color C>
         [[nodiscard]] bool can_castle_queen_side() const;
 
-        template <Color c>
-        [[nodiscard]] int piece_count(PieceType pt) const;
+        template <color C>
+        [[nodiscard]] int piece_count(piece_type pt) const;
 
-        [[nodiscard]] bitboards::Bitboard attacks_to_king(Square kingSquare, Color c) const;
+        [[nodiscard]] bitboards::bitboard attacks_to_king(square kingSquare, color c) const;
 
-        [[nodiscard]] Square king_square(Color c) const;
+        [[nodiscard]] square king_square(color c) const;
 
-        void set_piece(Piece p, Square sq);
+        void set_piece(piece p, square sq);
 
-        void remove_piece(Piece p, Square sq);
+        void remove_piece(piece p, square sq);
 
-        void move_piece(Piece p, Square from, Square to);
+        void move_piece(piece p, square from, square to);
 
-        void make_move(moves::Move move);
+        void make_move(moves::move move);
 
         void reset_to_start_pos();
 
-        [[nodiscard]] bool is_square_attacked_by(Square sq, Color c) const;
+        [[nodiscard]] bool is_square_attacked_by(square sq, color c) const;
 
         [[nodiscard]] bool is_valid() const;
 
@@ -194,15 +195,15 @@ class Position {
         };
         // clang-format on
 
-        std::array<Piece, constants::num_squares>                   m_pieces;
-        std::array<bitboards::Bitboard, constants::num_piece_types> m_piece_bb;
-        std::array<bitboards::Bitboard, constants::num_colors>      m_occupied_bb;
-        bitboards::Bitboard                                         m_checkers_bb;
-        ZobristKey                                                  m_key;
+        std::array<piece, constants::num_squares>                   m_pieces;
+        std::array<bitboards::bitboard, constants::num_piece_types> m_piece_bb;
+        std::array<bitboards::bitboard, constants::num_colors>      m_occupied_bb;
+        bitboards::bitboard                                         m_checkers_bb;
+        zobrist_key                                                 m_key;
         u16                                                         m_full_move_number;
-        Color                                                       m_stm;
-        Square                                                      m_ep_sq;
-        CastlingRights                                              m_castling;
+        color                                                       m_stm;
+        square                                                      m_ep_sq;
+        castling_rights                                             m_castling;
         u8                                                          m_half_move_clock;
 };
 
@@ -225,6 +226,6 @@ inline constexpr std::array<std::string_view, constants::num_squares> sq_to_coor
 
 } // namespace util
 
-void print_board(const Position& pos);
+void print_board(const position& pos);
 
 } // namespace board

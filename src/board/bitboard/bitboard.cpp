@@ -5,7 +5,7 @@
 
 namespace board::bitboards {
 
-void print_bb(const Bitboard& bitboard) {
+void print_bb(const bitboard& bitboard) {
     std::cout << std::endl;
 
     for (int rank = constants::num_ranks - 1; rank >= 0; --rank) {
@@ -13,7 +13,7 @@ void print_bb(const Bitboard& bitboard) {
 
         for (u8 file = 0; file < constants::num_files; ++file) {
             std::cout << std::format(
-                "{} ", Bitboard::is_bit_set(bitboard, square_of(file, rank)) ? '1' : '0');
+                "{} ", bitboard::is_bit_set(bitboard, square_of(file, rank)) ? '1' : '0');
         }
 
         std::cout << std::endl;
