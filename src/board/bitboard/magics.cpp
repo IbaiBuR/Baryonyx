@@ -54,7 +54,7 @@ bool try_magic(const u64                    magic,
 /// @returns The MagicEntry (empty if it fails to find a valid candidate)
 template <piece_type PieceType>
 constexpr magic_entry find_magic(const square sq) {
-    assert(Pt == piece_type::bishop || Pt == piece_type::rook);
+    assert(PieceType == piece_type::bishop || PieceType == piece_type::rook);
 
     constexpr bool is_bishop = PieceType == piece_type::bishop;
     constexpr int  max_blockers_config =
