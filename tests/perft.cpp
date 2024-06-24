@@ -19,7 +19,7 @@ TEST_SUITE("Perft tests") {
                 const int  test_depth     = std::stoi(test_data[0].substr(1));
                 const u64  expected_nodes = std::stoi(test_data[1]);
 
-                CHECK(perft(test_pos, test_depth) == expected_nodes);
+                CHECK_EQ(perft(test_pos, test_depth), expected_nodes);
             }
         }
     }

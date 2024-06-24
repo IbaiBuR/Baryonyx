@@ -11,24 +11,24 @@ TEST_SUITE("Position Tests") {
         SUBCASE("start position") {
             position pos(util::start_pos_fen);
 
-            CHECK(pos.piece_type_bb(piece_type::pawn) == bitboards::bitboard(0xFF00000000FF00ULL));
-            CHECK(pos.piece_type_bb(piece_type::knight)
-                  == bitboards::bitboard(0x4200000000000042ULL));
-            CHECK(pos.piece_type_bb(piece_type::king)
-                  == bitboards::bitboard(0x1000000000000010ULL));
-            CHECK(pos.piece_type_bb(piece_type::bishop)
-                  == bitboards::bitboard(0x2400000000000024ULL));
-            CHECK(pos.piece_type_bb(piece_type::rook)
-                  == bitboards::bitboard(0x8100000000000081ULL));
-            CHECK(pos.piece_type_bb(piece_type::queen)
-                  == bitboards::bitboard(0x800000000000008ULL));
+            CHECK_EQ(pos.piece_type_bb(piece_type::pawn), bitboards::bitboard(0xFF00000000FF00ULL));
+            CHECK_EQ(pos.piece_type_bb(piece_type::knight),
+                     bitboards::bitboard(0x4200000000000042ULL));
+            CHECK_EQ(pos.piece_type_bb(piece_type::king),
+                     bitboards::bitboard(0x1000000000000010ULL));
+            CHECK_EQ(pos.piece_type_bb(piece_type::bishop),
+                     bitboards::bitboard(0x2400000000000024ULL));
+            CHECK_EQ(pos.piece_type_bb(piece_type::rook),
+                     bitboards::bitboard(0x8100000000000081ULL));
+            CHECK_EQ(pos.piece_type_bb(piece_type::queen),
+                     bitboards::bitboard(0x800000000000008ULL));
 
-            CHECK(pos.side_to_move() == color::white);
-            CHECK(pos.castling() == castling_rights(castling_rights::castling_flag::all));
-            CHECK(pos.ep_square() == square::none);
-            CHECK(pos.fifty_move_rule() == 0);
-            CHECK(pos.full_moves() == 1);
-            CHECK(pos.checkers() == bitboards::util::empty_bb);
+            CHECK_EQ(pos.side_to_move(), color::white);
+            CHECK_EQ(pos.castling(), castling_rights(castling_rights::castling_flag::all));
+            CHECK_EQ(pos.ep_square(), square::none);
+            CHECK_EQ(pos.fifty_move_rule(), 0);
+            CHECK_EQ(pos.full_moves(), 1);
+            CHECK_EQ(pos.checkers(), bitboards::util::empty_bb);
         }
 
         SUBCASE("illegal position: too many kings") {
@@ -55,21 +55,21 @@ TEST_SUITE("Position Tests") {
 
     TEST_CASE("board to fen") {
         SUBCASE("start position") {
-            CHECK(position(util::start_pos_fen).to_fen()
-                  == "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+            CHECK_EQ(position(util::start_pos_fen).to_fen(), util::start_pos_fen);
         }
 
-        SUBCASE("r1bqk1nr/p1p3bp/2n3p1/1p1pPp2/4P3/P1P2NP1/1P3P1P/RNBQKB1R w KQkq f6 0 8") {
-            CHECK(
-                position("r1bqk1nr/p1p3bp/2n3p1/1p1pPp2/4P3/P1P2NP1/1P3P1P/RNBQKB1R w KQkq f6 0 8")
-                    .to_fen()
-                == "r1bqk1nr/p1p3bp/2n3p1/1p1pPp2/4P3/P1P2NP1/1P3P1P/RNBQKB1R w KQkq f6 0 8");
+        SUBCASE("fen 1") {
+            constexpr auto input_fen =
+                "r1bqk1nr/p1p3bp/2n3p1/1p1pPp2/4P3/P1P2NP1/1P3P1P/RNBQKB1R w KQkq f6 0 8";
+
+            CHECK_EQ(position(input_fen).to_fen(), input_fen);
         }
 
-        SUBCASE("r2q1knr/1bp3bp/p1n3p1/1p1pPp2/1P2P3/P1P2NP1/3N1PBP/R1BQK1R1 b Q - 0 11") {
-            CHECK(position("r2q1knr/1bp3bp/p1n3p1/1p1pPp2/1P2P3/P1P2NP1/3N1PBP/R1BQK1R1 b Q - 0 11")
-                      .to_fen()
-                  == "r2q1knr/1bp3bp/p1n3p1/1p1pPp2/1P2P3/P1P2NP1/3N1PBP/R1BQK1R1 b Q - 0 11");
+        SUBCASE("fen 2") {
+            constexpr auto input_fen =
+                "r2q1knr/1bp3bp/p1n3p1/1p1pPp2/1P2P3/P1P2NP1/3N1PBP/R1BQK1R1 b Q - 0 11";
+
+            CHECK_EQ(position(input_fen).to_fen(), input_fen);
         }
     }
 
