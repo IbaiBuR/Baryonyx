@@ -75,32 +75,62 @@ TEST_SUITE("Position Tests") {
 
     TEST_CASE("zobrist hashing") {
         SUBCASE("start position") {
-            CHECK(position(util::start_pos_fen).key() == 0x63FB272195DEE353ULL);
+            CHECK_EQ(position(util::start_pos_fen).key(), 0x63FB272195DEE353ULL);
         }
 
         SUBCASE("after double push") {
             position pos(util::start_pos_fen);
-            pos.make_move(move(square::e2, square::e4, move::move_flag::double_push));
+            pos.make_move<false>(move(square::e2, square::e4, move::move_flag::double_push));
 
-            CHECK(pos.key()
-                  == position("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1").key());
+            CHECK_EQ(pos.key(),
+                     position("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1").key());
         }
 
         SUBCASE("after castling") {
             position pos("rnbqk2r/pppp1ppp/5n2/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 4 4");
-            pos.make_move(move(square::e1, square::g1, move::move_flag::castle));
+            pos.make_move<false>(move(square::e1, square::g1, move::move_flag::castle));
 
-            CHECK(pos.key()
-                  == position("rnbqk2r/pppp1ppp/5n2/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQ1RK1 b kq - 5 4")
+            CHECK_EQ(pos.key(),
+                     position("rnbqk2r/pppp1ppp/5n2/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQ1RK1 b kq - 5 4")
                          .key());
         }
 
         SUBCASE("after en passant") {
             position pos("rnbqkbnr/ppp2ppp/4p3/3pP3/8/8/PPPP1PPP/RNBQKBNR w KQkq d6 0 3");
-            pos.make_move(move(square::e5, square::d6, move::move_flag::en_passant));
+            pos.make_move<false>(move(square::e5, square::d6, move::move_flag::en_passant));
 
-            CHECK(pos.key()
-                  == position("rnbqkbnr/ppp2ppp/3Pp3/8/8/8/PPPP1PPP/RNBQKBNR b KQkq - 0 3").key());
+            CHECK_EQ(pos.key(),
+                     position("rnbqkbnr/ppp2ppp/3Pp3/8/8/8/PPPP1PPP/RNBQKBNR b KQkq - 0 3").key());
+        }
+    }
+
+    TEST_CASE("repetition detection") {
+        SUBCASE("position 1 ") {
+            position pos("4r1k1/p2r1p2/1p3BpQ/2p5/4p1PP/2P3qB/PP6/5R1K b - - 5 30");
+
+            pos.make_move<true>(move(square::g3, square::h3, move::move_flag::capture));
+            pos.make_move<true>(move(square::h1, square::g1, move::move_flag::quiet));
+            pos.make_move<true>(move(square::h3, square::g3, move::move_flag::quiet));
+            pos.make_move<true>(move(square::g1, square::h1, move::move_flag::quiet));
+            pos.make_move<true>(move(square::g3, square::h3, move::move_flag::quiet));
+            pos.make_move<true>(move(square::h1, square::g1, move::move_flag::quiet));
+            pos.make_move<true>(move(square::h3, square::g3, move::move_flag::quiet));
+
+            CHECK_EQ(pos.has_repeated(), true);
+        }
+
+        SUBCASE("position 2") {
+            position pos("r3kr2/p1R5/1p5Q/7p/3P3q/P1P5/1P4P1/R6K w - - 0 30");
+
+            pos.make_move<true>(move(square::h1, square::g1, move::move_flag::quiet));
+            pos.make_move<true>(move(square::h4, square::f2, move::move_flag::quiet));
+            pos.make_move<true>(move(square::g1, square::h1, move::move_flag::quiet));
+            pos.make_move<true>(move(square::f2, square::h4, move::move_flag::quiet));
+            pos.make_move<true>(move(square::h1, square::g1, move::move_flag::quiet));
+            pos.make_move<true>(move(square::h4, square::f2, move::move_flag::quiet));
+            pos.make_move<true>(move(square::g1, square::h1, move::move_flag::quiet));
+
+            CHECK_EQ(pos.has_repeated(), true);
         }
     }
 }
