@@ -372,6 +372,19 @@ bool position::is_valid() const {
 
 bool position::was_legal() const { return !is_square_attacked_by(king_square(~m_stm), m_stm); }
 
+bool position::has_repeated() const {
+    const usize history_size      = m_hash_history.size();
+    const auto  repetition_offset = std::min<usize>(m_half_move_clock, history_size - 1);
+
+    for (usize i = 4; i <= repetition_offset; i += 2) {
+        if (m_key == m_hash_history[history_size - i])
+            return true;
+    }
+
+    return false;
+}
+
+
 std::string position::to_fen() const {
     std::string fen;
 

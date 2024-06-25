@@ -190,6 +190,8 @@ class position {
 
         [[nodiscard]] bool was_legal() const;
 
+        [[nodiscard]] bool has_repeated() const;
+
         [[nodiscard]] std::string to_fen() const;
 
     private:
