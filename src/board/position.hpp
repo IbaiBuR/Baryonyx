@@ -132,6 +132,13 @@ class position {
 
         explicit position(const std::string& fen);
 
+        /// @note Only used during perft to avoid copying the hash history vector recursively
+        static position copy_without_hash_history(const position& other) {
+            position copy = other;
+            copy.m_hash_history.clear();
+            return copy;
+        }
+
         [[nodiscard]] bitboards::bitboard      checkers() const { return m_checkers_bb; }
         [[nodiscard]] color                    side_to_move() const { return m_stm; }
         [[nodiscard]] square                   ep_square() const { return m_ep_sq; }

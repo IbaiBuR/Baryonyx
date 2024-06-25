@@ -31,15 +31,16 @@ u64 perft(const board::position& pos, const int depth) {
 void split_perft(const board::position& pos, const int depth) {
     std::cout << std::format("\nRunning performance test...\n") << std::endl;
 
+    const auto       base_pos = board::position::copy_without_hash_history(pos);
     moves::move_list move_list;
-    generate_all_moves(pos, move_list);
+    generate_all_moves(base_pos, move_list);
 
     u64       total_nodes = 0ULL;
     const u64 start_time  = utils::time::get_time_ms();
 
     for (u32 i = 0; i < move_list.size(); ++i) {
-        board::position copy         = pos;
-        const auto      current_move = move_list.move_at(i);
+        auto       copy         = base_pos;
+        const auto current_move = move_list.move_at(i);
         copy.make_move<false>(current_move);
 
         if (!copy.was_legal())
