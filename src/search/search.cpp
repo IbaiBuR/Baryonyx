@@ -106,7 +106,7 @@ score searcher::qsearch(const board::position& pos, score alpha, const score bet
         const auto current_move = move_list.move_at(i);
 
         board::position copy = pos;
-        copy.make_move(current_move);
+        copy.make_move<true>(current_move);
 
         if (!copy.was_legal())
             continue;
@@ -162,7 +162,7 @@ score searcher::negamax(const board::position& pos,
         const auto current_move = move_list.move_at(i);
 
         board::position copy = pos;
-        copy.make_move(current_move);
+        copy.make_move<true>(current_move);
 
         if (!copy.was_legal())
             continue;

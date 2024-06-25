@@ -17,7 +17,7 @@ u64 perft(const board::position& pos, const int depth) {
 
     for (u32 i = 0; i < move_list.size(); ++i) {
         board::position copy = pos;
-        copy.make_move(move_list.move_at(i));
+        copy.make_move<false>(move_list.move_at(i));
 
         if (!copy.was_legal())
             continue;
@@ -40,7 +40,7 @@ void split_perft(const board::position& pos, const int depth) {
     for (u32 i = 0; i < move_list.size(); ++i) {
         board::position copy         = pos;
         const auto      current_move = move_list.move_at(i);
-        copy.make_move(current_move);
+        copy.make_move<false>(current_move);
 
         if (!copy.was_legal())
             continue;

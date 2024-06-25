@@ -12,9 +12,10 @@ inline constexpr usize num_piece_types = 6;
 inline constexpr usize num_colors      = 2;
 inline constexpr usize num_pieces      = num_piece_types * num_colors;
 
-inline constexpr int max_depth = 100;
-inline constexpr int max_ply   = 200;
-inline constexpr int max_moves = 256;
+inline constexpr int max_depth    = 100;
+inline constexpr int max_ply      = 200;
+inline constexpr int max_game_ply = max_ply + 400;
+inline constexpr int max_moves    = 256;
 
 } // namespace constants
 

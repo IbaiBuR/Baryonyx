@@ -2,6 +2,7 @@
 
 #include <array>
 #include <string>
+#include <vector>
 
 #include "bitboard/bitboard.hpp"
 #include "../moves/move.hpp"
@@ -125,18 +126,20 @@ class position {
             m_stm(color::white),
             m_ep_sq(square::none),
             m_half_move_clock(0) {
+            m_hash_history.reserve(constants::max_game_ply);
             m_pieces.fill(piece::none);
         }
 
         explicit position(const std::string& fen);
 
-        [[nodiscard]] bitboards::bitboard checkers() const { return m_checkers_bb; }
-        [[nodiscard]] color               side_to_move() const { return m_stm; }
-        [[nodiscard]] square              ep_square() const { return m_ep_sq; }
-        [[nodiscard]] castling_rights     castling() const { return m_castling; }
-        [[nodiscard]] u8                  fifty_move_rule() const { return m_half_move_clock; }
-        [[nodiscard]] u16                 full_moves() const { return m_full_move_number; }
-        [[nodiscard]] zobrist_key         key() const { return m_key; }
+        [[nodiscard]] bitboards::bitboard      checkers() const { return m_checkers_bb; }
+        [[nodiscard]] color                    side_to_move() const { return m_stm; }
+        [[nodiscard]] square                   ep_square() const { return m_ep_sq; }
+        [[nodiscard]] castling_rights          castling() const { return m_castling; }
+        [[nodiscard]] u8                       fifty_move_rule() const { return m_half_move_clock; }
+        [[nodiscard]] u16                      full_moves() const { return m_full_move_number; }
+        [[nodiscard]] zobrist_key              key() const { return m_key; }
+        [[nodiscard]] std::vector<zobrist_key> hash_history() const { return m_hash_history; }
 
         [[nodiscard]] piece piece_on(const square sq) const {
             return m_pieces[std::to_underlying(sq)];
@@ -169,6 +172,7 @@ class position {
 
         void move_piece(piece p, square from, square to);
 
+        template <bool SaveHashHistory>
         void make_move(moves::move move);
 
         void reset_to_start_pos();
@@ -195,6 +199,7 @@ class position {
         };
         // clang-format on
 
+        std::vector<zobrist_key>                                    m_hash_history;
         std::array<piece, constants::num_squares>                   m_pieces;
         std::array<bitboards::bitboard, constants::num_piece_types> m_piece_bb;
         std::array<bitboards::bitboard, constants::num_colors>      m_occupied_bb;

@@ -65,7 +65,7 @@ void command_handler::handle_position(const std::vector<std::string>& command,
             if (parsed_move == moves::move::none())
                 break;
 
-            pos.make_move(parsed_move);
+            pos.make_move<true>(parsed_move);
         }
     }
 }

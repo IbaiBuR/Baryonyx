@@ -14,6 +14,7 @@ position::position(const std::string& fen) :
     m_pieces(),
     m_key(0ULL) {
     m_pieces.fill(piece::none);
+
     const auto tokens = utils::split::split_string(fen, ' ');
 
     if (tokens.size() < 6)
@@ -63,6 +64,8 @@ position::position(const std::string& fen) :
 
     m_half_move_clock  = std::stoi(tokens[4]);
     m_full_move_number = std::stoi(tokens[5]);
+
+    m_hash_history.reserve(constants::max_game_ply - m_full_move_number);
 
     m_checkers_bb = attacks_to_king(king_square(m_stm), m_stm);
 
@@ -167,8 +170,12 @@ void position::move_piece(const piece p, const square from, const square to) {
     set_piece(p, to);
 }
 
+template <bool SaveHashHistory>
 void position::make_move(const moves::move move) {
     ++m_half_move_clock;
+
+    if constexpr (SaveHashHistory)
+        m_hash_history.push_back(m_key);
 
     const square    from         = move.from();
     const square    to           = move.to();
@@ -234,7 +241,13 @@ void position::make_move(const moves::move move) {
     m_checkers_bb = attacks_to_king(king_square(m_stm), m_stm);
 }
 
+template void position::make_move<true>(moves::move move);
+template void position::make_move<false>(moves::move move);
+
 void position::reset_to_start_pos() {
+    m_hash_history.clear();
+    m_pieces.fill(piece::none);
+
     m_checkers_bb      = bitboards::util::empty_bb;
     m_stm              = color::white;
     m_ep_sq            = square::none;
@@ -252,8 +265,6 @@ void position::reset_to_start_pos() {
 
     m_occupied_bb[std::to_underlying(color::white)] = bitboards::bitboard(0xFFFFULL);
     m_occupied_bb[std::to_underlying(color::black)] = bitboards::bitboard(0xFFFF000000000000ULL);
-
-    m_pieces.fill(piece::none);
 
     for (u8 sq = std::to_underlying(square::a2); sq <= std::to_underlying(square::h2); ++sq)
         m_pieces[sq] = piece::w_pawn;
