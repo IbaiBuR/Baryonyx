@@ -10,8 +10,8 @@ namespace utils::zobrist {
 /// @returns An array of random Zobrist keys
 template <typename T, usize Size>
 consteval std::array<T, Size> generate_keys() {
-    std::array<T, Size>      keys{};
-    random::sfc64_rng prng{};
+    std::array<T, Size> keys{};
+    random::sfc64_rng   prng{};
 
     std::ranges::for_each(keys.begin(), keys.end(), [&](auto& key) { key = prng.next_u64(); });
 

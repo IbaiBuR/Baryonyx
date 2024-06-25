@@ -28,7 +28,8 @@ void init_sliders() {
                 bishop_attacks[sq][magic_index] =
                     gen_sliding<PieceType>(static_cast<square>(sq), occupied);
             else
-                rook_attacks[sq][magic_index] = gen_sliding<PieceType>(static_cast<square>(sq), occupied);
+                rook_attacks[sq][magic_index] =
+                    gen_sliding<PieceType>(static_cast<square>(sq), occupied);
         }
     }
 }
