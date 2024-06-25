@@ -149,6 +149,9 @@ score searcher::negamax(const board::position& pos,
     if (depth <= 0)
         return qsearch(pos, alpha, beta, ply);
 
+    if (ply > 0 && pos.has_repeated())
+        return 0;
+
     if (ply >= constants::max_ply)
         return eval::evaluate(pos);
 
