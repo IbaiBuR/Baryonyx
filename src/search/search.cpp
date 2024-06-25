@@ -136,7 +136,6 @@ score searcher::negamax(const board::position& pos,
                         const int              ply,
                         pv_line&               pv) {
     ++m_info.searched_nodes;
-    pv.length = 0;
 
     if (m_info.stopped)
         return 0;
@@ -179,6 +178,8 @@ score searcher::negamax(const board::position& pos,
 
         if (current_score > alpha) {
             alpha = current_score;
+
+            pv.length = 0;
             pv.update(current_move, child_pv);
         }
 
@@ -192,12 +193,7 @@ score searcher::negamax(const board::position& pos,
 
     // Checkmate / stalemate detection
     if (!legal_moves) {
-        if (pos.checkers().bit_count() > 0)
-            // Take the shortest available mate
-            return -score_mate + ply;
-        else
-            // Stalemate
-            return 0;
+        return pos.checkers().bit_count() > 0 ? -score_mate + ply : 0;
     }
 
     return best_score;
