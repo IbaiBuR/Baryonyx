@@ -101,8 +101,10 @@ score searcher::qsearch(const board::position& pos, score alpha, const score bet
     score            best_score = static_eval;
     moves::move_list move_list;
     generate_all_captures(pos, move_list);
+    move_list.score_moves(pos);
+    move_list.sort();
 
-    for (u32 i = 0; i < move_list.size(); i++) {
+    for (usize i = 0; i < move_list.size(); i++) {
         const auto current_move = move_list.move_at(i);
 
         board::position copy = pos;
@@ -159,8 +161,10 @@ score searcher::negamax(const board::position& pos,
     score            best_score = -score_infinite;
     moves::move_list move_list;
     generate_all_moves(pos, move_list);
+    move_list.score_moves(pos);
+    move_list.sort();
 
-    for (u32 i = 0; i < move_list.size(); ++i) {
+    for (usize i = 0; i < move_list.size(); ++i) {
         const auto current_move = move_list.move_at(i);
 
         board::position copy = pos;
