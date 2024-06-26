@@ -138,6 +138,7 @@ score searcher::negamax(const board::position& pos,
                         const int              ply,
                         pv_line&               pv) {
     ++m_info.searched_nodes;
+    pv.length = 0;
 
     if (m_info.stopped)
         return 0;
@@ -182,8 +183,6 @@ score searcher::negamax(const board::position& pos,
 
         if (current_score > alpha) {
             alpha = current_score;
-
-            pv.length = 0;
             pv.update(current_move, child_pv);
         }
 
@@ -214,7 +213,7 @@ bool searcher::should_stop() const {
 }
 
 void searcher::report_info(u64 elapsed, int depth, score score, const pv_line& pv) const {
-    std::cout << std::format("info depth {} score cp {} time {} nodes {} nps {} pv {}", depth,
+    std::cout << std::format("info depth {} score cp {} time {} nodes {} nps {} pv{}", depth,
                              score, elapsed, m_info.searched_nodes,
                              m_info.searched_nodes / std::max<u64>(1, elapsed) * 1000,
                              pv.to_string())

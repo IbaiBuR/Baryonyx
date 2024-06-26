@@ -13,7 +13,7 @@ constexpr score score_mate     = 31500;
 
 struct pv_line {
         std::array<moves::move, constants::max_moves> moves{};
-        u32                                           length{};
+        usize                                         length{};
 
         [[nodiscard]] auto begin() const { return moves.begin(); }
         [[nodiscard]] auto end() const { return moves.begin() + length; }
@@ -34,12 +34,8 @@ struct pv_line {
         [[nodiscard]] std::string to_string() const {
             std::string result;
 
-            for (auto it = begin(); it < end(); ++it) {
-                if (it + 1 == end())
-                    result += std::format("{}", it->to_string());
-                else
-                    result += std::format("{} ", it->to_string());
-            }
+            for (usize i = 0; i < length; ++i)
+                result += std::format(" {}", moves[i].to_string());
 
             return result;
         }
