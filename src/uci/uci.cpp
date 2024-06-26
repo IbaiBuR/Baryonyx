@@ -118,7 +118,7 @@ moves::move from_uci(const board::position& pos, const std::string& move) {
     moves::move_list move_list;
     generate_all_moves(pos, move_list);
 
-    for (u32 i = 0; i < move_list.size(); ++i) {
+    for (usize i = 0; i < move_list.size(); ++i) {
         if (const auto current_move = move_list.move_at(i); move == current_move.to_string())
             return current_move;
     }
