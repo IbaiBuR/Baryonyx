@@ -95,7 +95,7 @@ constexpr magic_entry find_magic(const square sq) {
 template <piece_type PieceType>
 void print_magics_by_piece_type() {
     std::cout << std::format(
-        "constexpr std::array<magic_entry, constants::num_squares> {} = {}\n {}",
+        "inline constexpr std::array<magic_entry, constants::num_squares> {} = {}\n {}",
         PieceType == piece_type::bishop ? "bishop_magics" : "rook_magics", "{", "{")
               << std::endl;
 
