@@ -8,9 +8,6 @@
 
 namespace search {
 
-constexpr score score_infinite = 32000;
-constexpr score score_mate     = 31500;
-
 struct pv_line {
         std::array<moves::move, constants::max_moves> moves{};
         usize                                         length{};
@@ -59,6 +56,7 @@ class searcher {
 
         void reset_info();
         void set_limits(u64 nodes_limit, u64 time_limit, u32 depth_limit);
+        void set_start_time(u64 time);
         void parse_time_control(const std::vector<std::string>& command, color stm);
         void main_search(const board::position& pos);
 
