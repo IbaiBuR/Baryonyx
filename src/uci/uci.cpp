@@ -23,8 +23,10 @@ void command_handler::handle_is_ready() { std::cout << std::format("readyok") <<
 
 void command_handler::handle_go(const std::vector<std::string>& command,
                                 const board::position&          pos) {
-    if (command[1] == "depth")
+    if (command[1] == "depth") {
         m_searcher.set_limits(UINT64_MAX, UINT64_MAX, std::stoi(command[2]));
+        m_searcher.set_start_time(utils::time::get_time_ms());
+    }
     else if (command[1] == "perft") {
         split_perft(pos, std::stoi(command[2]));
         return;
