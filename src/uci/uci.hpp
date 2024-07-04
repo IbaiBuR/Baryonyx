@@ -24,6 +24,7 @@ class command_handler {
         static void handle_is_ready();
         void        handle_go(const std::vector<std::string>& command, const board::position& pos);
         static void handle_position(const std::vector<std::string>& command, board::position& pos);
+        static void handle_setoption(const std::vector<std::string>& command);
         static void handle_uci();
         static void handle_uci_new_game(board::position& pos);
 };
