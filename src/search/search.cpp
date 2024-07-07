@@ -170,7 +170,9 @@ score searcher::negamax(const board::position& pos,
     if (depth <= 0)
         return qsearch(pos, alpha, beta, ply);
 
-    if (ply > 0 && pos.has_repeated())
+    const bool root_node = ply == 0;
+
+    if (!root_node && pos.has_repeated())
         return 0;
 
     if (ply >= constants::max_ply)
@@ -182,7 +184,8 @@ score searcher::negamax(const board::position& pos,
     const auto tt_score = tt_hit ? tt::score_from_tt(entry.value(), ply) : constants::score_none;
     const u8   tt_depth = entry.depth();
 
-    if (tt_score != constants::score_none && tt_depth >= depth && entry.can_use_score(alpha, beta))
+    if (!root_node && tt_score != constants::score_none && tt_depth >= depth
+        && entry.can_use_score(alpha, beta))
         return tt_score;
 
     u16     legal_moves{};
