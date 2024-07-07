@@ -15,7 +15,7 @@ class command_handler {
     private:
         static constexpr auto author  = "Ibai Burgos";
         static constexpr auto name    = "Baryonyx";
-        static constexpr auto version = "0.1.6";
+        static constexpr auto version = "0.1.10";
 
         search::searcher m_searcher;
 
