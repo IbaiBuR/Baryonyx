@@ -55,8 +55,9 @@ void searcher::main_search(const board::position& pos) {
 
     // Iterative deepening loop
     for (int current_depth = 1; current_depth <= m_limits.depth_limit; ++current_depth) {
-        const score best_score = negamax(pos, -constants::score_infinite, constants::score_infinite,
-                                         current_depth, 0, m_info.pv);
+        const score best_score =
+            negamax<true>(pos, -constants::score_infinite, constants::score_infinite, current_depth,
+                          0, m_info.pv);
 
         if (m_info.stopped) {
             // If search stopped too early and we don't have a best move, we update it in order to
@@ -76,6 +77,7 @@ void searcher::main_search(const board::position& pos) {
     std::cout << std::format("bestmove {}", best_move.to_string()) << std::endl;
 }
 
+template <bool pv_node>
 score searcher::qsearch(const board::position& pos, score alpha, const score beta, const int ply) {
     ++m_info.searched_nodes;
 
@@ -93,7 +95,7 @@ score searcher::qsearch(const board::position& pos, score alpha, const score bet
     const auto tt_score = tt_hit ? tt::score_from_tt(entry.value(), ply) : constants::score_none;
     const auto tt_move  = tt_hit ? entry.move() : moves::move::null();
 
-    if (tt_score != constants::score_none && entry.can_use_score(alpha, beta))
+    if (!pv_node && tt_score != constants::score_none && entry.can_use_score(alpha, beta))
         return tt_score;
 
     const score static_eval = eval::evaluate(pos);
@@ -124,10 +126,7 @@ score searcher::qsearch(const board::position& pos, score alpha, const score bet
         if (!copy.was_legal())
             continue;
 
-        const score current_score = -qsearch(copy, -beta, -alpha, ply + 1);
-
-        if (m_info.stopped)
-            return 0;
+        const score current_score = -qsearch<pv_node>(copy, -beta, -alpha, ply + 1);
 
         if (current_score > best_score) {
             best_score = current_score;
@@ -140,6 +139,9 @@ score searcher::qsearch(const board::position& pos, score alpha, const score bet
                     break;
             }
         }
+
+        if (m_info.stopped)
+            return 0;
     }
 
     const auto tt_flag = best_score >= beta ? tt::tt_entry::tt_flag::lower_bound
@@ -151,6 +153,7 @@ score searcher::qsearch(const board::position& pos, score alpha, const score bet
     return best_score;
 }
 
+template <bool pv_node>
 score searcher::negamax(const board::position& pos,
                         score                  alpha,
                         const score            beta,
@@ -169,7 +172,7 @@ score searcher::negamax(const board::position& pos,
     }
 
     if (depth <= 0)
-        return qsearch(pos, alpha, beta, ply);
+        return qsearch<pv_node>(pos, alpha, beta, ply);
 
     const bool root_node = ply == 0;
 
@@ -186,7 +189,7 @@ score searcher::negamax(const board::position& pos,
     const auto tt_move  = tt_hit ? entry.move() : moves::move::null();
     const u8   tt_depth = entry.depth();
 
-    if (!root_node && tt_score != constants::score_none && tt_depth >= depth
+    if (!pv_node && tt_score != constants::score_none && tt_depth >= depth
         && entry.can_use_score(alpha, beta))
         return tt_score;
 
@@ -213,7 +216,19 @@ score searcher::negamax(const board::position& pos,
 
         ++legal_moves;
 
-        const score current_score = -negamax(copy, -beta, -alpha, depth - 1, ply + 1, child_pv);
+        score current_score;
+
+        if (i == 0)
+            // Search the first move with a full window
+            current_score = -negamax<pv_node>(copy, -beta, -alpha, depth - 1, ply + 1, child_pv);
+        else {
+            // Do a null window search to see if we find a better move
+            current_score = -negamax<false>(copy, -alpha - 1, -alpha, depth - 1, ply + 1, child_pv);
+
+            if (current_score > alpha && pv_node)
+                // If we found a better move, do a full re-search
+                current_score = -negamax<true>(copy, -beta, -alpha, depth - 1, ply + 1, child_pv);
+        }
 
         if (current_score > best_score) {
             best_score = current_score;
