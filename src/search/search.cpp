@@ -91,6 +91,7 @@ score searcher::qsearch(const board::position& pos, score alpha, const score bet
 
     const bool tt_hit   = tt::global_tt.probe(pos.key(), entry);
     const auto tt_score = tt_hit ? tt::score_from_tt(entry.value(), ply) : constants::score_none;
+    const auto tt_move = tt_hit ? entry.move() : moves::move::null();
 
     if (tt_score != constants::score_none && entry.can_use_score(alpha, beta))
         return tt_score;
@@ -111,7 +112,7 @@ score searcher::qsearch(const board::position& pos, score alpha, const score bet
 
     moves::move_list move_list;
     generate_all_captures(pos, move_list);
-    move_list.score_moves(pos);
+    move_list.score_moves(tt_move, pos);
     move_list.sort();
 
     for (usize i = 0; i < move_list.size(); i++) {
@@ -182,6 +183,7 @@ score searcher::negamax(const board::position& pos,
 
     const bool tt_hit   = tt::global_tt.probe(pos.key(), entry);
     const auto tt_score = tt_hit ? tt::score_from_tt(entry.value(), ply) : constants::score_none;
+    const auto tt_move = tt_hit ? entry.move() : moves::move::null();
     const u8   tt_depth = entry.depth();
 
     if (!root_node && tt_score != constants::score_none && tt_depth >= depth
@@ -197,7 +199,7 @@ score searcher::negamax(const board::position& pos,
 
     moves::move_list move_list;
     generate_all_moves(pos, move_list);
-    move_list.score_moves(pos);
+    move_list.score_moves(tt_move, pos);
     move_list.sort();
 
     for (usize i = 0; i < move_list.size(); ++i) {

@@ -20,9 +20,14 @@ constexpr std::array<std::array<score, constants::num_piece_types>, constants::n
 };
 // clang-format on
 
-void move_list::score_moves(const board::position& pos) {
+void move_list::score_moves(const move tt_move, const board::position& pos) {
     for (usize i = 0; i < m_size; ++i) {
         const auto current_move = move_at(i);
+
+        if (tt_move != move::null() && current_move == tt_move) {
+            m_moves[i].move_score = constants::score_infinite;
+            continue;
+        }
 
         if (current_move.is_capture()) {
             const auto attacker_piece_type =
