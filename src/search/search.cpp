@@ -87,6 +87,14 @@ score searcher::qsearch(const board::position& pos, score alpha, const score bet
         return 0;
     }
 
+    tt::tt_entry entry;
+
+    const bool tt_hit   = tt::global_tt.probe(pos.key(), entry);
+    const auto tt_score = tt_hit ? tt::score_from_tt(entry.value(), ply) : constants::score_none;
+
+    if (tt_score != constants::score_none && entry.can_use_score(alpha, beta))
+        return tt_score;
+
     const score static_eval = eval::evaluate(pos);
 
     if (ply >= constants::max_ply)
@@ -98,7 +106,9 @@ score searcher::qsearch(const board::position& pos, score alpha, const score bet
     if (static_eval > alpha)
         alpha = static_eval;
 
-    score            best_score = static_eval;
+    score best_score = static_eval;
+    auto  best_move  = moves::move::null();
+
     moves::move_list move_list;
     generate_all_captures(pos, move_list);
     move_list.score_moves(pos);
@@ -118,15 +128,25 @@ score searcher::qsearch(const board::position& pos, score alpha, const score bet
         if (m_info.stopped)
             return 0;
 
-        if (current_score > best_score)
+        if (current_score > best_score) {
             best_score = current_score;
 
-        if (current_score > alpha)
-            alpha = current_score;
+            if (current_score > alpha) {
+                alpha     = current_score;
+                best_move = current_move;
 
-        if (alpha >= beta)
-            break;
+                if (alpha >= beta)
+                    break;
+            }
+        }
     }
+
+    const auto tt_flag = best_score >= beta ? tt::tt_entry::tt_flag::lower_bound
+                                            : tt::tt_entry::tt_flag::upper_bound;
+
+    tt::global_tt.store(pos.key(), tt::tt_entry(pos.key(), best_move,
+                                                tt::score_to_tt(best_score, ply), 0, tt_flag));
+
     return best_score;
 }
 
@@ -156,9 +176,22 @@ score searcher::negamax(const board::position& pos,
     if (ply >= constants::max_ply)
         return eval::evaluate(pos);
 
-    u16              legal_moves{};
-    pv_line          child_pv{};
-    score            best_score = -constants::score_infinite;
+    tt::tt_entry entry;
+
+    const bool tt_hit   = tt::global_tt.probe(pos.key(), entry);
+    const auto tt_score = tt_hit ? tt::score_from_tt(entry.value(), ply) : constants::score_none;
+    const u8   tt_depth = entry.depth();
+
+    if (tt_score != constants::score_none && tt_depth >= depth && entry.can_use_score(alpha, beta))
+        return tt_score;
+
+    u16     legal_moves{};
+    pv_line child_pv{};
+
+    score       best_score     = -constants::score_infinite;
+    auto        best_move      = moves::move::null();
+    const score original_alpha = alpha;
+
     moves::move_list move_list;
     generate_all_moves(pos, move_list);
     move_list.score_moves(pos);
@@ -177,26 +210,35 @@ score searcher::negamax(const board::position& pos,
 
         const score current_score = -negamax(copy, -beta, -alpha, depth - 1, ply + 1, child_pv);
 
-        if (current_score > best_score)
+        if (current_score > best_score) {
             best_score = current_score;
 
-        if (current_score > alpha) {
-            alpha = current_score;
-            pv.update(current_move, child_pv);
+            if (current_score > alpha) {
+                alpha     = current_score;
+                best_move = current_move;
+                pv.update(current_move, child_pv);
+
+                if (alpha >= beta)
+                    break;
+            }
         }
 
         // Double-check if search stopped to make sure we don't exceed the search limits
         if (m_info.stopped)
             return 0;
-
-        if (alpha >= beta)
-            break;
     }
 
     // Checkmate / stalemate detection
     if (!legal_moves) {
         return pos.checkers().bit_count() > 0 ? -constants::score_mate + ply : 0;
     }
+
+    const auto tt_flag = best_score <= original_alpha ? tt::tt_entry::tt_flag::upper_bound
+                       : best_score >= beta           ? tt::tt_entry::tt_flag::lower_bound
+                                                      : tt::tt_entry::tt_flag::exact;
+
+    tt::global_tt.store(pos.key(), tt::tt_entry(pos.key(), best_move,
+                                                tt::score_to_tt(best_score, ply), depth, tt_flag));
 
     return best_score;
 }
