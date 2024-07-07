@@ -30,7 +30,7 @@ class move_list {
 
         void clear() { m_size = 0; }
 
-        void score_moves(const board::position& pos);
+        void score_moves(move tt_move, const board::position& pos);
 
         void sort() {
             std::stable_sort(begin(), end(), [](const scored_move a, const scored_move b) {
