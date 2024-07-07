@@ -22,7 +22,7 @@ class tt_entry {
         tt_entry() :
             m_key(0),
             m_move(moves::move::null()),
-            m_score(0),
+            m_score(constants::score_none),
             m_depth(0),
             m_flag(tt_flag::none) {}
 
@@ -34,9 +34,15 @@ class tt_entry {
             m_depth(d),
             m_flag(f) {}
 
-        [[nodiscard]] tt_flag flag() const { return m_flag; }
+        [[nodiscard]] tt_key key() const { return m_key; }
+
+        [[nodiscard]] moves::move move() const { return m_move; }
+
+        [[nodiscard]] i16 value() const { return m_score; }
 
         [[nodiscard]] u8 depth() const { return m_depth; }
+
+        [[nodiscard]] tt_flag flag() const { return m_flag; }
 
         [[nodiscard]] bool key_matches(const zobrist_key key) const {
             return m_key == static_cast<tt_key>(key);
@@ -67,6 +73,12 @@ class transposition_table {
             transposition_table(default_tt_size) {}
 
         explicit transposition_table(const usize size) { resize(size); }
+
+        /// @brief Checks if the position has been saved already in the tranposition table
+        /// @param key Zobrist key
+        /// @param entry Entry to fill if position is found
+        /// @returns true if the position's key and the tranposition table key match
+        bool probe(zobrist_key key, tt_entry& entry) const;
 
         /// @brief Clears the transposition table by filling it with default-initialized entries
         void clear();
@@ -100,6 +112,32 @@ class transposition_table {
 
         std::vector<tt_entry> m_data;
 };
+
+/// @brief Adjusts the score before storing it in the transposition table
+/// @param s Score
+/// @param ply Ply
+/// @returns The adjusted score
+inline score score_to_tt(score s, const int ply) {
+    if (s > constants::score_win)
+        s += ply;
+    else if (s < -constants::score_win)
+        s -= ply;
+
+    return s;
+}
+
+/// @brief Adjusts the score before retrieving it from the transposition table
+/// @param s Score
+/// @param ply Ply
+/// @returns The adjusted score
+inline score score_from_tt(score s, const int ply) {
+    if (s > constants::score_win)
+        s -= ply;
+    else if (s < -constants::score_win)
+        s += ply;
+
+    return s;
+}
 
 /// @brief Shared tranposition table
 inline transposition_table global_tt;

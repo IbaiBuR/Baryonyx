@@ -4,6 +4,16 @@
 
 namespace search::tt {
 
+bool transposition_table::probe(const zobrist_key key, tt_entry& entry) const {
+    if (const auto current_entry = m_data[index(key)]; current_entry.key_matches(key)) {
+        entry = current_entry;
+
+        return true;
+    }
+
+    return false;
+}
+
 void transposition_table::clear() { std::ranges::fill(m_data, tt_entry{}); }
 
 void transposition_table::resize(const usize size_mb) {
