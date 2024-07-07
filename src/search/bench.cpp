@@ -19,6 +19,7 @@ void search::bench::run(searcher& searcher, const u32 depth) {
     for (const auto& fen : bench_fens) {
         board::position pos(fen);
 
+        searcher.set_start_time(utils::time::get_time_ms());
         searcher.main_search(pos);
 
         total_nodes += searcher.searched_nodes();
