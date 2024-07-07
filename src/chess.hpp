@@ -20,6 +20,7 @@ inline constexpr int max_moves    = 256;
 inline constexpr score score_infinite = 32000;
 inline constexpr score score_mate     = 31500;
 inline constexpr score score_win      = score_mate - max_ply;
+inline constexpr score score_none     = 32001;
 
 } // namespace constants
 
