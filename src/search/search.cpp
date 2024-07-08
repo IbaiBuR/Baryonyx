@@ -217,7 +217,7 @@ score searcher::negamax(const board::position& pos,
             copy.make_null_move();
 
             const score null_move_score =
-                -negamax<false>(copy, -beta, -beta - 1, depth - r, ply + 1, child_pv);
+                -negamax<false>(copy, -beta, -beta + 1, depth - r, ply + 1, child_pv);
 
             if (null_move_score >= beta)
                 return null_move_score;
