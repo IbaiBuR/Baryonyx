@@ -69,15 +69,18 @@ class searcher {
         time_manager  m_timer{};
 
         /// @brief Quiescence search, to get rid of the horizon effect
+        /// @tparam pv_node Indicates if the current node is from the principal variation
         /// @param pos Position to search from
         /// @param alpha Best score for the maximizing player
         /// @param beta Best score for the minimizing player
         /// @param ply Internal depth of the search tree (seldepth)
         /// @returns The best score found
         /// @note See https://en.wikipedia.org/wiki/Quiescence_search for reference
+        template <bool pv_node>
         score qsearch(const board::position& pos, score alpha, score beta, int ply);
 
         /// @brief Fail-soft negamax algorithm with alpha-beta pruning
+        /// @tparam pv_node Indicates if the current node is from the principal variation
         /// @param pos Position to search from
         /// @param alpha Best score for the maximizing player
         /// @param beta Best score for the minimizing player
@@ -86,6 +89,7 @@ class searcher {
         /// @param pv PV-List on the stack, to keep track of the principal variation
         /// @returns The best score found
         /// @note See https://en.wikipedia.org/wiki/Negamax for reference
+        template <bool pv_node>
         score negamax(
             const board::position& pos, score alpha, score beta, int depth, int ply, pv_line& pv);
 
