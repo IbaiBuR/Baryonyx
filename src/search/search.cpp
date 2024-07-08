@@ -250,7 +250,7 @@ score searcher::negamax(const board::position& pos,
 
         score current_score;
 
-        if (i == 0)
+        if (legal_moves == 1)
             // Search the first move with a full window
             current_score = -negamax<pv_node>(copy, -beta, -alpha, depth - 1, ply + 1, child_pv);
         else {
