@@ -96,10 +96,13 @@ score searcher::qsearch(const board::position& pos, score alpha, const score bet
 
     tt::tt_entry entry;
 
+    // Probe the tranposition table and retrieve information from previous searches if possible
     const bool tt_hit   = tt::global_tt.probe(pos.key(), entry);
     const auto tt_score = tt_hit ? tt::score_from_tt(entry.value(), ply) : constants::score_none;
     const auto tt_move  = tt_hit ? entry.move() : moves::move::null();
 
+    // TT cutoff: If we are not in a pv-node and we get a tt hit with a
+    // usable score, cut the search returning the score from the tt
     if (!pv_node && tt_score != constants::score_none && entry.can_use_score(alpha, beta))
         return tt_score;
 
@@ -186,11 +189,14 @@ score searcher::negamax(const board::position& pos,
 
     tt::tt_entry entry;
 
+    // Probe the tranposition table and retrieve information from previous searches if possible
     const bool tt_hit   = tt::global_tt.probe(pos.key(), entry);
     const auto tt_score = tt_hit ? tt::score_from_tt(entry.value(), ply) : constants::score_none;
     const auto tt_move  = tt_hit ? entry.move() : moves::move::null();
     const u8   tt_depth = entry.depth();
 
+    // TT cutoff: If we are not in a pv-node and we get a tt hit with a high enough depth and a
+    // usable score, cut the search returning the score from the tt
     if (!pv_node && tt_score != constants::score_none && tt_depth >= depth
         && entry.can_use_score(alpha, beta))
         return tt_score;
@@ -206,8 +212,8 @@ score searcher::negamax(const board::position& pos,
             return static_eval;
 
         // Null Move Pruning: If after making a null move (forfeiting the side to move) we still
-        // have a strong enough position to produce a cutoff, we cut the search.
-        // See https://en.wikipedia.org/wiki/Null-move_heuristic for reference
+        // have a strong enough position to produce a cutoff, we cut the search returning the null
+        // move score from a shallower search
 
         if (!pos.last_move_was_null() && !pos.has_no_pawns(pos.side_to_move())
             && static_eval >= beta) {
