@@ -139,14 +139,14 @@ class position {
             return copy;
         }
 
-        [[nodiscard]] bitboards::bitboard      checkers() const { return m_checkers_bb; }
-        [[nodiscard]] color                    side_to_move() const { return m_stm; }
-        [[nodiscard]] square                   ep_square() const { return m_ep_sq; }
-        [[nodiscard]] castling_rights          castling() const { return m_castling; }
-        [[nodiscard]] u8                       fifty_move_rule() const { return m_half_move_clock; }
-        [[nodiscard]] u16                      full_moves() const { return m_full_move_number; }
-        [[nodiscard]] zobrist_key              key() const { return m_key; }
-        [[nodiscard]] std::vector<zobrist_key> hash_history() const { return m_hash_history; }
+        [[nodiscard]] bitboards::bitboard checkers() const { return m_checkers_bb; }
+        [[nodiscard]] color               side_to_move() const { return m_stm; }
+        [[nodiscard]] square              ep_square() const { return m_ep_sq; }
+        [[nodiscard]] castling_rights     castling() const { return m_castling; }
+        [[nodiscard]] u8                  fifty_move_rule() const { return m_half_move_clock; }
+        [[nodiscard]] u16                 full_moves() const { return m_full_move_number; }
+        [[nodiscard]] zobrist_key         key() const { return m_key; }
+        [[nodiscard]] bool last_move_was_null() const { return m_last_move_was_null; }
 
         [[nodiscard]] piece piece_on(const square sq) const {
             return m_pieces[std::to_underlying(sq)];
@@ -182,7 +182,11 @@ class position {
         template <bool SaveHashHistory>
         void make_move(moves::move move);
 
+        void make_null_move();
+
         void reset_to_start_pos();
+
+        [[nodiscard]] bool has_no_pawns(color c) const;
 
         [[nodiscard]] bool is_square_attacked_by(square sq, color c) const;
 
@@ -208,6 +212,9 @@ class position {
         };
         // clang-format on
 
+        template <color C>
+        [[nodiscard]] bool has_no_pawns() const;
+
         std::vector<zobrist_key>                                    m_hash_history;
         std::array<piece, constants::num_squares>                   m_pieces;
         std::array<bitboards::bitboard, constants::num_piece_types> m_piece_bb;
@@ -219,6 +226,7 @@ class position {
         square                                                      m_ep_sq;
         castling_rights                                             m_castling;
         u8                                                          m_half_move_clock;
+        bool                                                        m_last_move_was_null{false};
 };
 
 namespace util {

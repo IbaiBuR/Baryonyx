@@ -13,6 +13,8 @@ namespace search {
 constexpr int rfp_depth_limit = 6;
 constexpr int rfp_margin      = 70;
 
+constexpr int nmp_base_reduction = 3;
+
 void searcher::reset_info() {
     m_info.stopped        = false;
     m_info.searched_nodes = 0ULL;
@@ -123,7 +125,7 @@ score searcher::qsearch(const board::position& pos, score alpha, const score bet
     for (usize i = 0; i < move_list.size(); i++) {
         const auto current_move = move_list.move_at(i);
 
-        board::position copy = pos;
+        auto copy = pos;
         copy.make_move<true>(current_move);
 
         if (!copy.was_legal())
@@ -193,6 +195,8 @@ score searcher::negamax(const board::position& pos,
         && entry.can_use_score(alpha, beta))
         return tt_score;
 
+    pv_line child_pv{};
+
     const score static_eval = eval::evaluate(pos);
     const bool  in_check    = pos.checkers().bit_count() > 0;
 
@@ -200,14 +204,30 @@ score searcher::negamax(const board::position& pos,
         // Reverse Futility Pruning
         if (depth <= rfp_depth_limit && static_eval - rfp_margin * depth >= beta)
             return static_eval;
+
+        // Null Move Pruning: If after making a null move (forfeiting the side to move) we still
+        // have a strong enough position to produce a cutoff, we cut the search.
+        // See https://en.wikipedia.org/wiki/Null-move_heuristic for reference
+
+        if (!pos.last_move_was_null() && !pos.has_no_pawns(pos.side_to_move())
+            && static_eval >= beta) {
+            const int r = nmp_base_reduction + depth / nmp_base_reduction;
+
+            auto copy = pos;
+            copy.make_null_move();
+
+            const score null_move_score =
+                -negamax<false>(copy, -beta, -beta - 1, depth - r, ply + 1, child_pv);
+
+            if (null_move_score >= beta)
+                return null_move_score;
+        }
     }
 
     if (ply >= constants::max_ply)
         return static_eval;
 
-    u16     legal_moves{};
-    pv_line child_pv{};
-
+    u16         legal_moves{};
     score       best_score     = -constants::score_infinite;
     auto        best_move      = moves::move::null();
     const score original_alpha = alpha;
@@ -220,7 +240,7 @@ score searcher::negamax(const board::position& pos,
     for (usize i = 0; i < move_list.size(); ++i) {
         const auto current_move = move_list.move_at(i);
 
-        board::position copy = pos;
+        auto copy = pos;
         copy.make_move<true>(current_move);
 
         if (!copy.was_legal())
