@@ -10,6 +10,9 @@
 
 namespace search {
 
+constexpr int rfp_depth_limit = 6;
+constexpr int rfp_margin      = 70;
+
 void searcher::reset_info() {
     m_info.stopped        = false;
     m_info.searched_nodes = 0ULL;
@@ -179,9 +182,6 @@ score searcher::negamax(const board::position& pos,
     if (!root_node && pos.has_repeated())
         return 0;
 
-    if (ply >= constants::max_ply)
-        return eval::evaluate(pos);
-
     tt::tt_entry entry;
 
     const bool tt_hit   = tt::global_tt.probe(pos.key(), entry);
@@ -192,6 +192,18 @@ score searcher::negamax(const board::position& pos,
     if (!pv_node && tt_score != constants::score_none && tt_depth >= depth
         && entry.can_use_score(alpha, beta))
         return tt_score;
+
+    const score static_eval = eval::evaluate(pos);
+    const bool  in_check    = pos.checkers().bit_count() > 0;
+
+    if (!in_check && !pv_node) {
+        // Reverse Futility Pruning
+        if (depth <= rfp_depth_limit && static_eval - rfp_margin * depth >= beta)
+            return static_eval;
+    }
+
+    if (ply >= constants::max_ply)
+        return static_eval;
 
     u16     legal_moves{};
     pv_line child_pv{};
@@ -250,7 +262,7 @@ score searcher::negamax(const board::position& pos,
 
     // Checkmate / stalemate detection
     if (!legal_moves) {
-        return pos.checkers().bit_count() > 0 ? -constants::score_mate + ply : 0;
+        return in_check ? -constants::score_mate + ply : 0;
     }
 
     const auto tt_flag = best_score <= original_alpha ? tt::tt_entry::tt_flag::upper_bound
