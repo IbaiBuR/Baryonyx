@@ -238,11 +238,27 @@ void position::make_move(const moves::move move) {
     m_stm = ~m_stm;
     m_key ^= utils::zobrist::get_side_key(m_stm);
 
-    m_checkers_bb = attacks_to_king(king_square(m_stm), m_stm);
+    m_checkers_bb        = attacks_to_king(king_square(m_stm), m_stm);
+    m_last_move_was_null = false;
 }
 
 template void position::make_move<true>(moves::move move);
 template void position::make_move<false>(moves::move move);
+
+void position::make_null_move() {
+    ++m_half_move_clock;
+
+    m_hash_history.push_back(m_key);
+
+    m_key ^= utils::zobrist::get_side_key(m_stm);
+    m_key ^= utils::zobrist::get_en_passant_key(m_ep_sq);
+
+    m_stm = ~m_stm;
+    m_key ^= utils::zobrist::get_side_key(m_stm);
+
+    m_checkers_bb        = attacks_to_king(king_square(m_stm), m_stm);
+    m_last_move_was_null = true;
+}
 
 void position::reset_to_start_pos() {
     m_hash_history.clear();
@@ -294,6 +310,15 @@ void position::reset_to_start_pos() {
 
     m_pieces[std::to_underlying(square::e1)] = piece::w_king;
     m_pieces[std::to_underlying(square::e8)] = piece::b_king;
+}
+
+template <color C>
+bool position::has_no_pawns() const {
+    return piece_count<C>(piece_type::pawn) == 0;
+}
+
+bool position::has_no_pawns(const color c) const {
+    return c == color::white ? has_no_pawns<color::white>() : has_no_pawns<color::black>();
 }
 
 bool position::is_square_attacked_by(const square sq, const color c) const {
