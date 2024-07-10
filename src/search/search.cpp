@@ -78,7 +78,6 @@ void searcher::main_search(const board::position& pos) {
         // Ensure we only update the best move if search was not cancelled. Otherwise, our best
         // move may be terrible
         best_move = m_info.pv.best_move();
-
         report_info(m_timer.elapsed(), current_depth, best_score, m_info.pv);
     }
     std::cout << std::format("bestmove {}", best_move.to_string()) << std::endl;
@@ -203,7 +202,7 @@ score searcher::negamax(const board::position& pos,
         && entry.can_use_score(alpha, beta))
         return tt_score;
 
-    pv_line child_pv{};
+    pv_line child_pv;
 
     const score static_eval = eval::evaluate(pos);
     const bool  in_check    = pos.checkers().bit_count() > 0;
@@ -256,6 +255,9 @@ score searcher::negamax(const board::position& pos,
 
         ++legal_moves;
 
+        if constexpr (pv_node)
+            child_pv.length = 0;
+
         score current_score;
 
         if (legal_moves == 1)
@@ -276,7 +278,9 @@ score searcher::negamax(const board::position& pos,
             if (current_score > alpha) {
                 alpha     = current_score;
                 best_move = current_move;
-                pv.update(current_move, child_pv);
+
+                if constexpr (pv_node)
+                    pv.update(current_move, child_pv);
 
                 if (best_move.is_quiet())
                     m_data.update_killers(best_move, ply);
