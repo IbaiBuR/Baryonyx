@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <format>
 #include <vector>
 
@@ -50,11 +51,39 @@ struct search_info {
         bool    stopped;
 };
 
+struct search_data {
+        using killers = std::array<moves::move, 2>;
+
+        std::array<killers, constants::max_ply> killer_moves;
+
+        search_data() :
+            killer_moves() {
+            clear_killers();
+        }
+
+        void clear_killers() {
+            std::ranges::for_each(killer_moves.begin(), killer_moves.end(),
+                                  [](killers& current_killers) {
+                                      current_killers[0] = current_killers[1] = moves::move::none();
+                                  });
+        }
+
+        void update_killers(const moves::move move, const int ply) {
+            if (move != killer_moves[0][ply]) {
+                killer_moves[1][ply] = killer_moves[0][ply];
+                killer_moves[0][ply] = move;
+            }
+        }
+
+        [[nodiscard]] auto first_killer(const int ply) const { return killer_moves[0][ply]; }
+        [[nodiscard]] auto second_killer(const int ply) const { return killer_moves[1][ply]; }
+};
+
 class searcher {
     public:
         [[nodiscard]] u64 searched_nodes() const { return m_info.searched_nodes; }
 
-        void reset_info();
+        void reset();
         void set_limits(u64 nodes_limit, u64 time_limit, u32 depth_limit);
         void set_start_time(u64 time);
         void parse_time_control(const std::vector<std::string>& command, color stm);
@@ -64,6 +93,7 @@ class searcher {
         void main_search(const board::position& pos);
 
     private:
+        search_data   m_data;
         search_info   m_info{};
         search_limits m_limits{};
         time_manager  m_timer{};
