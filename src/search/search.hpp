@@ -62,10 +62,9 @@ struct search_data {
         }
 
         void clear_killers() {
-            std::ranges::for_each(killer_moves.begin(), killer_moves.end(),
-                                  [](killers& current_killers) {
-                                      current_killers[0] = current_killers[1] = moves::move::none();
-                                  });
+            for (auto& killer : killer_moves) {
+                std::ranges::fill(killer.begin(), killer.end(), moves::move::none());
+            }
         }
 
         void update_killers(const moves::move move, const int ply) {
