@@ -317,10 +317,10 @@ bool searcher::should_stop() const {
 }
 
 void searcher::report_info(u64 elapsed, int depth, score score, const pv_line& pv) const {
-    std::cout << std::format("info depth {} score cp {} time {} nodes {} nps {} pv{}", depth, score,
-                             elapsed, m_info.searched_nodes,
+    std::cout << std::format("info depth {} score cp {} time {} nodes {} nps {} hashfull {} pv{}",
+                             depth, score, elapsed, m_info.searched_nodes,
                              m_info.searched_nodes / std::max<u64>(1, elapsed) * 1000,
-                             pv.to_string())
+                             tt::global_tt.hashfull(), pv.to_string())
               << std::endl;
 }
 
