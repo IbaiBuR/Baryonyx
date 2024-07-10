@@ -7,6 +7,7 @@
 #include "move.hpp"
 #include "../board/piece.hpp"
 #include "../board/position.hpp"
+#include "../search/search.hpp"
 
 namespace moves {
 
@@ -30,7 +31,10 @@ class move_list {
 
         void clear() { m_size = 0; }
 
-        void score_moves(move tt_move, const board::position& pos);
+        void score_moves(move                       tt_move,
+                         const board::position&     pos,
+                         const search::search_data& search_data,
+                         int                        ply);
 
         void sort() {
             std::stable_sort(begin(), end(), [](const scored_move a, const scored_move b) {

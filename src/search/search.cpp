@@ -15,10 +15,12 @@ constexpr int rfp_margin      = 70;
 
 constexpr int nmp_base_reduction = 3;
 
-void searcher::reset_info() {
+void searcher::reset() {
     m_info.stopped        = false;
     m_info.searched_nodes = 0ULL;
+
     m_info.pv.clear();
+    m_data.clear_killers();
 }
 
 void searcher::set_limits(const u64 nodes_limit, const u64 time_limit, const u32 depth_limit) {
@@ -55,7 +57,7 @@ void searcher::parse_time_control(const std::vector<std::string>& command, const
 }
 
 void searcher::main_search(const board::position& pos) {
-    reset_info();
+    reset();
     auto best_move = moves::move::null();
 
     // Iterative deepening loop
@@ -122,7 +124,7 @@ score searcher::qsearch(const board::position& pos, score alpha, const score bet
 
     moves::move_list move_list;
     generate_all_captures(pos, move_list);
-    move_list.score_moves(tt_move, pos);
+    move_list.score_moves(tt_move, pos, m_data, ply);
     move_list.sort();
 
     for (usize i = 0; i < move_list.size(); i++) {
@@ -240,7 +242,7 @@ score searcher::negamax(const board::position& pos,
 
     moves::move_list move_list;
     generate_all_moves(pos, move_list);
-    move_list.score_moves(tt_move, pos);
+    move_list.score_moves(tt_move, pos, m_data, ply);
     move_list.sort();
 
     for (usize i = 0; i < move_list.size(); ++i) {
@@ -275,6 +277,9 @@ score searcher::negamax(const board::position& pos,
                 alpha     = current_score;
                 best_move = current_move;
                 pv.update(current_move, child_pv);
+
+                if (best_move.is_quiet())
+                    m_data.update_killers(best_move, ply);
 
                 if (alpha >= beta)
                     break;
