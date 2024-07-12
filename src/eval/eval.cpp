@@ -14,10 +14,15 @@ constexpr packed_score S(i16 mg, i16 eg) { return {mg, eg}; }
 /// @brief Evaluation terms
 namespace terms {
 
-constexpr std::array piece_values = {S(61, 93),   S(259, 298), S(237, 279),
-                                     S(297, 454), S(573, 833), S(0, 0)};
+template <typename T>
+using piece_table = std::array<T, constants::num_piece_types>;
 
-constexpr std::array<std::array<packed_score, 64>, 6> all_psqt = {
+using piece_square_table = piece_table<std::array<packed_score, constants::num_squares>>;
+
+constexpr piece_table<packed_score> piece_values = {S(61, 93),   S(259, 298), S(237, 279),
+                                                    S(297, 454), S(573, 833), S(0, 0)};
+
+constexpr piece_square_table all_psqt = {
     {
      {S(0, 0),     S(0, 0),     S(0, 0),     S(0, 0),     S(0, 0),     S(0, 0),     S(0, 0),
      S(0, 0),     S(122, 278), S(155, 270), S(123, 271), S(159, 207), S(141, 202), S(113, 220),
