@@ -27,7 +27,8 @@ It is a personal project with the goal of learning modern C++ and chess programm
     - [Zobrist Hashing][zobrist]
 - Evaluation
     - [Material][material]
-    - [PesTO Piece-Square Tables][psqts]
+    - [Texel-tuned Piece-Square Tables][psqts]
+    - [Tempo][tempo]
     - [Tapered Evaluation][tapered-eval]
 - Search
   - [Negamax with Alpha-beta pruning][negamax]
@@ -36,6 +37,7 @@ It is a personal project with the goal of learning modern C++ and chess programm
   - [Move Ordering][move-ordering]
     - [TT move][tt-move]
     - [MVV-LVA][mvv-lva]
+    - [Killer Moves][killers]
   - [Transposition Table][transposition-table]
   - [Principal Variation Search][pv-search]
   - [Reverse Futility Pruning][rfp]
@@ -72,6 +74,7 @@ To create a working executable, follow this steps:
 [zobrist]: https://www.chessprogramming.org/Zobrist_Hashing
 [material]: https://www.chessprogramming.org/Material
 [psqts]: https://www.chessprogramming.org/Piece-Square_Tables
+[tempo]: https://www.chessprogramming.org/Tempo
 [tapered-eval]: https://www.chessprogramming.org/Tapered_Eval
 [negamax]: https://en.wikipedia.org/wiki/Negamax#Negamax_with_alpha_beta_pruning
 [id]: https://www.chessprogramming.org/Iterative_Deepening
@@ -80,6 +83,7 @@ To create a working executable, follow this steps:
 [move-ordering]: https://www.chessprogramming.org/Move_Ordering
 [tt-move]: https://www.chessprogramming.org/Hash_Move
 [mvv-lva]: https://www.chessprogramming.org/MVV-LVA
+[killers]: https://www.chessprogramming.org/Killer_Move
 [transposition-table]: https://www.chessprogramming.org/Transposition_Table
 [pv-search]: https://www.chessprogramming.org/Principal_Variation_Search
 [rfp]: https://www.chessprogramming.org/Reverse_Futility_Pruning
