@@ -10,6 +10,14 @@
 
 namespace search {
 
+namespace move_ordering {
+
+inline constexpr score mvv_lva_base_bonus      = 10000;
+inline constexpr score killer_moves_base_bonus = mvv_lva_base_bonus - 1;
+inline constexpr score max_history             = killer_moves_base_bonus - 2;
+
+} // namespace move_ordering
+
 struct pv_line {
         std::array<moves::move, constants::max_moves> moves{};
         usize                                         length{};
@@ -87,12 +95,12 @@ struct search_data {
         }
 
         void update_quiet_history(const moves::move move, const int depth) {
-            static constexpr int max_history = 512;
-
             const auto from          = move.from();
             const auto to            = move.to();
             const auto history_value = quiet_history_value(move);
-            const int  history_bonus = std::min(history_value + depth * depth, max_history);
+
+            const int history_bonus =
+                std::min(history_value + depth * depth, move_ordering::max_history);
 
             quiet_history[std::to_underlying(from)][std::to_underlying(to)] = history_bonus;
         }
