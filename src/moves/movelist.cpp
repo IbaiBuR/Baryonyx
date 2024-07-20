@@ -50,6 +50,8 @@ void move_list::score_moves(const move                 tt_move,
                 m_moves[i].move_score = killer_moves_base_bonus;
             else if (current_move == search_data.second_killer(ply))
                 m_moves[i].move_score = killer_moves_base_bonus - 1;
+            else
+                m_moves[i].move_score = search_data.quiet_history_value(current_move);
         }
     }
 }

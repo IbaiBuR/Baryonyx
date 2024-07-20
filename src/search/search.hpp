@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <cstring>
 #include <format>
 #include <vector>
 
@@ -53,12 +54,21 @@ struct search_info {
 
 struct search_data {
         using killers = std::array<moves::move, 2>;
+        using butterfly_history =
+            std::array<std::array<u16, constants::num_squares>, constants::num_squares>;
 
         std::array<killers, constants::max_ply> killer_moves;
+        butterfly_history                       quiet_history;
 
         search_data() :
-            killer_moves() {
+            killer_moves(),
+            quiet_history() {
+            clear();
+        }
+
+        void clear() {
             clear_killers();
+            clear_quiet_history();
         }
 
         void clear_killers() {
@@ -67,6 +77,8 @@ struct search_data {
             }
         }
 
+        void clear_quiet_history() { std::memset(&quiet_history, 0, sizeof(quiet_history)); }
+
         void update_killers(const moves::move move, const int ply) {
             if (move != killer_moves[0][ply]) {
                 killer_moves[1][ply] = killer_moves[0][ply];
@@ -74,8 +86,22 @@ struct search_data {
             }
         }
 
+        void update_quiet_history(const moves::move move, const int depth) {
+            static constexpr int max_history = 512;
+
+            const auto from          = move.from();
+            const auto to            = move.to();
+            const int  history_bonus = std::min(depth * depth, max_history);
+
+            quiet_history[std::to_underlying(from)][std::to_underlying(to)] += history_bonus;
+        }
+
         [[nodiscard]] auto first_killer(const int ply) const { return killer_moves[0][ply]; }
         [[nodiscard]] auto second_killer(const int ply) const { return killer_moves[1][ply]; }
+
+        [[nodiscard]] u16 quiet_history_value(const moves::move m) const {
+            return quiet_history[std::to_underlying(m.from())][std::to_underlying(m.to())];
+        }
 };
 
 class searcher {
