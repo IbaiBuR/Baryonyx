@@ -91,9 +91,10 @@ struct search_data {
 
             const auto from          = move.from();
             const auto to            = move.to();
-            const int  history_bonus = std::min(depth * depth, max_history);
+            const auto history_value = quiet_history_value(move);
+            const int  history_bonus = std::min(history_value + depth * depth, max_history);
 
-            quiet_history[std::to_underlying(from)][std::to_underlying(to)] += history_bonus;
+            quiet_history[std::to_underlying(from)][std::to_underlying(to)] = history_bonus;
         }
 
         [[nodiscard]] auto first_killer(const int ply) const { return killer_moves[0][ply]; }
