@@ -282,11 +282,12 @@ score searcher::negamax(const board::position& pos,
                 if constexpr (pv_node)
                     pv.update(current_move, child_pv);
 
-                if (best_move.is_quiet())
-                    m_data.update_killers(best_move, ply);
+                if (alpha >= beta) {
+                    if (best_move.is_quiet())
+                        m_data.update_killers(best_move, ply);
 
-                if (alpha >= beta)
                     break;
+                }
             }
         }
 
