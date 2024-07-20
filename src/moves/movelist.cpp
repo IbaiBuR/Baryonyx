@@ -20,9 +20,6 @@ constexpr std::array<std::array<score, constants::num_piece_types>, constants::n
 };
 // clang-format on
 
-constexpr int mvv_lva_base_bonus      = 1000;
-constexpr int killer_moves_base_bonus = mvv_lva_base_bonus - 1;
-
 void move_list::score_moves(const move                 tt_move,
                             const board::position&     pos,
                             const search::search_data& search_data,
@@ -43,13 +40,15 @@ void move_list::score_moves(const move                 tt_move,
 
             m_moves[i].move_score = mvv_lva[std::to_underlying(attacker_piece_type)]
                                            [std::to_underlying(victim_piece_type)]
-                                  + mvv_lva_base_bonus;
+                                  + search::move_ordering::mvv_lva_base_bonus;
         }
         else {
             if (current_move == search_data.first_killer(ply))
-                m_moves[i].move_score = killer_moves_base_bonus;
+                m_moves[i].move_score = search::move_ordering::killer_moves_base_bonus;
             else if (current_move == search_data.second_killer(ply))
-                m_moves[i].move_score = killer_moves_base_bonus - 1;
+                m_moves[i].move_score = search::move_ordering::killer_moves_base_bonus - 1;
+            else
+                m_moves[i].move_score = search_data.quiet_history_value(current_move);
         }
     }
 }

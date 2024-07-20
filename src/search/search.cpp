@@ -21,6 +21,7 @@ void searcher::reset() {
 
     m_info.pv.clear();
     m_data.clear_killers();
+    m_data.clear();
 }
 
 void searcher::set_limits(const u64 nodes_limit, const u64 time_limit, const u32 depth_limit) {
@@ -283,8 +284,10 @@ score searcher::negamax(const board::position& pos,
                     pv.update(current_move, child_pv);
 
                 if (alpha >= beta) {
-                    if (best_move.is_quiet())
+                    if (best_move.is_quiet()) {
                         m_data.update_killers(best_move, ply);
+                        m_data.update_quiet_history(best_move, depth);
+                    }
 
                     break;
                 }
