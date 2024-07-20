@@ -20,7 +20,6 @@ void searcher::reset() {
     m_info.searched_nodes = 0ULL;
 
     m_info.pv.clear();
-    m_data.clear_killers();
     m_data.clear();
 }
 
