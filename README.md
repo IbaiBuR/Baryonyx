@@ -38,6 +38,7 @@ It is a personal project with the goal of learning modern C++ and chess programm
     - [TT move][tt-move]
     - [MVV-LVA][mvv-lva]
     - [Killer Moves][killers]
+    - [History Heuristic][history-heuristic]
   - [Transposition Table][transposition-table]
   - [Principal Variation Search][pv-search]
   - [Reverse Futility Pruning][rfp]
@@ -84,6 +85,7 @@ To create a working executable, follow this steps:
 [tt-move]: https://www.chessprogramming.org/Hash_Move
 [mvv-lva]: https://www.chessprogramming.org/MVV-LVA
 [killers]: https://www.chessprogramming.org/Killer_Move
+[history-heuristic]: https://www.chessprogramming.org/History_Heuristic
 [transposition-table]: https://www.chessprogramming.org/Transposition_Table
 [pv-search]: https://www.chessprogramming.org/Principal_Variation_Search
 [rfp]: https://www.chessprogramming.org/Reverse_Futility_Pruning
