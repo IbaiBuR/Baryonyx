@@ -170,7 +170,6 @@ score searcher::negamax(const board::position& pos,
                         const int              ply,
                         pv_line&               pv) {
     ++m_info.searched_nodes;
-    pv.length = 0;
 
     if (m_info.stopped)
         return 0;
