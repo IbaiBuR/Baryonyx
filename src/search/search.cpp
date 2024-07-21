@@ -174,15 +174,15 @@ score searcher::negamax(const board::position& pos,
     if (m_info.stopped)
         return 0;
 
-    if (should_stop()) {
+    const bool root_node = ply == 0;
+
+    if (!root_node && should_stop()) {
         m_info.stopped = true;
         return 0;
     }
 
     if (depth <= 0)
         return qsearch<pv_node>(pos, alpha, beta, ply);
-
-    const bool root_node = ply == 0;
 
     if (!root_node && pos.has_repeated())
         return 0;
