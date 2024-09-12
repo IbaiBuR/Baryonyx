@@ -19,7 +19,7 @@ void command_handler::handle_eval(const board::position& pos) {
     std::cout << std::format("\nStatic evaluation: {}", eval::evaluate(pos)) << std::endl;
 }
 
-void command_handler::handle_is_ready() { std::cout << std::format("readyok") << std::endl; }
+void command_handler::handle_is_ready() { std::cout << "readyok" << std::endl; }
 
 void command_handler::handle_go(const std::vector<std::string>& command,
                                 const board::position&          pos) {
@@ -82,9 +82,9 @@ void command_handler::handle_setoption(const std::vector<std::string>& command) 
 void command_handler::handle_uci() {
     std::cout << std::format("id name {} {}", name, version) << std::endl;
     std::cout << std::format("id author {}", author) << std::endl;
-    std::cout << std::format("option name Hash type spin default 16 min 1 max 1024") << std::endl;
-    std::cout << std::format("option name Threads type spin default 1 min 1 max 1") << std::endl;
-    std::cout << std::format("uciok") << std::endl;
+    std::cout << "option name Hash type spin default 16 min 1 max 1024" << std::endl;
+    std::cout << "option name Threads type spin default 1 min 1 max 1" << std::endl;
+    std::cout << "uciok" << std::endl;
 }
 
 void command_handler::handle_uci_new_game(board::position& pos) {

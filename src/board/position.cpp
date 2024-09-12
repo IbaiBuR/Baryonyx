@@ -355,39 +355,38 @@ bool position::is_square_attacked_by(const square sq, const color c) const {
 
 bool position::is_valid() const {
     if (piece_type_bb(piece_type::king).bit_count() != 2) {
-        std::cerr << std::format("There must be 2 kings on the board.") << std::endl;
+        std::cerr << "There must be 2 kings on the board." << std::endl;
         return false;
     }
 
     const auto& white_occupancies = occupancies(color::white);
 
     if (white_occupancies.bit_count() > 16) {
-        std::cerr << std::format("White must have 16 or less pieces.") << std::endl;
+        std::cerr << "White must have 16 or less pieces." << std::endl;
         return false;
     }
 
     const auto& black_occupancies = occupancies(color::black);
 
     if (black_occupancies.bit_count() > 16) {
-        std::cerr << std::format("Black must have 16 or less pieces.") << std::endl;
+        std::cerr << "Black must have 16 or less pieces." << std::endl;
         return false;
     }
 
     const auto& pawns = piece_type_bb(piece_type::pawn);
 
     if ((pawns & white_occupancies).bit_count() > 8) {
-        std::cerr << std::format("White must have 8 or less pawns.") << std::endl;
+        std::cerr << "White must have 8 or less pawns." << std::endl;
         return false;
     }
 
     if ((pawns & black_occupancies).bit_count() > 8) {
-        std::cerr << std::format("Black must have 8 or less pawns.") << std::endl;
+        std::cerr << "Black must have 8 or less pawns." << std::endl;
         return false;
     }
 
     if (is_square_attacked_by(king_square(~m_stm), m_stm)) {
-        std::cerr << std::format(
-            "The king of the player whose turn it is not to move must not be in check.")
+        std::cerr << "The king of the player whose turn it is not to move must not be in check."
                   << std::endl;
         return false;
     }

@@ -105,7 +105,7 @@ void print_magics_by_piece_type() {
                                  mask.as_u64(), magic, shift);
 
         if (sq < constants::num_squares - 1)
-            std::cout << std::format(",");
+            std::cout << ",";
 
         std::cout << std::endl;
     }
