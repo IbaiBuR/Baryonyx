@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <string_view>
 #include <vector>
 
 #include "../board/position.hpp"
@@ -13,9 +14,9 @@ class command_handler {
         void loop();
 
     private:
-        static constexpr auto author  = "Ibai Burgos";
-        static constexpr auto name    = "Baryonyx";
-        static constexpr auto version = "0.1.16";
+        static constexpr std::string_view author  = "Ibai Burgos";
+        static constexpr std::string_view name    = "Baryonyx";
+        static constexpr std::string_view version = "0.1.16";
 
         search::searcher m_searcher;
 
