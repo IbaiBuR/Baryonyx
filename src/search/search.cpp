@@ -214,7 +214,6 @@ score searcher::negamax(const board::position& pos,
         // Null Move Pruning: If after making a null move (forfeiting the side to move) we still
         // have a strong enough position to produce a cutoff, we cut the search returning the null
         // move score from a shallower search
-
         if (!pos.last_move_was_null() && !pos.has_no_pawns(pos.side_to_move())
             && static_eval >= beta) {
             const int r = nmp_base_reduction + depth / nmp_base_reduction;
