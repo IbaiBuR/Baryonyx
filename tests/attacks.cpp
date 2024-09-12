@@ -6,20 +6,20 @@ using namespace board::bitboards;
 TEST_SUITE("Attacks Test") {
     TEST_CASE("pawn attacks") {
         SUBCASE("white") {
-            CHECK_EQ(attacks::pawn_attacks[std::to_underlying(color::white)]
-                                          [std::to_underlying(square::e4)],
+            CHECK_EQ(attacks::pawn_attacks[std::to_underlying(color::white),
+                                           std::to_underlying(square::e4)],
                      bitboard(0x2800000000ULL));
-            CHECK_EQ(attacks::pawn_attacks[std::to_underlying(color::white)]
-                                          [std::to_underlying(square::a8)],
+            CHECK_EQ(attacks::pawn_attacks[std::to_underlying(color::white),
+                                           std::to_underlying(square::a8)],
                      bitboard(0x0ULL));
         }
 
         SUBCASE("black") {
-            CHECK_EQ(attacks::pawn_attacks[std::to_underlying(color::black)]
-                                          [std::to_underlying(square::e4)],
+            CHECK_EQ(attacks::pawn_attacks[std::to_underlying(color::black),
+                                           std::to_underlying(square::e4)],
                      bitboard(0x280000ULL));
-            CHECK_EQ(attacks::pawn_attacks[std::to_underlying(color::black)]
-                                          [std::to_underlying(square::a1)],
+            CHECK_EQ(attacks::pawn_attacks[std::to_underlying(color::black),
+                                           std::to_underlying(square::a1)],
                      bitboard(0x0ULL));
         }
     }
