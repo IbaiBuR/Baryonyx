@@ -3,10 +3,11 @@
 #include <format>
 #include <iostream>
 
+#include "tt.hpp"
+
 #include "../eval/eval.hpp"
 #include "../moves/movegen.hpp"
 #include "../utils/time.hpp"
-#include "tt.hpp"
 
 namespace search {
 

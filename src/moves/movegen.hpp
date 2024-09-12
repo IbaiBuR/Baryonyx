@@ -1,6 +1,7 @@
 #pragma once
 
 #include "movelist.hpp"
+
 #include "../board/position.hpp"
 
 namespace moves {

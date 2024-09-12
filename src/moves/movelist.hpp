@@ -5,6 +5,7 @@
 #include <cassert>
 
 #include "move.hpp"
+
 #include "../board/piece.hpp"
 #include "../board/position.hpp"
 #include "../search/search.hpp"

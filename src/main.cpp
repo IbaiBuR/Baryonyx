@@ -1,8 +1,9 @@
 #include <cstring>
 
-#include "board/bitboard/attacks.hpp"
 #include "search/bench.hpp"
 #include "uci/uci.hpp"
+
+#include "board/bitboard/attacks.hpp"
 
 int main(const int argc, const char *argv[]) {
     board::bitboards::attacks::init();

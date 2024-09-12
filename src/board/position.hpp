@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "bitboard/bitboard.hpp"
+
 #include "../moves/move.hpp"
 
 namespace board {

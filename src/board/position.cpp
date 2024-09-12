@@ -3,8 +3,10 @@
 #include <format>
 #include <iostream>
 
-#include "bitboard/attacks.hpp"
 #include "piece.hpp"
+
+#include "bitboard/attacks.hpp"
+
 #include "../utils/split.hpp"
 #include "../utils/zobrist.hpp"
 

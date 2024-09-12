@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "attacks.hpp"
+
 #include "../../utils/random.hpp"
 
 namespace board::bitboards::magics {
