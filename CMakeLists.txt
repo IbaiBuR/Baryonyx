@@ -3,7 +3,7 @@ project(Baryonyx)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -funroll-loops -flto=auto -DNDEBUG -std=c++23 -march=native -mtune=native -Wall -Wextra -Wpedantic")
-set(CMAKE_CXX_FLAGS_DEBUG "-O0")
+set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g -Wall -Wextra -Wpedantic")
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
