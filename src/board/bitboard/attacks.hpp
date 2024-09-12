@@ -150,7 +150,8 @@ inline constexpr std::array<bitboard, constants::num_squares> black_pawn_attacks
 };
 
 /// @brief Pre-calculated lookup table for pawn attacks
-inline constexpr std::array pawn_attacks = {white_pawn_attacks, black_pawn_attacks};
+inline constexpr utils::mdarray<bitboard, constants::num_squares, constants::num_squares>
+    pawn_attacks = {white_pawn_attacks, black_pawn_attacks};
 
 /// @brief Pre-calculated lookup table for knight attacks
 inline constexpr std::array<bitboard, constants::num_squares> knight_attacks = {
@@ -299,7 +300,7 @@ constexpr int get_max_blockers_config() {
 }
 
 inline bitboard get_pawn_attacks(const square sq, const color c) {
-    return pawn_attacks[std::to_underlying(c)][std::to_underlying(sq)];
+    return pawn_attacks[std::to_underlying(c), std::to_underlying(sq)];
 }
 
 inline bitboard get_knight_attacks(const square sq) {
