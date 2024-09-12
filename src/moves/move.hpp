@@ -29,12 +29,15 @@ class move {
 
         constexpr move() = default;
 
+        constexpr explicit move(const u16 data) :
+            m_data(data) {}
+
         constexpr move(const square from, const square to, const move_flag flag) {
             m_data = std::to_underlying(from) | std::to_underlying(to) << 6
                    | std::to_underlying(flag) << 12;
         }
 
-        static constexpr move none() { return {square::a8, square::a8, move_flag::no_move}; }
+        static constexpr move none() { return move(0); }
         static constexpr move null() { return {square::a8, square::a8, move_flag::null_move}; }
 
         [[nodiscard]] constexpr square from() const { return static_cast<square>(m_data & 0X3F); }
