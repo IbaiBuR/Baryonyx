@@ -61,12 +61,11 @@ struct search_info {
 };
 
 struct search_data {
-        using killers = std::array<moves::move, 2>;
-        using butterfly_history =
-            std::array<std::array<u16, constants::num_squares>, constants::num_squares>;
+        using killers = std::array<moves::move, constants::max_ply>;
 
         std::array<killers, constants::max_ply> killer_moves;
         butterfly_history                       quiet_history;
+        std::array<killers, 2>                                              killer_moves;
 
         search_data() :
             killer_moves(),
