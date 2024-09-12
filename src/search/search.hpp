@@ -5,8 +5,10 @@
 #include <format>
 #include <vector>
 
-#include "../board/position.hpp"
 #include "../timeman.hpp"
+
+#include "../board/position.hpp"
+#include "../utils/mdarray.hpp"
 
 namespace search {
 
@@ -61,35 +63,24 @@ struct search_info {
 };
 
 struct search_data {
-        using killers = std::array<moves::move, constants::max_ply>;
+        utils::mdarray<moves::move, 2, constants::max_ply>                  killer_moves;
+        utils::mdarray<u16, constants::num_squares, constants::num_squares> quiet_history;
 
-        std::array<killers, constants::max_ply> killer_moves;
-        butterfly_history                       quiet_history;
-        std::array<killers, 2>                                              killer_moves;
-
-        search_data() :
-            killer_moves(),
-            quiet_history() {
-            clear();
-        }
+        search_data() { clear(); }
 
         void clear() {
             clear_killers();
             clear_quiet_history();
         }
 
-        void clear_killers() {
-            for (auto& killer : killer_moves) {
-                std::ranges::fill(killer.begin(), killer.end(), moves::move::none());
-            }
-        }
+        void clear_killers() { killer_moves = {}; }
 
-        void clear_quiet_history() { std::memset(&quiet_history, 0, sizeof(quiet_history)); }
+        void clear_quiet_history() { quiet_history = {}; }
 
         void update_killers(const moves::move move, const int ply) {
-            if (move != killer_moves[0][ply]) {
-                killer_moves[1][ply] = killer_moves[0][ply];
-                killer_moves[0][ply] = move;
+            if (move != killer_moves[0, ply]) {
+                killer_moves[1, ply] = killer_moves[0, ply];
+                killer_moves[0, ply] = move;
             }
         }
 
@@ -101,14 +92,14 @@ struct search_data {
             const int history_bonus =
                 std::min(history_value + depth * depth, move_ordering::max_history);
 
-            quiet_history[std::to_underlying(from)][std::to_underlying(to)] = history_bonus;
+            quiet_history[std::to_underlying(from), std::to_underlying(to)] = history_bonus;
         }
 
-        [[nodiscard]] auto first_killer(const int ply) const { return killer_moves[0][ply]; }
-        [[nodiscard]] auto second_killer(const int ply) const { return killer_moves[1][ply]; }
+        [[nodiscard]] auto first_killer(const int ply) const { return killer_moves[0, ply]; }
+        [[nodiscard]] auto second_killer(const int ply) const { return killer_moves[1, ply]; }
 
         [[nodiscard]] u16 quiet_history_value(const moves::move m) const {
-            return quiet_history[std::to_underlying(m.from())][std::to_underlying(m.to())];
+            return quiet_history[std::to_underlying(m.from()), std::to_underlying(m.to())];
         }
 };
 

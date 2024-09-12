@@ -2,8 +2,8 @@
 
 namespace board::bitboards::attacks {
 
-std::array<std::array<bitboard, max_bishop_blockers_config>, constants::num_squares> bishop_attacks;
-std::array<std::array<bitboard, max_rook_blockers_config>, constants::num_squares>   rook_attacks;
+utils::mdarray<bitboard, constants::num_squares, max_bishop_blockers_config> bishop_attacks;
+utils::mdarray<bitboard, constants::num_squares, max_rook_blockers_config>   rook_attacks;
 
 /// @brief Initializes the sliding attacks lookup tables
 /// @tparam PieceType Piece type (Slider)
@@ -25,10 +25,10 @@ void init_sliders() {
 #endif
 
             if constexpr (is_bishop)
-                bishop_attacks[sq][magic_index] =
+                bishop_attacks[sq, magic_index] =
                     gen_sliding<PieceType>(static_cast<square>(sq), occupied);
             else
-                rook_attacks[sq][magic_index] =
+                rook_attacks[sq, magic_index] =
                     gen_sliding<PieceType>(static_cast<square>(sq), occupied);
         }
     }

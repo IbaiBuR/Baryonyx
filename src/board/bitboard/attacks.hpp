@@ -5,15 +5,15 @@
 #include "bitboard.hpp"
 #include "magics.hpp"
 
+#include "../../utils/mdarray.hpp"
+
 namespace board::bitboards::attacks {
 
 inline constexpr int max_bishop_blockers_config = 1 << 9;
 inline constexpr int max_rook_blockers_config   = 1 << 12;
 
-extern std::array<std::array<bitboard, max_bishop_blockers_config>, constants::num_squares>
-    bishop_attacks;
-extern std::array<std::array<bitboard, max_rook_blockers_config>, constants::num_squares>
-    rook_attacks;
+extern utils::mdarray<bitboard, constants::num_squares, max_bishop_blockers_config> bishop_attacks;
+extern utils::mdarray<bitboard, constants::num_squares, max_rook_blockers_config>   rook_attacks;
 
 inline constexpr std::array<bitboard, constants::num_squares> white_pawn_attacks = {
     {bitboard(0x200ULL),
@@ -307,13 +307,13 @@ inline bitboard get_knight_attacks(const square sq) {
 }
 
 inline bitboard get_bishop_attacks(const square sq, bitboard blockers) {
-    return bishop_attacks[std::to_underlying(sq)]
-                         [magic_index(magics::bishop_magics[std::to_underlying(sq)], blockers)];
+    return bishop_attacks[std::to_underlying(sq),
+                          magic_index(magics::bishop_magics[std::to_underlying(sq)], blockers)];
 }
 
 inline bitboard get_rook_attacks(const square sq, bitboard blockers) {
-    return rook_attacks[std::to_underlying(sq)]
-                       [magic_index(magics::rook_magics[std::to_underlying(sq)], blockers)];
+    return rook_attacks[std::to_underlying(sq),
+                        magic_index(magics::rook_magics[std::to_underlying(sq)], blockers)];
 }
 
 inline bitboard get_king_attacks(const square sq) { return king_attacks[std::to_underlying(sq)]; }
@@ -350,7 +350,8 @@ constexpr bitboard sliding_attacks(const square sq, const bitboard& occupied) {
 /// included since we can obtain it by combining the attacks of the bishop and the rook
 template <piece_type PieceType>
 constexpr bitboard gen_sliding(const square sq, const bitboard& occupied) {
-    assert(PieceType == piece_type::bishop || PieceType == piece_type::rook);
+    static_assert(PieceType == piece_type::bishop || PieceType == piece_type::rook,
+                  "Piece type must be either bishop or rook.\n");
 
     if constexpr (PieceType == piece_type::bishop) {
         return sliding_attacks<direction::north_east>(sq, occupied)
