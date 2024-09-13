@@ -11,10 +11,14 @@
 
 namespace search {
 
+namespace heuristics {
+
 constexpr int rfp_depth_limit = 6;
 constexpr int rfp_margin      = 70;
 
 constexpr int nmp_base_reduction = 3;
+
+} // namespace heuristics
 
 void searcher::reset() {
     m_info.stopped        = false;
@@ -209,7 +213,8 @@ score searcher::negamax(const board::position& pos,
 
     if (!in_check && !pv_node) {
         // Reverse Futility Pruning
-        if (depth <= rfp_depth_limit && static_eval - rfp_margin * depth >= beta)
+        if (depth <= heuristics::rfp_depth_limit
+            && static_eval - heuristics::rfp_margin * depth >= beta)
             return static_eval;
 
         // Null Move Pruning: If after making a null move (forfeiting the side to move) we still
@@ -217,7 +222,7 @@ score searcher::negamax(const board::position& pos,
         // move score from a shallower search
         if (!pos.last_move_was_null() && !pos.has_no_pawns(pos.side_to_move())
             && static_eval >= beta) {
-            const int r = nmp_base_reduction + depth / nmp_base_reduction;
+            const int r = heuristics::nmp_base_reduction + depth / heuristics::nmp_base_reduction;
 
             auto copy = pos;
             copy.make_null_move();
