@@ -43,6 +43,7 @@ It is a personal project with the goal of learning modern C++ and chess programm
   - [Principal Variation Search][pv-search]
   - [Reverse Futility Pruning][rfp]
   - [Null Move Pruning][nmp]
+  - [Late Move Reductions][lmr]
 
 ## Building
 
@@ -90,3 +91,4 @@ To create a working executable, follow this steps:
 [pv-search]: https://www.chessprogramming.org/Principal_Variation_Search
 [rfp]: https://www.chessprogramming.org/Reverse_Futility_Pruning
 [nmp]: https://www.chessprogramming.org/Null_Move_Pruning
+[lmr]: https://www.chessprogramming.org/Late_Move_Reductions
