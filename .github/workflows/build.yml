@@ -41,5 +41,13 @@ jobs:
       - name: Build
         run: make debug CXX=${{ env.CXX }}
 
+      - name: Run Bench
+        run: |
+          if [[ "${{ matrix.os }}" == "ubuntu-latest" || "${{ matrix.os }}" == "macos-latest" ]]; then
+            ./baryonyx bench
+          elif [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+            .\baryonyx.exe bench
+          fi
+
       - name: Clean
         run: make clean
