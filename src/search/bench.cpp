@@ -29,5 +29,8 @@ void search::bench::run(searcher& searcher, const u32 depth) {
     const auto seconds = elapsed / 1000;
 
     std::cout << std::format("\ninfo string {} seconds", seconds) << std::endl;
-    std::cout << std::format("{} nodes {} nps", total_nodes, total_nodes / seconds) << std::endl;
+    std::cout << std::format(
+        "{} nodes {} nps", total_nodes,
+        static_cast<u64>(static_cast<double>(total_nodes) / static_cast<double>(seconds)))
+              << std::endl;
 }
