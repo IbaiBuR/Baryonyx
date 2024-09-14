@@ -150,8 +150,8 @@ inline constexpr std::array<bitboard, constants::num_squares> black_pawn_attacks
 };
 
 /// @brief Pre-calculated lookup table for pawn attacks
-inline constexpr utils::mdarray<bitboard, constants::num_squares, constants::num_squares>
-    pawn_attacks = {{{{white_pawn_attacks}, {black_pawn_attacks}}}};
+inline constexpr utils::mdarray<bitboard, constants::num_colors, constants::num_squares>
+    pawn_attacks = {white_pawn_attacks, black_pawn_attacks};
 
 /// @brief Pre-calculated lookup table for knight attacks
 inline constexpr std::array<bitboard, constants::num_squares> knight_attacks = {
