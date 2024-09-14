@@ -20,25 +20,24 @@ constexpr int rfp_margin      = 70;
 
 constexpr int nmp_base_reduction = 3;
 
-constexpr auto lmr_noisy_factor  = -0.25;
-constexpr auto lmr_noisy_divisor = 2.25;
 constexpr auto lmr_quiet_factor  = 1.00;
 constexpr auto lmr_quiet_divisor = 2.00;
 
 static const auto lmr_table = [] {
-    utils::mdarray<int, 2, constants::max_depth, constants::max_moves> lmr_table;
+    utils::mdarray<int, constants::max_depth, constants::max_moves> lmr_table;
 
-    for (int i = 0; i < constants::max_depth; ++i) {
-        for (int j = 0; j < constants::max_moves; ++j) {
-            lmr_table[0, i, j] =
-                static_cast<int>(lmr_noisy_factor + std::log(i) * std::log(j) / lmr_noisy_divisor);
-            lmr_table[1, i, j] =
+    for (int i = 1; i < constants::max_depth; ++i) {
+        for (int j = 1; j < constants::max_moves; ++j) {
+            lmr_table[i, j] =
                 static_cast<int>(lmr_quiet_factor + std::log(i) * std::log(j) / lmr_quiet_divisor);
         }
     }
 
     return lmr_table;
 }();
+
+constexpr int lmr_min_depth      = 2;
+constexpr int lmr_move_threshold = 3;
 
 } // namespace heuristics
 
@@ -291,10 +290,11 @@ score searcher::negamax(const board::position& pos,
             current_score = -negamax<pv_node>(copy, -beta, -alpha, depth - 1, ply + 1, child_pv);
         else {
             // Apply LMR: Search moves that are late in move ordering with reduced depth
-            const auto reduction =
-                depth > 2 && legal_moves > 3
-                    ? heuristics::lmr_table[current_move.is_quiet(), depth, legal_moves]
-                    : 0;
+            const auto reduction = depth > heuristics::lmr_min_depth
+                                        && legal_moves > heuristics::lmr_move_threshold
+                                        && current_move.is_quiet()
+                                     ? heuristics::lmr_table[depth, legal_moves]
+                                     : 0;
 
             // Ensure the reduced depth is not negative
             const auto new_depth     = depth - 1;
