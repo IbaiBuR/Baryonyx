@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    name: Build Debug
+    name: Build Debug & Bench
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -19,35 +19,37 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Linux environment
-        if: matrix.os == 'ubuntu-latest'
+      - name: Setup environment (Linux & MacOS)
+        if: matrix.os != 'windows-latest'
+        shell: bash
         run: |
-          sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
-          sudo apt-get update -y
-          sudo apt-get install g++-13
-          echo "CXX=$(which g++-13)" >> $GITHUB_ENV
+          if [[ "${{ matrix.os }}" == "ubuntu-latest" ]]; then
+            sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+            sudo apt-get update -y
+            sudo apt-get install g++-13
+            echo "CXX=$(which g++-13)" >> $GITHUB_ENV
+          elif [[ "${{ matrix.os }}" == "macos-latest" ]]; then
+            brew install llvm
+            echo "CXX=$(brew --prefix llvm)/bin/clang++" >> $GITHUB_ENV
+          fi
 
-      - name: Setup Windows environment
+      - name: Setup environment (Windows)
         if: matrix.os == 'windows-latest'
-        run: |
-          echo "CXX=clang++" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-
-      - name: Setup macOS environment
-        if: matrix.os == 'macos-latest'
-        run: |
-          brew install llvm
-          echo "CXX=$(brew --prefix llvm)/bin/clang++" >> $GITHUB_ENV
+        shell: powershell
+        run: echo "CXX=clang++" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Build
         run: make debug CXX=${{ env.CXX }}
 
-      - name: Run Bench
-        run: |
-          if [[ "${{ matrix.os }}" == "ubuntu-latest" || "${{ matrix.os }}" == "macos-latest" ]]; then
-            ./baryonyx bench
-          elif [[ "${{ matrix.os }}" == "windows-latest" ]]; then
-            .\baryonyx.exe bench
-          fi
+      - name: Run Bench (Linux && MacOS)
+        if: matrix.os != 'windows-latest'
+        shell: bash
+        run: ./baryonyx bench
+
+      - name: Run Bench (Windows)
+        if: matrix.os == 'windows-latest'
+        shell: powershell
+        run: .\baryonyx.exe bench
 
       - name: Clean
         run: make clean
