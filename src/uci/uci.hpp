@@ -16,7 +16,7 @@ class command_handler {
     private:
         static constexpr std::string_view author  = "Ibai Burgos";
         static constexpr std::string_view name    = "Baryonyx";
-        static constexpr std::string_view version = "0.1.16";
+        static constexpr std::string_view version = "0.1.17";
 
         search::searcher m_searcher;
 
