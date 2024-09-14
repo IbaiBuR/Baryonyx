@@ -1,5 +1,6 @@
 #include "search.hpp"
 
+#include <cmath>
 #include <format>
 #include <iostream>
 
@@ -7,6 +8,7 @@
 
 #include "../eval/eval.hpp"
 #include "../moves/movegen.hpp"
+#include "../utils/mdarray.hpp"
 #include "../utils/time.hpp"
 
 namespace search {
@@ -17,6 +19,26 @@ constexpr int rfp_depth_limit = 6;
 constexpr int rfp_margin      = 70;
 
 constexpr int nmp_base_reduction = 3;
+
+constexpr auto lmr_noisy_factor  = -0.25;
+constexpr auto lmr_noisy_divisor = 2.25;
+constexpr auto lmr_quiet_factor  = 1.00;
+constexpr auto lmr_quiet_divisor = 2.00;
+
+static const auto lmr_table = [] {
+    utils::mdarray<int, 2, constants::max_depth, constants::max_moves> lmr_table;
+
+    for (int i = 0; i < constants::max_depth; ++i) {
+        for (int j = 0; j < constants::max_moves; ++j) {
+            lmr_table[0, i, j] =
+                static_cast<int>(lmr_noisy_factor + std::log(i) * std::log(j) / lmr_noisy_divisor);
+            lmr_table[1, i, j] =
+                static_cast<int>(lmr_quiet_factor + std::log(i) * std::log(j) / lmr_quiet_divisor);
+        }
+    }
+
+    return lmr_table;
+}();
 
 } // namespace heuristics
 
@@ -264,16 +286,32 @@ score searcher::negamax(const board::position& pos,
 
         score current_score;
 
+        // Search the first move with a full window
         if (legal_moves == 1)
-            // Search the first move with a full window
             current_score = -negamax<pv_node>(copy, -beta, -alpha, depth - 1, ply + 1, child_pv);
         else {
-            // Do a null window search to see if we find a better move
-            current_score = -negamax<false>(copy, -alpha - 1, -alpha, depth - 1, ply + 1, child_pv);
+            // Apply LMR: Search moves that are late in move ordering with reduced depth
+            const auto reduction =
+                depth > 2 && legal_moves > 3
+                    ? heuristics::lmr_table[current_move.is_quiet(), depth, legal_moves]
+                    : 0;
 
+            // Ensure the reduced depth is not negative
+            const auto new_depth     = depth - 1;
+            const auto reduced_depth = std::clamp(new_depth - reduction, 0, new_depth);
+
+            // Perform a null window search at reduced depth
+            current_score =
+                -negamax<false>(copy, -alpha - 1, -alpha, reduced_depth, ply + 1, child_pv);
+
+            // Full depth search
+            if (current_score > alpha && reduced_depth < new_depth)
+                current_score =
+                    -negamax<false>(copy, -alpha - 1, -alpha, new_depth, ply + 1, child_pv);
+
+            // If we found a better move, do a full window search
             if (current_score > alpha && pv_node)
-                // If we found a better move, do a full re-search
-                current_score = -negamax<true>(copy, -beta, -alpha, depth - 1, ply + 1, child_pv);
+                current_score = -negamax<true>(copy, -beta, -alpha, new_depth, ply + 1, child_pv);
         }
 
         if (current_score > best_score) {
