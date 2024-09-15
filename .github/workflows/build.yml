@@ -41,7 +41,7 @@ jobs:
       - name: Build
         run: make debug CXX=${{ env.CXX }}
 
-      - name: Run Bench (Linux && MacOS)
+      - name: Run Bench (Linux & MacOS)
         if: matrix.os != 'windows-latest'
         shell: bash
         run: ./baryonyx bench
