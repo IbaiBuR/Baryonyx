@@ -369,13 +369,10 @@ void searcher::report_info(const u64      elapsed,
                            const int      depth,
                            const score    score,
                            const pv_line& pv) const {
-    const bool is_mate = utils::score::is_mate(score);
-
-    std::cout << std::format(
-        "info depth {} score {} {} time {} nodes {} nps {} hashfull {} pv{}", depth,
-        is_mate ? "mate" : "cp", is_mate ? utils::score::mate_in(score) : score, elapsed,
-        m_info.searched_nodes, m_info.searched_nodes / std::max<u64>(1, elapsed) * 1000,
-        tt::global_tt.hashfull(), pv.to_string())
+    std::cout << std::format("info depth {} score {} time {} nodes {} nps {} hashfull {} pv{}",
+                             depth, utils::score::to_string(score), elapsed, m_info.searched_nodes,
+                             m_info.searched_nodes / std::max<u64>(1, elapsed) * 1000,
+                             tt::global_tt.hashfull(), pv.to_string())
               << std::endl;
 }
 
