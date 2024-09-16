@@ -10,6 +10,7 @@
 #include "../moves/movegen.hpp"
 #include "../utils/mdarray.hpp"
 #include "../utils/time.hpp"
+#include "../utils/score.hpp"
 
 namespace search {
 
@@ -341,9 +342,8 @@ score searcher::negamax(const board::position& pos,
     }
 
     // Checkmate / stalemate detection
-    if (!legal_moves) {
+    if (!legal_moves)
         return in_check ? -constants::score_mate + ply : 0;
-    }
 
     const auto tt_flag = best_score <= original_alpha ? tt::tt_entry::tt_flag::upper_bound
                        : best_score >= beta           ? tt::tt_entry::tt_flag::lower_bound
@@ -365,11 +365,17 @@ bool searcher::should_stop() const {
         || elapsed >= m_timer.optimum_time();
 }
 
-void searcher::report_info(u64 elapsed, int depth, score score, const pv_line& pv) const {
-    std::cout << std::format("info depth {} score cp {} time {} nodes {} nps {} hashfull {} pv{}",
-                             depth, score, elapsed, m_info.searched_nodes,
-                             m_info.searched_nodes / std::max<u64>(1, elapsed) * 1000,
-                             tt::global_tt.hashfull(), pv.to_string())
+void searcher::report_info(const u64      elapsed,
+                           const int      depth,
+                           const score    score,
+                           const pv_line& pv) const {
+    const bool is_mate = utils::score::is_mate(score);
+
+    std::cout << std::format(
+        "info depth {} score {} {} time {} nodes {} nps {} hashfull {} pv{}", depth,
+        is_mate ? "mate" : "cp", is_mate ? utils::score::mate_in(score) : score, elapsed,
+        m_info.searched_nodes, m_info.searched_nodes / std::max<u64>(1, elapsed) * 1000,
+        tt::global_tt.hashfull(), pv.to_string())
               << std::endl;
 }
 
