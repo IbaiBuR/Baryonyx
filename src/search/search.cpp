@@ -265,6 +265,8 @@ score searcher::negamax(const board::position& pos,
     auto        best_move      = moves::move::null();
     const score original_alpha = alpha;
 
+    m_data.m_fail_low_quiets.clear();
+
     moves::move_list move_list;
     generate_all_moves(pos, move_list);
     move_list.score_moves(tt_move, pos, m_data, ply);
@@ -328,12 +330,14 @@ score searcher::negamax(const board::position& pos,
                 if (alpha >= beta) {
                     if (best_move.is_quiet()) {
                         m_data.update_killers(best_move, ply);
-                        m_data.update_quiet_history(best_move, depth);
                     }
 
                     break;
                 }
             }
+
+            if (current_move != best_move && current_move.is_quiet())
+                m_data.m_fail_low_quiets.push_back(current_move);
         }
 
         // Double-check if search stopped to make sure we don't exceed the search limits
@@ -344,6 +348,13 @@ score searcher::negamax(const board::position& pos,
     // Checkmate / stalemate detection
     if (!legal_moves)
         return in_check ? -constants::score_mate + ply : 0;
+
+    if (best_move != moves::move::null() && best_move.is_quiet()) {
+        m_data.update_quiet_history(best_move, depth, false);
+
+        for (const auto fail_low_quiet : m_data.m_fail_low_quiets)
+            m_data.update_quiet_history(fail_low_quiet, depth, true);
+    }
 
     const auto tt_flag = best_score <= original_alpha ? tt::tt_entry::tt_flag::upper_bound
                        : best_score >= beta           ? tt::tt_entry::tt_flag::lower_bound

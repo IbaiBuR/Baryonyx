@@ -64,13 +64,19 @@ struct search_info {
 
 struct search_data {
         utils::mdarray<moves::move, 2, constants::max_ply>                  killer_moves;
-        utils::mdarray<u16, constants::num_squares, constants::num_squares> quiet_history;
+        utils::mdarray<i16, constants::num_squares, constants::num_squares> quiet_history;
 
-        search_data() { clear(); }
+        std::vector<moves::move> m_fail_low_quiets;
+
+        search_data() {
+            clear();
+            m_fail_low_quiets.reserve(constants::max_moves);
+        }
 
         void clear() {
             clear_killers();
             clear_quiet_history();
+            m_fail_low_quiets.clear();
         }
 
         void clear_killers() { killer_moves = {}; }
@@ -84,21 +90,20 @@ struct search_data {
             }
         }
 
-        void update_quiet_history(const moves::move move, const int depth) {
+        void update_quiet_history(const moves::move move, const int depth, const bool penalize) {
             const auto from          = move.from();
             const auto to            = move.to();
             const auto history_value = quiet_history_value(move);
+            const int  delta         = penalize ? -depth * depth : depth * depth;
 
-            const int history_bonus =
-                std::min(history_value + depth * depth, move_ordering::max_history);
-
-            quiet_history[std::to_underlying(from), std::to_underlying(to)] = history_bonus;
+            quiet_history[std::to_underlying(from), std::to_underlying(to)] +=
+                delta - history_value * std::abs(delta) / move_ordering::max_history;
         }
 
         [[nodiscard]] auto first_killer(const int ply) const { return killer_moves[0, ply]; }
         [[nodiscard]] auto second_killer(const int ply) const { return killer_moves[1, ply]; }
 
-        [[nodiscard]] u16 quiet_history_value(const moves::move m) const {
+        [[nodiscard]] i16 quiet_history_value(const moves::move m) const {
             return quiet_history[std::to_underlying(m.from()), std::to_underlying(m.to())];
         }
 };
