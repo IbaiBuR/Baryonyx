@@ -3,12 +3,15 @@
 #include <cmath>
 #include <format>
 #include <iostream>
+#include <limits>
+#include <stdexcept>
 
 #include "tt.hpp"
 
 #include "../eval/eval.hpp"
 #include "../moves/movegen.hpp"
 #include "../utils/mdarray.hpp"
+#include "../utils/parsing.hpp"
 #include "../utils/time.hpp"
 #include "../utils/score.hpp"
 
@@ -62,22 +65,37 @@ void searcher::parse_time_control(const std::vector<std::string>& command, const
     u64 base_time{};
     u16 increment{};
 
-    for (auto it = command.begin() + 1; it < command.end(); ++it) {
-        if (stm == color::white) {
-            if (*it == "wtime") {
-                base_time = std::stoull(*(it + 1));
-                set_limits(UINT64_MAX, base_time, constants::max_depth);
-            }
-            if (*it == "winc")
-                increment = std::stoi(*(it + 1));
+    auto set_base_time_and_limits = [&](const std::optional<u64> parsed_base_time) -> void {
+        if (parsed_base_time) {
+            base_time = parsed_base_time.value();
+            set_limits(std::numeric_limits<u64>::max(), base_time, constants::max_depth);
         }
         else {
-            if (*it == "btime") {
-                base_time = std::stoull(*(it + 1));
-                set_limits(UINT64_MAX, base_time, constants::max_depth);
-            }
+            throw std::runtime_error("Failed to parse base time.\n");
+        }
+    };
+
+    auto set_increment = [&](const std::optional<u16> parsed_increment) -> void {
+        if (parsed_increment)
+            increment = parsed_increment.value();
+        else
+            throw std::runtime_error("Failed to parse increment.\n");
+    };
+
+    for (auto it = command.begin() + 1; it < command.end(); ++it) {
+        if (stm == color::white) {
+            if (*it == "wtime")
+                set_base_time_and_limits(utils::parsing::to_number<u64>(*(it + 1)));
+
+            if (*it == "winc")
+                set_increment(utils::parsing::to_number<u16>(*(it + 1)));
+        }
+        else {
+            if (*it == "btime")
+                set_base_time_and_limits(utils::parsing::to_number<u64>(*(it + 1)));
+
             if (*it == "binc")
-                increment = std::stoi(*(it + 1));
+                set_increment(utils::parsing::to_number<u16>(*(it + 1)));
         }
     }
     m_timer = time_manager(utils::time::get_time_ms(), base_time, increment);

@@ -2,6 +2,7 @@
 
 #include <format>
 #include <iostream>
+#include <limits>
 #include <numeric>
 
 #include "../eval/eval.hpp"
@@ -9,6 +10,7 @@
 #include "../perft/perft.hpp"
 #include "../utils/split.hpp"
 #include "../search/tt.hpp"
+#include "../utils/parsing.hpp"
 #include "../utils/time.hpp"
 
 namespace uci {
@@ -24,19 +26,30 @@ void command_handler::handle_is_ready() { std::cout << "readyok" << std::endl; }
 void command_handler::handle_go(const std::vector<std::string>& command,
                                 const board::position&          pos) {
     if (command[1] == "depth") {
-        m_searcher.set_limits(UINT64_MAX, UINT64_MAX, std::stoi(command[2]));
+        if (const auto parsed_depth = utils::parsing::to_number<u32>(command[2]))
+            m_searcher.set_limits(std::numeric_limits<u64>::max(), std::numeric_limits<u64>::max(),
+                                  parsed_depth.value());
+
         m_searcher.set_start_time(utils::time::get_time_ms());
     }
     else if (command[1] == "perft") {
-        split_perft(pos, std::stoi(command[2]));
+        if (const auto parsed_perft_depth = utils::parsing::to_number<int>(command[2]))
+            split_perft(pos, parsed_perft_depth.value());
+
         return;
     }
     else if (command[1] == "movetime") {
-        m_searcher.set_limits(UINT64_MAX, std::stoull(command[2]), constants::max_depth);
+        if (const auto parsed_move_time = utils::parsing::to_number<u64>(command[2]))
+            m_searcher.set_limits(std::numeric_limits<u64>::max(), parsed_move_time.value(),
+                                  constants::max_depth);
+
         m_searcher.set_start_time(utils::time::get_time_ms());
     }
     else if (command[1] == "nodes") {
-        m_searcher.set_limits(std::stoull(command[2]), UINT64_MAX, constants::max_depth);
+        if (const auto parsed_nodes = utils::parsing::to_number<u64>(command[2]))
+            m_searcher.set_limits(parsed_nodes.value(), std::numeric_limits<u64>::max(),
+                                  constants::max_depth);
+
         m_searcher.set_start_time(utils::time::get_time_ms());
     }
     else if (command[1] == "wtime" || command[1] == "btime") {

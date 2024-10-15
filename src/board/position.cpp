@@ -7,6 +7,7 @@
 
 #include "bitboard/attacks.hpp"
 
+#include "../utils/parsing.hpp"
 #include "../utils/split.hpp"
 #include "../utils/zobrist.hpp"
 
@@ -64,8 +65,15 @@ position::position(const std::string& fen) :
         en_passant == "-" ? square::none : square_of(en_passant[0] - 'a', en_passant[1] - 1 - '0');
     m_key ^= utils::zobrist::get_en_passant_key(m_ep_sq);
 
-    m_half_move_clock  = std::stoi(tokens[4]);
-    m_full_move_number = std::stoi(tokens[5]);
+    if (const auto parsed_half_move_clock = utils::parsing::to_number<u8>(tokens[4]))
+        m_half_move_clock = parsed_half_move_clock.value();
+    else
+        throw std::runtime_error("Failed to parse halfmove clock.\n");
+
+    if (const auto parsed_full_move_number = utils::parsing::to_number<u16>(tokens[5]))
+        m_full_move_number = parsed_full_move_number.value();
+    else
+        throw std::runtime_error("Failed to parse fullmove number.\n");
 
     m_hash_history.reserve(constants::max_game_ply - m_full_move_number);
 
